@@ -1,0 +1,93 @@
+{
+	"version": 0,
+	"dependencies": [
+		{
+			"importpath": "github.com/braintree/manners",
+			"repository": "https://github.com/braintree/manners",
+			"revision": "9e2a2714de21eb092ead2ef56d8c7a60d7928819",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/buger/goterm",
+			"repository": "https://github.com/buger/goterm",
+			"revision": "db9aaed44abbb1be9061aa43612ede2e864c5973",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/codegangsta/cli",
+			"repository": "https://github.com/codegangsta/cli",
+			"revision": "142e6cd241a4dfbf7f07a018f1f8225180018da4",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/dvsekhvalnov/jose2go",
+			"repository": "https://github.com/dvsekhvalnov/jose2go",
+			"revision": "6387d3c1f5abd8443b223577d5a7e0f4e0e5731f",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/gocraft/health",
+			"repository": "https://github.com/gocraft/health",
+			"revision": "6bc56b7d5fcaa70b9a1387318ec885ec4a987def",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/gocraft/web",
+			"repository": "https://github.com/gocraft/web",
+			"revision": "934a096ff6918ed5d4667075794a8d18a88c1576",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/jmoiron/sqlx",
+			"repository": "https://github.com/jmoiron/sqlx",
+			"revision": "ae682dc5c71d087ef97d506ec543320fdd7b0ff1",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/lib/pq",
+			"repository": "https://github.com/lib/pq",
+			"revision": "b269bd035a727d6c1081f76e7a239a1b00674c40",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/nu7hatch/gouuid",
+			"repository": "https://github.com/nu7hatch/gouuid",
+			"revision": "179d4d0c4d8d407a32af483c2354df1d2c91e6c3",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/prometheus/client_golang/prometheus",
+			"repository": "https://github.com/prometheus/client_golang",
+			"revision": "8c899cd8208a366b6899d397e4bc3ced7ab073e3",
+			"branch": "master",
+			"path": "/prometheus"
+		},
+		{
+			"importpath": "github.com/stretchr/testify/assert",
+			"repository": "https://github.com/stretchr/testify",
+			"revision": "f5520455607c0233cb6d7b056f71b22c1d265ef1",
+			"branch": "master",
+			"path": "/assert"
+		},
+		{
+			"importpath": "golang.org/x/crypto/bcrypt",
+			"repository": "https://go.googlesource.com/crypto",
+			"revision": "81bf7719a6b7ce9b665598222362b50122dfc13b",
+			"branch": "master",
+			"path": "/bcrypt"
+		},
+		{
+			"importpath": "golang.org/x/crypto/blowfish",
+			"repository": "https://go.googlesource.com/crypto",
+			"revision": "81bf7719a6b7ce9b665598222362b50122dfc13b",
+			"branch": "master",
+			"path": "/blowfish"
+		},
+		{
+			"importpath": "gopkg.in/check.v1",
+			"repository": "https://gopkg.in/check.v1",
+			"revision": "11d3bc7aa68e238947792f30573146a3231fc0f1",
+			"branch": "v1"
+		}
+	]
+}
