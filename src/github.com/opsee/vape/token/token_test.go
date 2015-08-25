@@ -1,0 +1,97 @@
+package token
+
+import (
+	"testing"
+	"time"
+	// "github.com/dvsekhvalnov/jose2go"
+	. "gopkg.in/check.v1"
+)
+
+type TokenSuite struct{}
+type testUser struct {
+	Id                 int       `token:"id"`
+	Email              string    `token:"email"`
+	CreatedAt          time.Time `token:"created_at"`
+	Admin              bool      `token:"admin"`
+	ThisFieldIsIgnored bool
+}
+
+var (
+	testVapeKey = []byte{194, 164, 235, 6, 138, 248, 171, 239, 24, 216, 11, 22, 137, 199, 215, 133}
+	_           = Suite(&TokenSuite{})
+)
+
+func Test(t *testing.T) { TestingT(t) }
+
+func (s *TokenSuite) SetUpTest(c *C) {
+	Init(testVapeKey)
+}
+
+func (s *TokenSuite) TestNew(c *C) {
+	now := time.Now()
+	exp := now.Add(time.Hour * 1)
+	token := newTestToken(now, exp)
+
+	c.Assert((*token)["exp"], DeepEquals, exp.Unix())
+	c.Assert((*token)["ThisFieldIsIgnored"], DeepEquals, nil)
+	c.Assert((*token)["email"], DeepEquals, "cliff@leaninto.it")
+	c.Assert((*token)["sub"], DeepEquals, "cliff@leaninto.it")
+}
+
+func (s *TokenSuite) TestMarshalUnmarshal(c *C) {
+	now := time.Now()
+	exp := now.Add(time.Hour * 1)
+	token := newTestToken(now, exp)
+	tokenString, err := token.Marshal()
+	if err != nil {
+		c.Fatal(err)
+	}
+
+	decoded, err := Unmarshal(tokenString)
+	if err != nil {
+		c.Fatal(err)
+	}
+
+	c.Assert((*decoded)["exp"], DeepEquals, exp.Unix())
+	c.Assert((*decoded)["ThisFieldIsIgnored"], DeepEquals, nil)
+	c.Assert((*decoded)["email"], DeepEquals, "cliff@leaninto.it")
+	c.Assert((*decoded)["sub"], DeepEquals, "cliff@leaninto.it")
+}
+
+func (s *TokenSuite) TestVerify(c *C) {
+	now := time.Now()
+	exp := now.Add(time.Hour * 1)
+	tokenString, err := newTestToken(now, exp).Marshal()
+	if err != nil {
+		c.Fatal(err)
+	}
+	c.Assert(Verify(tokenString), IsNil)
+
+	now = time.Now().Add(time.Hour * 1)
+	exp = now.Add(time.Hour * 2)
+	tokenString, err = newTestToken(now, exp).Marshal()
+	if err != nil {
+		c.Fatal(err)
+	}
+	c.Assert(Verify(tokenString), ErrorMatches, ".*issued after now")
+
+	now = time.Now()
+	exp = now.Add(time.Hour * -2)
+	tokenString, err = newTestToken(now, exp).Marshal()
+	if err != nil {
+		c.Fatal(err)
+	}
+	c.Assert(Verify(tokenString), ErrorMatches, ".*expired")
+}
+
+func newTestToken(now, exp time.Time) *Token {
+	user := &testUser{
+		Id:                 1,
+		Email:              "cliff@leaninto.it",
+		CreatedAt:          time.Now(),
+		Admin:              true,
+		ThisFieldIsIgnored: true,
+	}
+
+	return New(user, "cliff@leaninto.it", now, exp)
+}

@@ -18,13 +18,13 @@ type Context struct {
 }
 
 var (
-	stream = health.NewStream()
-	router = web.New(Context{})
-        origins = []string{
-                "http://localhost:8080",
-                "https://staging.opsy.co",
-                "https://opsee.co",
-        }
+	stream  = health.NewStream()
+	router  = web.New(Context{})
+	origins = []string{
+		"http://localhost:8080",
+		"https://staging.opsy.co",
+		"https://opsee.co",
+	}
 )
 
 func init() {
@@ -106,14 +106,14 @@ func (c *Context) SetContentType(rw web.ResponseWriter, r *web.Request, next web
 }
 
 func (c *Context) Cors(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
-        origin := r.Header.Get("Origin")
+	origin := r.Header.Get("Origin")
 
-        for _, o := range origins {
-                if o == origin {
-                	header := rw.Header()
-                	header.Set("Access-Control-Allow-Origin", o)
-                }
-        }
+	for _, o := range origins {
+		if o == origin {
+			header := rw.Header()
+			header.Set("Access-Control-Allow-Origin", o)
+		}
+	}
 	next(rw, r)
 }
 
@@ -135,11 +135,11 @@ func writeJson(rw web.ResponseWriter, data interface{}) {
 }
 
 func readJson(r *web.Request) (map[string]interface{}, error) {
-        value := new(map[string]interface{})
-        decoder := json.NewDecoder(r.Body)
-        err := decoder.Decode(&value)
-        if err != nil {
-                return nil, err
-        }
-        return *value, nil
+	value := make(map[string]interface{})
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&value)
+	if err != nil {
+		return nil, err
+	}
+	return value, nil
 }

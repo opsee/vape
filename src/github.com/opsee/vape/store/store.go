@@ -1,17 +1,16 @@
 package store
 
 import (
-        "github.com/jmoiron/sqlx"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
 var (
-        db *sqlx.DB
-        vapeKey []byte
+	db *sqlx.DB
 )
 
-func Init(pgConnection string, sharedKey []byte) error {
-        var err error
+func Init(pgConnection string) error {
+	var err error
 
 	db, err = sqlx.Open("postgres", pgConnection)
 	if err != nil {
@@ -20,6 +19,5 @@ func Init(pgConnection string, sharedKey []byte) error {
 	db.SetMaxOpenConns(64)
 	db.SetMaxIdleConns(8)
 
-        vapeKey = sharedKey
-        return nil
+	return nil
 }

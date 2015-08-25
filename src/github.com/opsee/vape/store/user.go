@@ -1,65 +1,51 @@
 package store
 
 import (
-        _ "github.com/lib/pq"
-        "time"
-        "encoding/json"
-        "golang.org/x/crypto/bcrypt"
-        "github.com/dvsekhvalnov/jose2go"
-        // "database/sql"
-        // "github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
+	"golang.org/x/crypto/bcrypt"
+	"time"
+
+	// "database/sql"
+	// "github.com/jmoiron/sqlx"
 )
 
-const tokenExpHours = 72
-
 type User struct {
-        Id int `json:"id"`
-        CustomerId string `json:"customer_id" db:"customer_id"`
-        Email string `json:"email"`
-        Name string `json:"name"`
-        Verified bool `json:"verified"`
-        Admin bool `json:"admin"`
-        Active bool `json:"active"`
-        Onboard bool `json:"onboard"`
-        PasswordHash string `json:"-" db:"password_hash"`
-        CreatedAt time.Time `json:"created_at" db:"created_at"`
-        UpdatedAt time.Time `json:"created_at" db:"updated_at"`
+	Id           int       `json:"id" token"id"`
+	CustomerId   string    `json:"customer_id" token:"customer_id" db:"customer_id"`
+	Email        string    `json:"email" token:"email"`
+	Name         string    `json:"name" token:"name"`
+	Verified     bool      `json:"verified" token:"verified"`
+	Admin        bool      `json:"admin" token:"admin"`
+	Active       bool      `json:"active" token:"active"`
+	Onboard      bool      `json:"onboard" token:"onboard"`
+	PasswordHash string    `json:"-" db:"password_hash"`       // not going in token
+	CreatedAt    time.Time `json:"created_at" db:"created_at"` // not going in token
+	UpdatedAt    time.Time `json:"created_at" db:"updated_at"` // not going in token
+}
+
+var queries = map[string]string{
+	"by-email-and-active": "select * from logins where email = $1 and active = $2 limit 1",
+}
+
+func GetUser(queryKey string, args ...interface{}) (*User, error) {
+	user := &User{}
+	err := db.Get(user, queries[queryKey], args...)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 func AuthenticateUser(email, password string) (*User, error) {
-        user := &User{}
-        err := db.Get(user, "select * from logins where email = $1 and active = true limit 1", email)
-        if err != nil {
-                return nil, err
-        }
+	user, err := GetUser("by-email-and-active", email, true)
+	if err != nil {
+		return nil, err
+	}
 
-        err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
-        if err != nil {
-                return nil, err
-        }
+	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
+	if err != nil {
+		return nil, err
+	}
 
-        return user, nil
-}
-
-func (user *User) MarshalJwe() (string, error) {
-        payload := map[string]interface{}{
-                "exp": time.Now().Add(time.Hour * tokenExpHours).Unix(),
-                "id": user.Id,
-                "email": user.Email,
-                "customer_id": user.CustomerId,
-                "admin": user.Admin,
-                "verified": user.Verified,
-                "active": user.Active,
-                "name": user.Name,
-                "onboard": user.Onboard,
-                "created_at": user.CreatedAt,
-                "updated_at": user.UpdatedAt,
-        }
-
-        json, err := json.Marshal(payload)
-        if err != nil {
-                return "", err
-        }
-
-        return jose.Encrypt(string(json), jose.A128GCMKW, jose.A128GCM, vapeKey)
+	return user, nil
 }
