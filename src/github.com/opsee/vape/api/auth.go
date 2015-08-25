@@ -23,7 +23,7 @@ func init() {
 
 func (c *AuthContext) CreateAuth(rw web.ResponseWriter, r *web.Request) {
 	postJson, err := readJson(r)
-	if err != nil {
+	if err != nil || postJson["email"] == nil || postJson["password"] == nil {
 		c.Job.EventErr("create-auth", err)
 		rw.WriteHeader(http.StatusBadRequest)
 		return
@@ -33,7 +33,14 @@ func (c *AuthContext) CreateAuth(rw web.ResponseWriter, r *web.Request) {
 	password := postJson["password"].(string)
 	c.Job.EventKv("create-auth.enter", map[string]string{"email": email})
 
-	user, err := store.AuthenticateUser(email, password)
+	user, err := store.GetUser("by-email-and-active", email, true)
+	if err != nil {
+		c.Job.EventErr("get-user", err)
+		rw.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	err = user.Authenticate(password)
 	if err != nil {
 		c.Job.EventErr("authenticate-user", err)
 		rw.WriteHeader(http.StatusUnauthorized)

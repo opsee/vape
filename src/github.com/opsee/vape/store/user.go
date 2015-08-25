@@ -36,16 +36,6 @@ func GetUser(queryKey string, args ...interface{}) (*User, error) {
 	return user, nil
 }
 
-func AuthenticateUser(email, password string) (*User, error) {
-	user, err := GetUser("by-email-and-active", email, true)
-	if err != nil {
-		return nil, err
-	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
-	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
+func (user *User) Authenticate(password string) error {
+        return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 }

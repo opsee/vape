@@ -42,14 +42,22 @@ func (s *UserSuite) SetUpTest(c *C) {
 	}
 }
 
-func (s *UserSuite) TestAuthenticateUser(c *C) {
-	user, err := AuthenticateUser("mark@opsee.co", "eatshit")
+func (s *UserSuite) TestGetUser(c *C) {
+	user, err := GetUser("by-email-and-active", "mark@opsee.co", true)
 	c.Assert(err, IsNil)
 	c.Assert(user.Name, Equals, "mark")
 
-	user, err = AuthenticateUser("mark@opsee.co", "shiteat")
+	user, err = GetUser("by-email-and-active", "mark@opsee.co", false)
+	c.Assert(err, NotNil)
+}
+
+func (s *UserSuite) TestAuthenticate(c *C) {
+	user, err := GetUser("by-email-and-active", "mark@opsee.co", true)
+	c.Assert(err, IsNil)
+
+	err = user.Authenticate("shiteat")
 	c.Assert(err, NotNil)
 
-	user, err = AuthenticateUser("mark@opsee.com", "eatshit")
-	c.Assert(err, NotNil)
+	err = user.Authenticate("eatshit")
+	c.Assert(err, IsNil)
 }

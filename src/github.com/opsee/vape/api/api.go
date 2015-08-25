@@ -29,7 +29,7 @@ var (
 
 func init() {
 	router.Middleware((*Context).Log)
-	router.Middleware((*Context).CatchPanics)
+        router.Middleware((*Context).CatchPanics)
 	router.Middleware((*Context).SetContentType)
 	router.Middleware((*Context).Cors)
 	router.NotFound((*Context).NotFound)
