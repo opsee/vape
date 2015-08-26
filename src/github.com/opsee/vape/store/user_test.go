@@ -18,7 +18,7 @@ func (s *UserSuite) SetUpTest(c *C) {
 	Init(os.Getenv("TEST_POSTGRES_CONN"))
 
 	// teardown first since it's nice to have lingering data to play with after a test
-	_, err := db.Exec("delete from logins")
+	_, err := db.Exec("delete from users")
 	if err != nil {
 		c.Fatal(err)
 	}
@@ -28,15 +28,16 @@ func (s *UserSuite) SetUpTest(c *C) {
 	}
 
 	// fk constraint on customer_id
-	_, err = db.Exec("insert into orgs (name, subdomain) values ('markorg', 'markorg')")
+        var id int
+	err = db.Get(&id, "insert into orgs (name) values ('markorg') returning id")
 	if err != nil {
 		c.Fatal(err)
 	}
 	_, err = db.Exec(
-		"insert into logins (id, email, password_hash, admin, active, verified, " +
-			"customer_id, name) values (1, 'mark@opsee.co', " +
+		"insert into users (id, email, password_hash, admin, active, verified, " +
+			"org_id, name) values (1, 'mark@opsee.co', " +
 			"'$2a$10$QcgjlXDKnRys50Oc30duFuNcZW6Rmqd7pcIJX9GWheIXJExUooZ7W', true, true, true, " +
-			"'markorg', 'mark')")
+			"$1, 'mark')", id)
 	if err != nil {
 		c.Fatal(err)
 	}

@@ -39,3 +39,4 @@ _testmain.go
 /target/
 vape.key
 vape.dev.key
+schema-full.sql

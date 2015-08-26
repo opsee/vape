@@ -45,20 +45,20 @@ func (s *ApiSuite) TestCors(c *C) {
         c.Assert(rec.Header().Get("Access-Control-Allow-Origin"), DeepEquals, "")
 }
 
-func (s *ApiSuite) TestLogin(c *C) {
-        rec, err := testReq("POST", "https://vape/login", nil, nil)
+func (s *ApiSuite) TestCreateAuthPassword(c *C) {
+        rec, err := testReq("POST", "https://vape/authenticate/password", nil, nil)
         if err != nil {
                 c.Fatal(err)
         }
         c.Assert(rec.Code, DeepEquals, 400)
 
-        rec, err = testReq("POST", "https://vape/login", bytes.NewBuffer([]byte(`{"email": "mark@opsee.co"}`)), nil)
+        rec, err = testReq("POST", "https://vape/authenticate/password", bytes.NewBuffer([]byte(`{"email": "mark@opsee.co"}`)), nil)
         if err != nil {
                 c.Fatal(err)
         }
         c.Assert(rec.Code, DeepEquals, 400)
 
-        rec, err = testReq("POST", "https://vape/login", bytes.NewBuffer([]byte(`{"email": "mark@opsee.co", "password": "hi"}`)), nil)
+        rec, err = testReq("POST", "https://vape/authenticate/password", bytes.NewBuffer([]byte(`{"email": "mark@opsee.co", "password": "hi"}`)), nil)
         if err != nil {
                 c.Fatal(err)
         }

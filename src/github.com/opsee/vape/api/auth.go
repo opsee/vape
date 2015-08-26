@@ -18,10 +18,10 @@ var authRouter *web.Router
 
 func init() {
 	authRouter = router.Subrouter(AuthContext{}, "/")
-	authRouter.Post("/login", (*AuthContext).CreateAuth)
+	authRouter.Post("/authenticate/password", (*AuthContext).CreateAuthPassword)
 }
 
-func (c *AuthContext) CreateAuth(rw web.ResponseWriter, r *web.Request) {
+func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) {
 	postJson, err := readJson(r)
 	if err != nil || postJson["email"] == nil || postJson["password"] == nil {
 		c.Job.EventErr("create-auth", err)
