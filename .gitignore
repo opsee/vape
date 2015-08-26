@@ -38,3 +38,4 @@ _testmain.go
 /pkg/
 /target/
 vape.key
+vape.dev.key

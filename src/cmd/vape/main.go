@@ -21,5 +21,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	api.ListenAndServe(":8080", os.Stdout)
+	api.ListenAndServe(os.Getenv("VAPE_HOST"), os.Stdout)
 }
