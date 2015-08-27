@@ -17,7 +17,6 @@ package api
 //
 // func init() {
 //         userRouter = router.Subrouter(UserContext{}, "/users")
-//         userRouter.Middleware((*Context).Authorize)
 //         userRouter.Get("/users/:id", (*UserContext).GetUser)
 //         userRouter.Put("/users/:id", (*UserContext).UpdateUser)
 //         userRouter.Delete("/users/:id", (*UserContext).DeleteUser)
@@ -34,3 +33,4 @@ package api
 // func (c *UserContext) DeleteUser(rw web.ResponseWriter, r *web.Request) {
 //
 // }
+//

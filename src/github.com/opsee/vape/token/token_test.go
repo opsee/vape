@@ -3,7 +3,6 @@ package token
 import (
 	"testing"
 	"time"
-	// "github.com/dvsekhvalnov/jose2go"
 	. "gopkg.in/check.v1"
 )
 
@@ -36,6 +35,30 @@ func (s *TokenSuite) TestNew(c *C) {
 	c.Assert((*token)["ThisFieldIsIgnored"], DeepEquals, nil)
 	c.Assert((*token)["email"], DeepEquals, "cliff@leaninto.it")
 	c.Assert((*token)["sub"], DeepEquals, "cliff@leaninto.it")
+}
+
+func (s *TokenSuite) TestReify(c *C) {
+	now := time.Now()
+	exp := now.Add(time.Hour * 1)
+	token := newTestToken(now, exp)
+
+	tokenString, err := token.Marshal()
+	if err != nil {
+		c.Fatal(err)
+	}
+
+	decoded, err := Unmarshal(tokenString)
+	if err != nil {
+		c.Fatal(err)
+	}
+
+        user := &testUser{}
+        decoded.Reify(user)
+
+        c.Assert(user.Id, DeepEquals, 1)
+        c.Assert(user.Email, DeepEquals, "cliff@leaninto.it")
+        c.Assert(user.CreatedAt, DeepEquals, now)
+        c.Assert(user.Admin, DeepEquals, true)
 }
 
 func (s *TokenSuite) TestMarshalUnmarshal(c *C) {
@@ -88,7 +111,7 @@ func newTestToken(now, exp time.Time) *Token {
 	user := &testUser{
 		Id:                 1,
 		Email:              "cliff@leaninto.it",
-		CreatedAt:          time.Now(),
+		CreatedAt:          now,
 		Admin:              true,
 		ThisFieldIsIgnored: true,
 	}
