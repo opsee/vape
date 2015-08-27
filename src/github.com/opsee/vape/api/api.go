@@ -51,6 +51,9 @@ func ListenAndServe(addr string) {
 	http.ListenAndServe(addr, router)
 }
 
+//
+// middleware
+//
 func (c *Context) UserSession(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
         auth := r.Header.Get("Authorization")
         authslice := strings.Split(auth, " ")

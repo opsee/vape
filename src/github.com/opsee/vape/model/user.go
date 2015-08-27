@@ -1,7 +1,6 @@
 package model
 
 import (
-	_ "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
@@ -16,7 +15,7 @@ type User struct {
 	Active       bool      `json:"active" token:"active"`
 	PasswordHash string    `json:"-" db:"password_hash"`       // not going in token
 	CreatedAt    time.Time `json:"created_at" db:"created_at"` // not going in token
-	UpdatedAt    time.Time `json:"created_at" db:"updated_at"` // not going in token
+	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"` // not going in token
 }
 
 func (user *User) Authenticate(password string) error {
