@@ -165,11 +165,11 @@ func testAuthedReq(u *model.User, method, url string, body io.Reader, headers ma
 }
 
 func userFromResponse(body io.Reader) (*model.User, error) {
-        userJson := make(map[string]*model.User)
+        user := &model.User{}
         dec := json.NewDecoder(body)
-        err := dec.Decode(&userJson)
+        err := dec.Decode(user)
         if err != nil {
                 return nil, err
         }
-        return userJson["user"], nil
+        return user, nil
 }

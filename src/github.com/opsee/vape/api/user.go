@@ -71,32 +71,25 @@ func (c *UserContext) SetUserContext(rw web.ResponseWriter, r *web.Request, next
 }
 
 func (c *UserContext) GetUser(rw web.ResponseWriter, r *web.Request) {
-        writeJson(rw, map[string]interface{}{"user": c.User})
+        writeJson(rw, c.User)
 }
 
 func (c *UserContext) UpdateUser(rw web.ResponseWriter, r *web.Request) {
-        json, err := readJson(r)
+        userJson, err := readJson(r)
         if err != nil {
                 c.Job.EventErr("error.json", err)
                 rw.WriteHeader(http.StatusBadRequest)
                 return
         }
 
-        userJson, ok := json["user"]
-        if !ok {
-                c.Job.Event("error.params")
-                rw.WriteHeader(http.StatusBadRequest)
-                return
-        }
-
-        err = servicer.UpdateUser(c.User, userJson.(map[string]interface{}))
+        err = servicer.UpdateUser(c.User, userJson)
         if err != nil {
                 c.Job.Event("error.update")
                 rw.WriteHeader(http.StatusInternalServerError)
                 return
         }
 
-        writeJson(rw, map[string]interface{}{"user": c.User})
+        writeJson(rw, c.User)
 }
 
 func (c *UserContext) DeleteUser(rw web.ResponseWriter, r *web.Request) {

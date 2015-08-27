@@ -6,7 +6,6 @@ import (
         "github.com/opsee/vape/servicer"
         "net/http"
         "strconv"
-        "fmt"
 )
 
 type SignupContext struct {
@@ -19,9 +18,9 @@ var signupRouter *web.Router
 
 func init() {
         signupRouter = router.Subrouter(SignupContext{}, "/signups")
-        userRouter.Post("/", (*SignupContext).CreateSignup)
-        userRouter.Get("/", (*SignupContext).ListSignups)
-        userRouter.Get("/:id", (*SignupContext).GetSignup)
+        signupRouter.Post("/", (*SignupContext).CreateSignup)
+        signupRouter.Get("/", (*SignupContext).ListSignups)
+        signupRouter.Get("/:id", (*SignupContext).GetSignup)
 }
 
 func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
@@ -46,18 +45,24 @@ func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
                 return
         }
 
-        writeJson(rw, map[string]interface{}{"signups": signups})
+        writeJson(rw, signups)
 }
 
 func (c *SignupContext) CreateSignup(rw web.ResponseWriter, r *web.Request) {
+        json, err := readJson(r)
+        if err != nil {
+                rw.WriteHeader(http.StatusBadRequest)
+                return
+        }
+
         // anyone is authorized for this
-        signup, err := servicer.CreateSignup()
+        signup, err := servicer.CreateSignup(json)
         if err != nil {
                 rw.WriteHeader(http.StatusInternalServerError)
                 return
         }
 
-        writeJson(rw, map[string]interface{}{"signup": signup})
+        writeJson(rw, signup)
 }
 
 func (c *SignupContext) GetSignup(rw web.ResponseWriter, r *web.Request) {
@@ -66,12 +71,12 @@ func (c *SignupContext) GetSignup(rw web.ResponseWriter, r *web.Request) {
                 return
         }
 
-        err := c.FetchSignup()
+        err := c.FetchSignup(rw, r)
         if err != nil {
                 return
         }
 
-        writeJson(rw, map[string]interface{}{"signup": c.Signup})
+        writeJson(rw, c.Signup)
 }
 
 func (c *SignupContext) FetchSignup(rw web.ResponseWriter, r *web.Request) error {

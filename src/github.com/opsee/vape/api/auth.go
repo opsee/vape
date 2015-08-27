@@ -65,5 +65,5 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 }
 
 func (c *AuthContext) Echo(rw web.ResponseWriter, r *web.Request) {
-        writeJson(rw, map[string]interface{}{"user": c.CurrentUser})
+        writeJson(rw, c.CurrentUser)
 }

@@ -22,8 +22,8 @@ func GetSignup(id int) (*model.Signup, error) {
 
 func CreateSignup(signupParams map[string]interface{}) (*model.Signup, error) {
         signup := model.NewSignup(signupParams)
-        _, err = store.NamedExec("insert-signup", signup)
-        return err
+        _, err := store.NamedExec("insert-signup", signup)
+        return signup, err
 }
 
 func ListSignups(perPage int, page int) ([]*model.Signup, error) {
