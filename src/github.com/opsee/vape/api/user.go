@@ -6,7 +6,6 @@ import (
         "github.com/opsee/vape/servicer"
         "net/http"
         "strconv"
-        "fmt"
 )
 
 type UserContext struct {
@@ -20,43 +19,42 @@ var userRouter *web.Router
 func init() {
         userRouter = router.Subrouter(UserContext{}, "/users")
         userRouter.Middleware((*UserContext).Authorized)
-        userRouter.Middleware((*UserContext).SetUserContext)
+        userRouter.Middleware((*UserContext).FetchUser)
         userRouter.Get("/:id", (*UserContext).GetUser)
         userRouter.Put("/:id", (*UserContext).UpdateUser)
         userRouter.Delete("/:id", (*UserContext).DeleteUser)
 }
 
 func (c *UserContext) Authorized(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
-        id, ok := r.PathParams["id"]
-        if ok {
-                userId, err := strconv.Atoi(id)
-                if err != nil {
-                        c.Job.EventErr("user-authorized", err)
-                        rw.WriteHeader(http.StatusBadRequest)
-                        return
-                }
-
-                c.Id = userId
+        if c.CurrentUser == nil {
+                rw.WriteHeader(http.StatusUnauthorized)
+                return
         }
+
+        id, err := strconv.Atoi(r.PathParams["id"])
+        if err != nil {
+                c.Job.EventErr("error.atoi", err)
+                rw.WriteHeader(http.StatusBadRequest)
+                return
+        }
+        c.Id = id
 
         if (c.Id != 0 && c.CurrentUser.Id == c.Id) || c.CurrentUser.Admin {
                 next(rw, r)
         } else {
-                c.Job.EventKv("user-authorized", map[string]string{"user_id": fmt.Sprintf("%s", c.Id)})
                 rw.WriteHeader(http.StatusUnauthorized)
         }
 }
 
-func (c *UserContext) SetUserContext(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
+func (c *UserContext) FetchUser(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
         if c.Id == 0 {
-                c.Job.EventKv("user-get", map[string]string{"user_id": fmt.Sprintf("%s", c.Id)})
                 rw.WriteHeader(http.StatusBadRequest)
                 return
         }
 
         user, err := servicer.GetUser(c.Id)
         if err != nil {
-                c.Job.EventErr("user-get", err)
+                c.Job.EventErr("error.getuser", err)
                 rw.WriteHeader(http.StatusInternalServerError)
                 return
         }
