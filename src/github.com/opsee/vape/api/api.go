@@ -7,14 +7,18 @@ import (
 	"github.com/gocraft/health"
 	"github.com/gocraft/web"
 	"github.com/nu7hatch/gouuid"
+	// "github.com/opsee/vape/token"
+	"github.com/opsee/vape/model"
 	"io"
 	"net/http"
 	"runtime"
+	// "strings"
 )
 
 type Context struct {
 	Job   *health.Job
 	Panic bool
+	User  *model.User
 }
 
 var (
@@ -29,7 +33,7 @@ var (
 
 func init() {
 	router.Middleware((*Context).Log)
-        router.Middleware((*Context).CatchPanics)
+	router.Middleware((*Context).CatchPanics)
 	router.Middleware((*Context).SetContentType)
 	router.Middleware((*Context).Cors)
 	router.NotFound((*Context).NotFound)
@@ -42,6 +46,64 @@ func ListenAndServe(addr string, sink io.Writer) {
 	stream.Event("api.listen-and-serve")
 	http.ListenAndServe(addr, router)
 }
+
+// func (c *Context) UserSession(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
+//         auth := r.Header.Get("Authorization")
+//         authslice := strings.Split(auth, " ")
+//
+//         switch authslice[0] {
+//         case "Bearer":
+//                 tokenString := authslice[1]
+//                 decodedToken, err := token.Unmarshal(tokenString)
+//                 if err != nil {
+//                         authorized = false
+//                         c.Job.EventErr(err)
+//                         break
+//                 }
+//
+//                 // no id in the token, who knows what that's about
+//                 userId, ok := token["id"]
+//                 if !ok {
+//                         authorized = false
+//                         c.Job.Event("no user id in token")
+//                         break
+//                 }
+//
+//
+//         default:
+//                 authorized = false
+//         }
+// }
+//
+// func (c *Context) Authorize(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
+//         var authorized bool
+//
+//         auth := r.Header.Get("Authorization")
+//         authslice := strings.Split(auth, " ")
+//
+//         switch authslice[0] {
+//         case "Bearer":
+//                 tokenString := authslice[1]
+//                 decodedToken, err := token.Unmarshal(tokenString)
+//                 if err != nil {
+//                         authorized = false
+//                         c.Job.EventErr(err)
+//                         break
+//                 }
+//
+//                 // no id in the token, who knows what that's about
+//                 userId, ok := token["id"]
+//                 if !ok {
+//                         authorized = false
+//                         c.Job.Event("no user id in token")
+//                         break
+//                 }
+//
+//
+//         default:
+//                 authorized = false
+//         }
+// }
 
 func (c *Context) Log(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
 	c.Job = stream.NewJob(r.RoutePath())

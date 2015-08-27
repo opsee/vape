@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/gocraft/web"
+	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vape/token"
 	"net/http"
@@ -12,7 +13,7 @@ type AuthContext struct {
 	*Context
 }
 
-const tokenExpHours = 72
+const tokenExpHours = 1
 
 var authRouter *web.Router
 
@@ -33,7 +34,8 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 	password := postJson["password"].(string)
 	c.Job.EventKv("create-auth.enter", map[string]string{"email": email})
 
-	user, err := store.GetUser("by-email-and-active", email, true)
+	user := new(model.User)
+	err = store.Get(user, "user-by-email-and-active", email, true)
 	if err != nil {
 		c.Job.EventErr("get-user", err)
 		rw.WriteHeader(http.StatusUnauthorized)

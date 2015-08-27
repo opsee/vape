@@ -1,12 +1,9 @@
-package store
+package model
 
 import (
 	_ "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 	"time"
-
-	// "database/sql"
-	// "github.com/jmoiron/sqlx"
 )
 
 type User struct {
@@ -22,19 +19,6 @@ type User struct {
 	UpdatedAt    time.Time `json:"created_at" db:"updated_at"` // not going in token
 }
 
-var queries = map[string]string{
-	"by-email-and-active": "select * from users where email = $1 and active = $2 limit 1",
-}
-
-func GetUser(queryKey string, args ...interface{}) (*User, error) {
-	user := &User{}
-	err := db.Get(user, queries[queryKey], args...)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
-}
-
 func (user *User) Authenticate(password string) error {
-        return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
+	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 }
