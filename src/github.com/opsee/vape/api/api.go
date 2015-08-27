@@ -18,7 +18,7 @@ import (
 type Context struct {
 	Job   *health.Job
 	Panic bool
-	User  *model.User
+	CurrentUser  *model.User
 }
 
 var (
@@ -40,10 +40,13 @@ func init() {
 	router.NotFound((*Context).NotFound)
 }
 
-func ListenAndServe(addr string, sink io.Writer) {
+func InjectLogger(sink io.Writer) {
 	if sink != nil {
 		stream.AddSink(&health.WriterSink{sink})
 	}
+}
+
+func ListenAndServe(addr string) {
 	stream.Event("api.listen-and-serve")
 	http.ListenAndServe(addr, router)
 }
@@ -69,7 +72,7 @@ func (c *Context) UserSession(rw web.ResponseWriter, r *web.Request, next web.Ne
                                 break
                         }
 
-                        c.User = user
+                        c.CurrentUser = user
                 }
         }
 

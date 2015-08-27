@@ -22,3 +22,26 @@ type User struct {
 func (user *User) Authenticate(password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 }
+
+func (user *User) Merge(params map[string]interface{}) error {
+        email, ok := params["email"]
+        if ok {
+                user.Email = email.(string)
+        }
+
+        name, ok := params["name"]
+        if ok {
+                user.Name = name.(string)
+        }
+
+        password, ok := params["password"]
+        if ok {
+                passwordHash, err := bcrypt.GenerateFromPassword([]byte(password.(string)), 10)
+                if err != nil {
+                        return err
+                }
+                user.PasswordHash = string(passwordHash)
+        }
+
+        return nil
+}
