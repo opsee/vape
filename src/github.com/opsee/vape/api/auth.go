@@ -18,7 +18,7 @@ const tokenExpHours = 1
 var authRouter *web.Router
 
 func init() {
-	authRouter = router.Subrouter(AuthContext{}, "/authenticate")
+	authRouter = publicRouter.Subrouter(AuthContext{}, "/authenticate")
 	authRouter.Post("/password", (*AuthContext).CreateAuthPassword)
 	authRouter.Get("/echo", (*AuthContext).Echo) // for testing
 }

@@ -17,7 +17,7 @@ type UserContext struct {
 var userRouter *web.Router
 
 func init() {
-	userRouter = router.Subrouter(UserContext{}, "/users")
+	userRouter = publicRouter.Subrouter(UserContext{}, "/users")
 	userRouter.Middleware((*UserContext).Authorized)
 	userRouter.Middleware((*UserContext).FetchUser)
 	userRouter.Get("/:id", (*UserContext).GetUser)

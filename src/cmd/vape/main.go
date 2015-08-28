@@ -22,5 +22,5 @@ func main() {
 	}
 
 	api.InjectLogger(os.Stdout)
-	api.ListenAndServe(os.Getenv("VAPE_HOST"))
+	api.ListenAndServe(os.Getenv("VAPE_PUBLIC_HOST"), os.Getenv("VAPE_PRIVATE_HOST"))
 }

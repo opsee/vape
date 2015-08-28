@@ -38,7 +38,7 @@ func (s *TokenSuite) TestNew(c *C) {
 }
 
 func (s *TokenSuite) TestReify(c *C) {
-	now := time.Now()
+	now := time.Now().UTC()
 	exp := now.Add(time.Hour * 1)
 	token := newTestToken(now, exp)
 
@@ -62,7 +62,7 @@ func (s *TokenSuite) TestReify(c *C) {
 }
 
 func (s *TokenSuite) TestMarshalUnmarshal(c *C) {
-	now := time.Now()
+	now := time.Now().UTC()
 	exp := now.Add(time.Hour * 1)
 	token := newTestToken(now, exp)
 	tokenString, err := token.Marshal()
@@ -82,7 +82,7 @@ func (s *TokenSuite) TestMarshalUnmarshal(c *C) {
 }
 
 func (s *TokenSuite) TestVerify(c *C) {
-	now := time.Now()
+	now := time.Now().UTC()
 	exp := now.Add(time.Hour * 1)
 	tokenString, err := newTestToken(now, exp).Marshal()
 	if err != nil {

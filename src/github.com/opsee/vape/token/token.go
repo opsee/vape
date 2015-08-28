@@ -108,7 +108,7 @@ func Unmarshal(tokenString string) (*Token, error) {
 	token["exp"] = int64(token["exp"].(float64))
 	token["iat"] = int64(token["iat"].(float64))
 
-	now := time.Now()
+	now := time.Now().UTC()
 	exp := time.Unix(token["exp"].(int64), 0)
 	iat := time.Unix(token["iat"].(int64), 0)
 

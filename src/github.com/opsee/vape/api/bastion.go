@@ -13,7 +13,7 @@ type BastionContext struct {
 var bastionRouter *web.Router
 
 func init() {
-	bastionRouter = router.Subrouter(BastionContext{}, "/bastions")
+	bastionRouter = privateRouter.Subrouter(BastionContext{}, "/bastions")
 	bastionRouter.Post("/", (*BastionContext).Create)
 	bastionRouter.Post("/authenticate", (*BastionContext).Authenticate)
 }

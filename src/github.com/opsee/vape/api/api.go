@@ -23,7 +23,8 @@ type Context struct {
 
 var (
 	stream  = health.NewStream()
-	router  = web.New(Context{})
+	publicRouter  = web.New(Context{})
+	privateRouter  = web.New(Context{})
 	origins = []string{
 		"http://localhost:8080",
 		"https://staging.opsy.co",
@@ -32,12 +33,17 @@ var (
 )
 
 func init() {
-	router.Middleware((*Context).Log)
-	router.Middleware((*Context).CatchPanics)
-	router.Middleware((*Context).SetContentType)
-	router.Middleware((*Context).Cors)
-	router.Middleware((*Context).UserSession)
-	router.NotFound((*Context).NotFound)
+	// we're creating a separate router instances to listen on separate ports
+	// as a result, we have to be repeat ourselves
+	// this may be another good reason to use go-restful
+	for _, router := range []*web.Router{publicRouter, privateRouter} {
+		router.Middleware((*Context).Log)
+		router.Middleware((*Context).CatchPanics)
+		router.Middleware((*Context).SetContentType)
+		router.Middleware((*Context).Cors)
+		router.Middleware((*Context).UserSession)
+		router.NotFound((*Context).NotFound)
+	}
 }
 
 func InjectLogger(sink io.Writer) {
@@ -46,9 +52,10 @@ func InjectLogger(sink io.Writer) {
 	}
 }
 
-func ListenAndServe(addr string) {
+func ListenAndServe(publicAddr string, privateAddr string) {
 	stream.Event("api.listen-and-serve")
-	http.ListenAndServe(addr, router)
+	http.ListenAndServe(publicAddr, publicRouter)
+	http.ListenAndServe(privateAddr, privateRouter)
 }
 
 //

@@ -34,21 +34,21 @@ func (s *ApiSuite) SetUpTest(c *C) {
 }
 
 func (s *ApiSuite) TestCors(c *C) {
-	rec, err := testReq("POST", "https://vape/", nil, nil)
+	rec, err := testReq(publicRouter, "POST", "https://vape/", nil, nil)
 	if err != nil {
 		c.Fatal(err)
 	}
 	c.Assert(rec.Header().Get("Access-Control-Allow-Origin"), DeepEquals, "")
 
 	for _, o := range []string{"https://staging.opsy.co", "https://opsee.co"} {
-		rec, err = testReq("POST", "https://vape/", nil, map[string]string{"Origin": o})
+		rec, err = testReq(publicRouter, "POST", "https://vape/", nil, map[string]string{"Origin": o})
 		if err != nil {
 			c.Fatal(err)
 		}
 		c.Assert(rec.Header().Get("Access-Control-Allow-Origin"), DeepEquals, o)
 	}
 
-	rec, err = testReq("POST", "https://vape/", nil, map[string]string{"Origin": "https://zombo.com"})
+	rec, err = testReq(publicRouter, "POST", "https://vape/", nil, map[string]string{"Origin": "https://zombo.com"})
 	if err != nil {
 		c.Fatal(err)
 	}
@@ -107,26 +107,26 @@ func (s *ApiSuite) TestUserGet(c *C) {
 }
 
 func (s *ApiSuite) TestCreateAuthPassword(c *C) {
-	rec, err := testReq("POST", "https://vape/authenticate/password", nil, nil)
+	rec, err := testReq(publicRouter, "POST", "https://vape/authenticate/password", nil, nil)
 	if err != nil {
 		c.Fatal(err)
 	}
 	c.Assert(rec.Code, DeepEquals, 400)
 
-	rec, err = testReq("POST", "https://vape/authenticate/password", bytes.NewBuffer([]byte(`{"email": "mark@opsee.co"}`)), nil)
+	rec, err = testReq(publicRouter, "POST", "https://vape/authenticate/password", bytes.NewBuffer([]byte(`{"email": "mark@opsee.co"}`)), nil)
 	if err != nil {
 		c.Fatal(err)
 	}
 	c.Assert(rec.Code, DeepEquals, 400)
 
-	rec, err = testReq("POST", "https://vape/authenticate/password", bytes.NewBuffer([]byte(`{"email": "mark@opsee.co", "password": "hi"}`)), nil)
+	rec, err = testReq(publicRouter, "POST", "https://vape/authenticate/password", bytes.NewBuffer([]byte(`{"email": "mark@opsee.co", "password": "hi"}`)), nil)
 	if err != nil {
 		c.Fatal(err)
 	}
 	c.Assert(rec.Code, DeepEquals, 401)
 }
 
-func testReq(method, url string, body io.Reader, headers map[string]string) (*httptest.ResponseRecorder, error) {
+func testReq(router *web.Router, method, url string, body io.Reader, headers map[string]string) (*httptest.ResponseRecorder, error) {
 	if body == nil {
 		body = bytes.NewBuffer([]byte{})
 	}
@@ -161,7 +161,7 @@ func testAuthedReq(u *model.User, method, url string, body io.Reader, headers ma
 	auth := "Bearer " + tokenString
 	headers["Authorization"] = auth
 
-	return testReq(method, url, body, headers)
+	return testReq(publicRouter, method, url, body, headers)
 }
 
 func userFromResponse(body io.Reader) (*model.User, error) {

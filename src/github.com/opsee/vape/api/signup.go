@@ -17,7 +17,7 @@ type SignupContext struct {
 var signupRouter *web.Router
 
 func init() {
-	signupRouter = router.Subrouter(SignupContext{}, "/signups")
+	signupRouter = publicRouter.Subrouter(SignupContext{}, "/signups")
 	signupRouter.Post("/", (*SignupContext).CreateSignup)
 	signupRouter.Get("/", (*SignupContext).ListSignups)
 	signupRouter.Get("/:id", (*SignupContext).GetSignup)
