@@ -2,33 +2,33 @@ package api
 
 import (
 	"bytes"
-        "github.com/opsee/vape/token"
-        "github.com/opsee/vape/model"
+	"encoding/json"
+	"github.com/gocraft/web"
+	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vape/testutil"
-        "github.com/gocraft/web"
+	"github.com/opsee/vape/token"
 	. "gopkg.in/check.v1"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
-        "encoding/json"
-        "time"
+	"time"
 )
 
 type ApiSuite struct{}
 
 var (
-	_ = Suite(&ApiSuite{})
-        testMiddlewareFunc = func(web.ResponseWriter, *web.Request) {}
-        testVapeKey = []byte{194, 164, 235, 6, 138, 248, 171, 239, 24, 216, 11, 22, 137, 199, 215, 133}
+	_                  = Suite(&ApiSuite{})
+	testMiddlewareFunc = func(web.ResponseWriter, *web.Request) {}
+	testVapeKey        = []byte{194, 164, 235, 6, 138, 248, 171, 239, 24, 216, 11, 22, 137, 199, 215, 133}
 )
 
 func Test(t *testing.T) { TestingT(t) }
 
 func (s *ApiSuite) SetUpTest(c *C) {
-        token.Init(testVapeKey)
+	token.Init(testVapeKey)
 	store.Init(os.Getenv("TEST_POSTGRES_CONN"))
 	testutil.SetupFixtures(store.DB, c)
 }
@@ -56,54 +56,54 @@ func (s *ApiSuite) TestCors(c *C) {
 }
 
 func (s *ApiSuite) TestUserSessionEcho(c *C) {
-        rec, err := testAuthedReq(&model.User{Id:1,Email:"cliff@leaninto.it",Admin:true}, "GET",
-                "https://vape/authenticate/echo", nil, nil)
+	rec, err := testAuthedReq(&model.User{Id: 1, Email: "cliff@leaninto.it", Admin: true}, "GET",
+		"https://vape/authenticate/echo", nil, nil)
 	if err != nil {
 		c.Fatal(err)
 	}
 
-        user, _ := userFromResponse(rec.Body)
-        c.Assert(user.Id, DeepEquals, 1)
-        c.Assert(user.Email, DeepEquals, "cliff@leaninto.it")
-        c.Assert(user.Admin, DeepEquals, true)
+	user, _ := userFromResponse(rec.Body)
+	c.Assert(user.Id, DeepEquals, 1)
+	c.Assert(user.Email, DeepEquals, "cliff@leaninto.it")
+	c.Assert(user.Admin, DeepEquals, true)
 }
 
 func (s *ApiSuite) TestUserGet(c *C) {
-        // a user viewing themselves
-        rec, err := testAuthedReq(&model.User{Id:1,Email:"cliff@leaninto.it",Admin:false}, "GET",
-                "https://vape/users/1", nil, nil)
+	// a user viewing themselves
+	rec, err := testAuthedReq(&model.User{Id: 1, Email: "cliff@leaninto.it", Admin: false}, "GET",
+		"https://vape/users/1", nil, nil)
 	if err != nil {
 		c.Fatal(err)
 	}
-        user, _ := userFromResponse(rec.Body)
-        c.Assert(user.Id, DeepEquals, 1)
-        c.Assert(user.Email, DeepEquals, "mark@opsee.co")
+	user, _ := userFromResponse(rec.Body)
+	c.Assert(user.Id, DeepEquals, 1)
+	c.Assert(user.Email, DeepEquals, "mark@opsee.co")
 
-        // non-admin viewing another
-        rec, err = testAuthedReq(&model.User{Id:2,Email:"cliff@leaninto.it",Admin:false}, "GET",
-                "https://vape/users/1", nil, nil)
+	// non-admin viewing another
+	rec, err = testAuthedReq(&model.User{Id: 2, Email: "cliff@leaninto.it", Admin: false}, "GET",
+		"https://vape/users/1", nil, nil)
 	if err != nil {
 		c.Fatal(err)
 	}
-        c.Assert(rec.Code, DeepEquals, 401)
+	c.Assert(rec.Code, DeepEquals, 401)
 
-        // admin viewing another
-        rec, err = testAuthedReq(&model.User{Id:2,Email:"cliff@leaninto.it",Admin:true}, "GET",
-                "https://vape/users/1", nil, nil)
+	// admin viewing another
+	rec, err = testAuthedReq(&model.User{Id: 2, Email: "cliff@leaninto.it", Admin: true}, "GET",
+		"https://vape/users/1", nil, nil)
 	if err != nil {
 		c.Fatal(err)
 	}
-        user, _ = userFromResponse(rec.Body)
-        c.Assert(user.Id, DeepEquals, 1)
-        c.Assert(user.Email, DeepEquals, "mark@opsee.co")
+	user, _ = userFromResponse(rec.Body)
+	c.Assert(user.Id, DeepEquals, 1)
+	c.Assert(user.Email, DeepEquals, "mark@opsee.co")
 
-        // not found
-        rec, err = testAuthedReq(&model.User{Id:2,Email:"cliff@leaninto.it",Admin:true}, "GET",
-                "https://vape/users/99", nil, nil)
+	// not found
+	rec, err = testAuthedReq(&model.User{Id: 2, Email: "cliff@leaninto.it", Admin: true}, "GET",
+		"https://vape/users/99", nil, nil)
 	if err != nil {
 		c.Fatal(err)
 	}
-        c.Assert(rec.Code, DeepEquals, 404)
+	c.Assert(rec.Code, DeepEquals, 404)
 }
 
 func (s *ApiSuite) TestCreateAuthPassword(c *C) {
@@ -146,30 +146,30 @@ func testReq(method, url string, body io.Reader, headers map[string]string) (*ht
 }
 
 func testAuthedReq(u *model.User, method, url string, body io.Reader, headers map[string]string) (*httptest.ResponseRecorder, error) {
-        if headers == nil {
-                headers = make(map[string]string)
-        }
+	if headers == nil {
+		headers = make(map[string]string)
+	}
 
 	now := time.Now()
 	exp := now.Add(time.Hour * 1)
-        tok := token.New(u, u.Email, now, exp)
+	tok := token.New(u, u.Email, now, exp)
 	tokenString, err := tok.Marshal()
 	if err != nil {
 		return nil, err
 	}
 
-        auth := "Bearer " + tokenString
-        headers["Authorization"] = auth
+	auth := "Bearer " + tokenString
+	headers["Authorization"] = auth
 
 	return testReq(method, url, body, headers)
 }
 
 func userFromResponse(body io.Reader) (*model.User, error) {
-        user := &model.User{}
-        dec := json.NewDecoder(body)
-        err := dec.Decode(user)
-        if err != nil {
-                return nil, err
-        }
-        return user, nil
+	user := &model.User{}
+	dec := json.NewDecoder(body)
+	err := dec.Decode(user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

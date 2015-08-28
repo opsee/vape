@@ -25,7 +25,7 @@ type Config struct {
 	Interval time.Duration
 
 	// Prometheus CountersVec. key is built by `job + event`. Required for predefined Counters.
-	CounterVecs map[string]*prometheus.CounterVec
+	CounterVecs   map[string]*prometheus.CounterVec
 	HistogramVecs map[string]*prometheus.HistogramVec
 }
 

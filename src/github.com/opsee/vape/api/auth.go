@@ -20,7 +20,7 @@ var authRouter *web.Router
 func init() {
 	authRouter = router.Subrouter(AuthContext{}, "/authenticate")
 	authRouter.Post("/password", (*AuthContext).CreateAuthPassword)
-        authRouter.Get("/echo", (*AuthContext).Echo) // for testing
+	authRouter.Get("/echo", (*AuthContext).Echo) // for testing
 }
 
 func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) {
@@ -65,5 +65,5 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 }
 
 func (c *AuthContext) Echo(rw web.ResponseWriter, r *web.Request) {
-        writeJson(rw, c.CurrentUser)
+	writeJson(rw, c.CurrentUser)
 }

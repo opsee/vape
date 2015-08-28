@@ -19,12 +19,12 @@ type User struct {
 }
 
 func NewUser(name, email, password string) *User {
-        passwordHash, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
-        return &User{
-                Email: email,
-                Name: name,
-                PasswordHash: string(passwordHash),
-        }
+	passwordHash, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
+	return &User{
+		Email:        email,
+		Name:         name,
+		PasswordHash: string(passwordHash),
+	}
 }
 
 func (user *User) Authenticate(password string) error {
@@ -32,24 +32,24 @@ func (user *User) Authenticate(password string) error {
 }
 
 func (user *User) Merge(params map[string]interface{}) error {
-        email, ok := params["email"]
-        if ok {
-                user.Email = email.(string)
-        }
+	email, ok := params["email"]
+	if ok {
+		user.Email = email.(string)
+	}
 
-        name, ok := params["name"]
-        if ok {
-                user.Name = name.(string)
-        }
+	name, ok := params["name"]
+	if ok {
+		user.Name = name.(string)
+	}
 
-        password, ok := params["password"]
-        if ok {
-                passwordHash, err := bcrypt.GenerateFromPassword([]byte(password.(string)), 10)
-                if err != nil {
-                        return err
-                }
-                user.PasswordHash = string(passwordHash)
-        }
+	password, ok := params["password"]
+	if ok {
+		passwordHash, err := bcrypt.GenerateFromPassword([]byte(password.(string)), 10)
+		if err != nil {
+			return err
+		}
+		user.PasswordHash = string(passwordHash)
+	}
 
-        return nil
+	return nil
 }

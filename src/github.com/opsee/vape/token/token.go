@@ -53,36 +53,36 @@ func (token *Token) Reify(thing interface{}) error {
 
 	for i := 0; i < t.NumField(); i++ {
 		tag := t.Type().Field(i).Tag.Get("token")
-                kind := t.Field(i).Kind()
+		kind := t.Field(i).Kind()
 
 		val, ok := (*token)[tag]
-                if !ok {
-                        continue
-                }
+		if !ok {
+			continue
+		}
 
-                switch val.(type) {
-                case float64: // a special case for json turning things into floats
-                        if kind == reflect.Int {
-                                t.Field(i).SetInt(int64(val.(float64)))
-                        } else {
-                                t.Field(i).Set(reflect.ValueOf(val))
-                        }
-                case string: // a special case for timestamps
-                        if kind == reflect.Struct {
-                                date, err := time.Parse(time.RFC3339, val.(string))
-                                if err != nil {
-                                        return err
-                                }
-                                t.Field(i).Set(reflect.ValueOf(date))
-                        } else {
-                                t.Field(i).Set(reflect.ValueOf(val))
-                        }
-                default:
-                        t.Field(i).Set(reflect.ValueOf(val))
-                }
+		switch val.(type) {
+		case float64: // a special case for json turning things into floats
+			if kind == reflect.Int {
+				t.Field(i).SetInt(int64(val.(float64)))
+			} else {
+				t.Field(i).Set(reflect.ValueOf(val))
+			}
+		case string: // a special case for timestamps
+			if kind == reflect.Struct {
+				date, err := time.Parse(time.RFC3339, val.(string))
+				if err != nil {
+					return err
+				}
+				t.Field(i).Set(reflect.ValueOf(date))
+			} else {
+				t.Field(i).Set(reflect.ValueOf(val))
+			}
+		default:
+			t.Field(i).Set(reflect.ValueOf(val))
+		}
 	}
 
-        return nil
+	return nil
 }
 
 func Unmarshal(tokenString string) (*Token, error) {

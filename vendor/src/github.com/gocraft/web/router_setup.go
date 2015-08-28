@@ -8,13 +8,13 @@ import (
 type httpMethod string
 
 const (
-	httpMethodGet    = httpMethod("GET")
-	httpMethodPost   = httpMethod("POST")
-	httpMethodPut    = httpMethod("PUT")
-	httpMethodDelete = httpMethod("DELETE")
-	httpMethodPatch  = httpMethod("PATCH")
-	httpMethodHead   = httpMethod("HEAD")
-	httpMethodOptions   = httpMethod("OPTIONS")
+	httpMethodGet     = httpMethod("GET")
+	httpMethodPost    = httpMethod("POST")
+	httpMethodPut     = httpMethod("PUT")
+	httpMethodDelete  = httpMethod("DELETE")
+	httpMethodPatch   = httpMethod("PATCH")
+	httpMethodHead    = httpMethod("HEAD")
+	httpMethodOptions = httpMethod("OPTIONS")
 )
 
 var httpMethods = []httpMethod{httpMethodGet, httpMethodPost, httpMethodPut, httpMethodDelete, httpMethodPatch, httpMethodHead, httpMethodOptions}

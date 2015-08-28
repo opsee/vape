@@ -21,6 +21,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-        api.InjectLogger(os.Stdout)
+	api.InjectLogger(os.Stdout)
 	api.ListenAndServe(os.Getenv("VAPE_HOST"))
 }

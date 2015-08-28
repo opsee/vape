@@ -1,9 +1,9 @@
 package servicer
 
 import (
-        "errors"
+	"errors"
 )
 
 var (
-        RecordNotFound = errors.New("record not found")
+	RecordNotFound = errors.New("record not found")
 )

@@ -7,18 +7,18 @@ import (
 	"github.com/gocraft/health"
 	"github.com/gocraft/web"
 	"github.com/nu7hatch/gouuid"
-        "github.com/opsee/vape/token"
 	"github.com/opsee/vape/model"
+	"github.com/opsee/vape/token"
 	"io"
 	"net/http"
 	"runtime"
-        "strings"
+	"strings"
 )
 
 type Context struct {
-	Job   *health.Job
-	Panic bool
-	CurrentUser  *model.User
+	Job         *health.Job
+	Panic       bool
+	CurrentUser *model.User
 }
 
 var (
@@ -36,7 +36,7 @@ func init() {
 	router.Middleware((*Context).CatchPanics)
 	router.Middleware((*Context).SetContentType)
 	router.Middleware((*Context).Cors)
-        router.Middleware((*Context).UserSession)
+	router.Middleware((*Context).UserSession)
 	router.NotFound((*Context).NotFound)
 }
 
@@ -55,31 +55,31 @@ func ListenAndServe(addr string) {
 // middleware
 //
 func (c *Context) UserSession(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
-        auth := r.Header.Get("Authorization")
-        authslice := strings.Split(auth, " ")
+	auth := r.Header.Get("Authorization")
+	authslice := strings.Split(auth, " ")
 
-        if len(authslice) >= 2 {
-                switch authslice[0] {
-                case "Bearer":
-                        tokenString := authslice[1]
-                        decodedToken, err := token.Unmarshal(tokenString)
-                        if err != nil {
-                                c.Job.EventErr("user_session.token_unmarshal", err)
-                                break
-                        }
+	if len(authslice) >= 2 {
+		switch authslice[0] {
+		case "Bearer":
+			tokenString := authslice[1]
+			decodedToken, err := token.Unmarshal(tokenString)
+			if err != nil {
+				c.Job.EventErr("user_session.token_unmarshal", err)
+				break
+			}
 
-                        user := &model.User{}
-                        err = decodedToken.Reify(user)
-                        if err != nil {
-                                c.Job.EventErr("user_session.token_reify", err)
-                                break
-                        }
+			user := &model.User{}
+			err = decodedToken.Reify(user)
+			if err != nil {
+				c.Job.EventErr("user_session.token_reify", err)
+				break
+			}
 
-                        c.CurrentUser = user
-                }
-        }
+			c.CurrentUser = user
+		}
+	}
 
-        next(rw, r)
+	next(rw, r)
 }
 
 func (c *Context) Log(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
@@ -184,10 +184,10 @@ func readJson(r *web.Request) (map[string]interface{}, error) {
 }
 
 func mustPresent(json map[string]interface{}, keys ...string) error {
-        for _, k := range keys {
-                if _, ok := json[k]; !ok {
-                        return errors.New("no key in json")
-                }
-        }
-        return nil
+	for _, k := range keys {
+		if _, ok := json[k]; !ok {
+			return errors.New("no key in json")
+		}
+	}
+	return nil
 }

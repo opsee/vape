@@ -1,9 +1,9 @@
 package token
 
 import (
+	. "gopkg.in/check.v1"
 	"testing"
 	"time"
-	. "gopkg.in/check.v1"
 )
 
 type TokenSuite struct{}
@@ -52,13 +52,13 @@ func (s *TokenSuite) TestReify(c *C) {
 		c.Fatal(err)
 	}
 
-        user := &testUser{}
-        decoded.Reify(user)
+	user := &testUser{}
+	decoded.Reify(user)
 
-        c.Assert(user.Id, DeepEquals, 1)
-        c.Assert(user.Email, DeepEquals, "cliff@leaninto.it")
-        c.Assert(user.CreatedAt, DeepEquals, now)
-        c.Assert(user.Admin, DeepEquals, true)
+	c.Assert(user.Id, DeepEquals, 1)
+	c.Assert(user.Email, DeepEquals, "cliff@leaninto.it")
+	c.Assert(user.CreatedAt, DeepEquals, now)
+	c.Assert(user.Admin, DeepEquals, true)
 }
 
 func (s *TokenSuite) TestMarshalUnmarshal(c *C) {

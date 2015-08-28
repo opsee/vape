@@ -1,10 +1,10 @@
 package model
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"golang.org/x/crypto/bcrypt"
 	"time"
-        "encoding/base64"
-        "crypto/rand"
 )
 
 type Bastion struct {
@@ -16,19 +16,19 @@ type Bastion struct {
 
 // also returns a plaintext password generated here
 func NewBastion() (*Bastion, string, error) {
-        pwbytes := make([]byte, 16)
-        if _, err := rand.Read(pwbytes); err != nil {
-                return nil, "", err
-        }
+	pwbytes := make([]byte, 16)
+	if _, err := rand.Read(pwbytes); err != nil {
+		return nil, "", err
+	}
 
-        pw := base64.StdEncoding.EncodeToString(pwbytes)
-        pwhash, err := bcrypt.GenerateFromPassword([]byte(pw), 10)
-        if err != nil {
-                return nil, "", err
-        }
+	pw := base64.StdEncoding.EncodeToString(pwbytes)
+	pwhash, err := bcrypt.GenerateFromPassword([]byte(pw), 10)
+	if err != nil {
+		return nil, "", err
+	}
 
-        bastion := &Bastion{PasswordHash:string(pwhash)}
-        return bastion, pw, nil
+	bastion := &Bastion{PasswordHash: string(pwhash)}
+	return bastion, pw, nil
 }
 
 func (bastion *Bastion) Authenticate(password string) error {
