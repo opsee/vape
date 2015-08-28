@@ -31,7 +31,7 @@ var queries = map[string]string{
 
 	// bastions
 	"insert-bastion": "insert into bastions (password_hash) values ($1) returning id",
-	"bastion-by-id": "select * from bastions where id = $1",
+	"bastion-by-id":  "select * from bastions where id = $1",
 }
 
 func Init(pgConnection string) error {

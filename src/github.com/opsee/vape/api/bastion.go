@@ -23,7 +23,7 @@ func (c *BastionContext) Create(rw web.ResponseWriter, r *web.Request) {
 	if err != nil {
 		c.Job.EventErr("error.create", err)
 		rw.WriteHeader(http.StatusInternalServerError)
-                return
+		return
 	}
 
 	writeJson(rw, map[string]string{"id": bastion.Id, "password": plaintext})
@@ -32,19 +32,19 @@ func (c *BastionContext) Create(rw web.ResponseWriter, r *web.Request) {
 func (c *BastionContext) Authenticate(rw web.ResponseWriter, r *web.Request) {
 	json, err := readJson(r)
 	if err != nil {
-                c.Job.EventErr("error.parse", err)
+		c.Job.EventErr("error.parse", err)
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	if err = mustPresent(json, "id", "password"); err != nil {
-                c.Job.EventErr("error.parse", err)
+		c.Job.EventErr("error.parse", err)
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	if err = servicer.AuthenticateBastion(json["id"].(string), json["password"].(string)); err != nil {
-                c.Job.EventErr("error.auth", err)
+		c.Job.EventErr("error.auth", err)
 		rw.WriteHeader(http.StatusUnauthorized)
 		return
 	}

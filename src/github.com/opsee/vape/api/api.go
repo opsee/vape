@@ -22,10 +22,10 @@ type Context struct {
 }
 
 var (
-	stream  = health.NewStream()
+	stream        = health.NewStream()
 	publicRouter  = web.New(Context{})
-	privateRouter  = web.New(Context{})
-	origins = []string{
+	privateRouter = web.New(Context{})
+	origins       = []string{
 		"http://localhost:8080",
 		"https://staging.opsy.co",
 		"https://opsee.co",
@@ -53,8 +53,8 @@ func InjectLogger(sink io.Writer) {
 }
 
 func ListenAndServe(publicAddr string, privateAddr string) {
-	stream.Event("api.listen-and-serve")
-	http.ListenAndServe(publicAddr, publicRouter)
+	stream.EventKv("api.listen-and-serve", map[string]string{"public_host": publicAddr, "private_host": privateAddr})
+	go http.ListenAndServe(publicAddr, publicRouter)
 	http.ListenAndServe(privateAddr, privateRouter)
 }
 
