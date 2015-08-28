@@ -2,5 +2,5 @@
 set -e
 
 echo "loading schema for tests..."
-apk add --update postgresql-client
-psql -U postgres -h postgresql -d vape_test -q < ./schema.sql >/dev/null 2>&1
+echo "drop database if exists vape_test; create database vape_test" | psql -U postgres -h postgresql
+migrate -url postgres://postgres@postgresql/vape_test?sslmode=disable -path ./migrations up
