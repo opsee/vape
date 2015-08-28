@@ -16,7 +16,7 @@ type Bastion struct {
 
 // also returns a plaintext password generated here
 func NewBastion() (*Bastion, string, error) {
-	pwbytes := make([]byte, 16)
+	pwbytes := make([]byte, 18)
 	if _, err := rand.Read(pwbytes); err != nil {
 		return nil, "", err
 	}
