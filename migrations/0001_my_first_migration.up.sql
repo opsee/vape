@@ -5,6 +5,8 @@ SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 
+CREATE EXTENSION "uuid-ossp";
+
 --
 -- Name: update_time(); Type: FUNCTION; Schema: public; Owner: -
 --
@@ -61,6 +63,18 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
+-- Name: bastions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE bastions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v1mc(),
+    name character varying(255),
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
 -- Name: orgs; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -99,6 +113,7 @@ CREATE TABLE signups (
     id integer NOT NULL,
     email character varying(255),
     name character varying(255),
+    claimed boolean default false,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
@@ -189,6 +204,15 @@ ALTER TABLE ONLY signups
 --
 
 CREATE TRIGGER update_users BEFORE UPDATE ON users FOR EACH ROW EXECUTE PROCEDURE update_time();
+
+
+
+--
+-- Name: update_bastions; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_bastions BEFORE UPDATE ON bastions FOR EACH ROW EXECUTE PROCEDURE update_time();
+
   
 
 --
