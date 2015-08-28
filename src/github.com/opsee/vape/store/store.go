@@ -28,6 +28,9 @@ var queries = map[string]string{
 
         // orgs
         "insert-new-org": "insert into orgs (name) values NULL",
+
+        // bastions
+        "insert-bastions": "insert into bastions (password_hash) values $1 returning id",
 }
 
 func Init(pgConnection string) error {

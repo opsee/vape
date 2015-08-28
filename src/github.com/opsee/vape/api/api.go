@@ -182,3 +182,12 @@ func readJson(r *web.Request) (map[string]interface{}, error) {
 	}
 	return value, nil
 }
+
+func mustPresent(json map[string]interface{}, keys ...string) error {
+        for _, k := range keys {
+                if _, ok := json[k]; !ok {
+                        return errors.New("no key in json")
+                }
+        }
+        return nil
+}
