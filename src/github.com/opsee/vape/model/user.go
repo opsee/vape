@@ -18,6 +18,15 @@ type User struct {
 	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"` // not going in token
 }
 
+func NewUser(name, email, password string) *User {
+        passwordHash, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
+        return &User{
+                Email: email,
+                Name: name,
+                PasswordHash: string(passwordHash),
+        }
+}
+
 func (user *User) Authenticate(password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 }

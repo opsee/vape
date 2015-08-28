@@ -21,6 +21,7 @@ func init() {
         signupRouter.Post("/", (*SignupContext).CreateSignup)
         signupRouter.Get("/", (*SignupContext).ListSignups)
         signupRouter.Get("/:id", (*SignupContext).GetSignup)
+        signupRouter.Put("/:id", (*SignupContext).ClaimSignup)
 }
 
 func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
@@ -76,7 +77,59 @@ func (c *SignupContext) GetSignup(rw web.ResponseWriter, r *web.Request) {
                 return
         }
 
+        if c.Signup == nil {
+                rw.WriteHeader(http.StatusNotFound)
+                return
+        }
+
         writeJson(rw, c.Signup)
+}
+
+func (c *SignupContext) ClaimSignup(rw web.ResponseWriter, r *web.Request) {
+        json, err := readJson(r)
+        if err != nil {
+                rw.WriteHeader(http.StatusBadRequest)
+                return
+        }
+
+        token, ok := json["token"]
+        if !ok {
+                rw.WriteHeader(http.StatusBadRequest)
+                return
+        }
+
+        password, ok := json["password"]
+        if !ok {
+                rw.WriteHeader(http.StatusBadRequest)
+                return
+        }
+
+        err = c.FetchSignup(rw, r)
+        if err != nil {
+                return
+        }
+
+        if c.Signup == nil {
+                rw.WriteHeader(http.StatusNotFound)
+                return
+        }
+
+        user, err := servicer.ClaimSignup(c.Signup, token.(string), password.(string))
+        if err != nil {
+                switch err {
+                case servicer.SignupAlreadyClaimed:
+                        rw.WriteHeader(http.StatusConflict)
+                case servicer.RecordNotFound:
+                        rw.WriteHeader(http.StatusNotFound)
+                case servicer.SignupInvalidToken:
+                        rw.WriteHeader(http.StatusUnauthorized)
+                default:
+                        rw.WriteHeader(http.StatusInternalServerError)
+                }
+                return
+        }
+
+        writeJson(rw, user)
 }
 
 func (c *SignupContext) FetchSignup(rw web.ResponseWriter, r *web.Request) error {

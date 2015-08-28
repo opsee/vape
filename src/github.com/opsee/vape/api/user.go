@@ -55,12 +55,11 @@ func (c *UserContext) FetchUser(rw web.ResponseWriter, r *web.Request, next web.
         user, err := servicer.GetUser(c.Id)
         if err != nil {
                 c.Job.EventErr("error.getuser", err)
-                rw.WriteHeader(http.StatusInternalServerError)
-                return
-        }
-
-        if user == nil {
-                rw.WriteHeader(http.StatusNotFound)
+                if err == servicer.RecordNotFound {
+                        rw.WriteHeader(http.StatusNotFound)
+                } else {
+                        rw.WriteHeader(http.StatusInternalServerError)
+                }
                 return
         }
 

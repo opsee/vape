@@ -11,7 +11,7 @@ func GetUser(id int) (*model.User, error) {
         err := store.Get(user, "user-by-id", id)
         if err != nil {
                 if err == sql.ErrNoRows {
-                        return nil, nil
+                        return nil, RecordNotFound
                 }
 
                 return nil, err

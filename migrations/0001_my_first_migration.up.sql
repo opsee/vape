@@ -37,7 +37,7 @@ CREATE TABLE users (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     org_id integer NOT NULL,
-    name character varying(255)
+    name character varying(255) NOT NULL
 );
 
 
@@ -66,7 +66,7 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 CREATE TABLE orgs (
     id integer NOT NULL,
-    name character varying(255) NOT NULL,
+    name character varying(255),
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
