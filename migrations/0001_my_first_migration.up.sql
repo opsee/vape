@@ -68,7 +68,7 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 CREATE TABLE bastions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v1mc(),
-    name character varying(255),
+    password_hash character varying(60) NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
