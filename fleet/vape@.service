@@ -1,0 +1,20 @@
+[Unit]
+Description=Vape
+After=docker.service
+Requires=docker.service
+Wants=%p-private-elb@%i.service
+# Wants=%p-public-elb@%i.service
+
+[Service]
+Restart=always
+User=core
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill %p-%i
+ExecStartPre=-/usr/bin/docker rm %p-%i
+ExecStartPre=/usr/bin/docker pull quay.io/opsee/%p:latest
+ExecStartPre=/
+ExecStart=/usr/bin/docker run --name %p-%i -p 8081:8081 -p 9091:9091 quay.io/opsee/%p:latest /run.sh
+ExecStop=/usr/bin/docker stop %p-%i
+
+[X-Fleet]
+Conflicts=%p@*.service

@@ -43,6 +43,7 @@ func init() {
 		router.Middleware((*Context).Cors)
 		router.Middleware((*Context).UserSession)
 		router.NotFound((*Context).NotFound)
+		router.Get("/health", (*Context).Health)
 	}
 }
 
@@ -57,6 +58,11 @@ func ListenAndServe(publicAddr string, privateAddr string) {
 	go http.ListenAndServe(publicAddr, publicRouter)
 	http.ListenAndServe(privateAddr, privateRouter)
 }
+
+//
+// endpoints
+//
+func (c *Context) Health(rw web.ResponseWriter, r *web.Request) {}
 
 //
 // middleware
