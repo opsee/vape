@@ -3,6 +3,7 @@ package servicer
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 )
@@ -26,10 +27,32 @@ func GetSignup(id int) (*model.Signup, error) {
 	return signup, nil
 }
 
-func CreateSignup(signupParams map[string]interface{}) (*model.Signup, error) {
-	signup := model.NewSignup(signupParams)
-	_, err := store.NamedExec("insert-signup", signup)
+func CreateSignup(email, name string) (*model.Signup, error) {
+	signup := model.NewSignup(email, name)
+	err := store.NamedInsert("insert-signup", signup)
+	if err != nil {
+		return nil, err
+	}
 	return signup, err
+}
+
+func ActivateSignup(id int) error {
+	signup, err := GetSignup(id)
+	if err != nil {
+		return err
+	}
+
+	// send an email here!
+	go func() {
+		mergeVars := map[string]string{
+			"id":    fmt.Sprint(signup.Id),
+			"token": signup.Token(),
+			"name":  signup.Name,
+		}
+		mailTemplatedMessage(signup.Email, signup.Name, "activation", mergeVars)
+	}()
+
+	return nil
 }
 
 func ListSignups(perPage int, page int) ([]*model.Signup, error) {
@@ -45,7 +68,7 @@ func ListSignups(perPage int, page int) ([]*model.Signup, error) {
 	offset := (perPage * page) - perPage
 
 	signups := []*model.Signup{}
-	err := store.Select(signups, "list-signups", limit, offset)
+	err := store.Select(&signups, "list-signups", limit, offset)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +82,10 @@ func ClaimSignup(signup *model.Signup, token, password string) (*model.User, err
 	}
 
 	// ok, pop that stuff in the user, and make sure they're verified
-	user := model.NewUser(signup.Name, signup.Email, password)
+	user, err := model.NewUser(signup.Name, signup.Email, password)
+	if err != nil {
+		return nil, err
+	}
 	user.Verified = true
 	user.Active = true
 
@@ -81,17 +107,10 @@ func ClaimSignup(signup *model.Signup, token, password string) (*model.User, err
 		return nil, err
 	}
 
-	// need to pull out the generated user id, so use a query instead
-	rows, err := tx.NamedQuery("insert-user", user)
+	err = tx.NamedInsert("insert-user", user)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
-	}
-	for rows.Next() {
-		if err = rows.StructScan(user); err != nil {
-			tx.Rollback()
-			return nil, err
-		}
 	}
 
 	if err = tx.Commit(); err != nil {

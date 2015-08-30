@@ -14,15 +14,9 @@ func CreateBastion(orgId int) (*model.Bastion, string, error) {
 	// we'll want to activate the bastion as well
 	bastion.Active = true
 
-	// need to pull out the generated bastion id, so use a query instead
-	rows, err := store.NamedQuery("insert-bastion", bastion)
+	err = store.NamedInsert("insert-bastion", bastion)
 	if err != nil {
 		return nil, "", err
-	}
-	for rows.Next() {
-		if err = rows.StructScan(bastion); err != nil {
-			return nil, "", err
-		}
 	}
 
 	return bastion, plaintext, nil

@@ -19,20 +19,11 @@ type Signup struct {
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 }
 
-func NewSignup(params map[string]interface{}) *Signup {
-	signup := &Signup{}
-
-	email, ok := params["email"]
-	if ok {
-		signup.Email = email.(string)
+func NewSignup(email, name string) *Signup {
+	return &Signup{
+		Email: email,
+		Name:  name,
 	}
-
-	name, ok := params["name"]
-	if ok {
-		signup.Name = name.(string)
-	}
-
-	return signup
 }
 
 func (s *Signup) Token() string {

@@ -44,6 +44,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/keighl/mandrill",
+			"repository": "https://github.com/keighl/mandrill",
+			"revision": "5d7133fb578a9504f8ab549737c993422f65a000",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/lib/pq",
 			"repository": "https://github.com/lib/pq",
 			"revision": "b269bd035a727d6c1081f76e7a239a1b00674c40",

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"github.com/gocraft/web"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
@@ -21,7 +22,8 @@ func init() {
 	signupRouter.Post("/", (*SignupContext).CreateSignup)
 	signupRouter.Get("/", (*SignupContext).ListSignups)
 	signupRouter.Get("/:id", (*SignupContext).GetSignup)
-	signupRouter.Put("/:id", (*SignupContext).ClaimSignup)
+	signupRouter.Post("/:id/claim", (*SignupContext).ClaimSignup)
+	signupRouter.Put("/:id/activate", (*SignupContext).ActivateSignup)
 }
 
 func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
@@ -40,8 +42,10 @@ func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
 		page = 1
 	}
 
+	c.Job.EventKv("list.params", map[string]string{"page": fmt.Sprint(page), "per_page": fmt.Sprint(perPage)})
 	signups, err := servicer.ListSignups(perPage, page)
 	if err != nil {
+		c.Job.EventErr("error.select", err)
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -56,14 +60,61 @@ func (c *SignupContext) CreateSignup(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
+	if err = mustPresent(json, "name", "email"); err != nil {
+		c.Job.EventErr("error.parse", err)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	email, ok := json["email"].(string)
+	if !ok {
+		c.Job.EventErr("error.parse", err)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	name, ok := json["name"].(string)
+	if !ok {
+		c.Job.EventErr("error.parse", err)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// anyone is authorized for this
-	signup, err := servicer.CreateSignup(json)
+	signup, err := servicer.CreateSignup(email, name)
 	if err != nil {
+		c.Job.EventErr("error.create", err)
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	writeJson(rw, signup)
+}
+
+func (c *SignupContext) ActivateSignup(rw web.ResponseWriter, r *web.Request) {
+	if c.CurrentUser == nil || c.CurrentUser.Admin != true {
+		rw.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	err := c.FetchSignup(rw, r)
+	if err != nil {
+		c.Job.EventErr("error.fetch", err)
+		return
+	}
+
+	if c.Signup == nil {
+		rw.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	err = servicer.ActivateSignup(c.Signup.Id)
+	if err != nil {
+		c.Job.EventErr("error.fetch", err)
+		return
+	}
+
+	writeJson(rw, map[string]interface{}{"token": c.Signup.Token()})
 }
 
 func (c *SignupContext) GetSignup(rw web.ResponseWriter, r *web.Request) {
@@ -74,6 +125,7 @@ func (c *SignupContext) GetSignup(rw web.ResponseWriter, r *web.Request) {
 
 	err := c.FetchSignup(rw, r)
 	if err != nil {
+		c.Job.EventErr("error.fetch", err)
 		return
 	}
 
@@ -116,6 +168,7 @@ func (c *SignupContext) ClaimSignup(rw web.ResponseWriter, r *web.Request) {
 
 	user, err := servicer.ClaimSignup(c.Signup, token.(string), password.(string))
 	if err != nil {
+		c.Job.EventErr("error.claim", err)
 		switch err {
 		case servicer.SignupAlreadyClaimed:
 			rw.WriteHeader(http.StatusConflict)
