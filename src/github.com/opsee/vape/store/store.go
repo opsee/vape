@@ -18,7 +18,7 @@ var queries = map[string]string{
 	"user-by-id":               "select * from users where id = $1",
 	"delete-user-by-id":        "delete from users where id = $1",
 	"update-user":              "update users set name = :name, email = :email, password_hash = :password_hash where id = :id",
-	"insert-user":              "insert into users (org_id, email, name, verified, active) values :org_id, :email, :name, :verified, :active",
+	"insert-user":              "insert into users (org_id, email, name, verified, active) values :org_id, :email, :name, :verified, :active returning *",
 
 	// signups
 	"signup-by-id":  "select * from signups where id = $1",
@@ -27,11 +27,11 @@ var queries = map[string]string{
 	"claim-signup":  "update signups set claimed = true where id = $1",
 
 	// orgs
-	"insert-new-org": "insert into orgs (name) values NULL",
+	"insert-new-org": "insert into orgs (name) values NULL returning id",
 
 	// bastions
-	"insert-bastion": "insert into bastions (password_hash) values ($1) returning id",
-	"bastion-by-id":  "select * from bastions where id = $1",
+	"insert-bastion":           "insert into bastions (password_hash, org_id) values (:password_hash, :org_id) returning *",
+	"bastion-by-id-and-active": "select * from bastions where id = $1 and active = $2",
 }
 
 func Init(pgConnection string) error {
@@ -61,7 +61,11 @@ func Exec(queryKey string, args ...interface{}) (sql.Result, error) {
 }
 
 func NamedExec(queryKey string, arg interface{}) (sql.Result, error) {
-	return DB.NamedExec(queryKey, arg)
+	return DB.NamedExec(queries[queryKey], arg)
+}
+
+func NamedQuery(queryKey string, arg interface{}) (*sqlx.Rows, error) {
+	return DB.NamedQuery(queries[queryKey], arg)
 }
 
 func Beginx() (*Tx, error) {
@@ -83,4 +87,8 @@ func (tx *Tx) Exec(queryKey string, args ...interface{}) (sql.Result, error) {
 
 func (tx *Tx) NamedExec(queryKey string, arg interface{}) (sql.Result, error) {
 	return tx.NamedExec(queryKey, arg)
+}
+
+func (tx *Tx) NamedQuery(queryKey string, arg interface{}) (*sqlx.Rows, error) {
+	return tx.NamedQuery(queries[queryKey], arg)
 }

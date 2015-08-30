@@ -10,12 +10,14 @@ import (
 type Bastion struct {
 	Id           string    `json:"id"`
 	PasswordHash string    `json:"_" db:"password_hash"`
+	OrgId        int       `json:"org_id" db:"org_id"`
+	Active       bool      `json:"active"`
 	CreatedAt    time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"`
 }
 
 // also returns a plaintext password generated here
-func NewBastion() (*Bastion, string, error) {
+func NewBastion(orgId int) (*Bastion, string, error) {
 	pwbytes := make([]byte, 18)
 	if _, err := rand.Read(pwbytes); err != nil {
 		return nil, "", err
@@ -27,7 +29,7 @@ func NewBastion() (*Bastion, string, error) {
 		return nil, "", err
 	}
 
-	bastion := &Bastion{PasswordHash: string(pwhash)}
+	bastion := &Bastion{PasswordHash: string(pwhash), OrgId: orgId}
 	return bastion, pw, nil
 }
 
