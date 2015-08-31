@@ -32,6 +32,10 @@ var (
 	}
 )
 
+// @APIVersion 0.0.1
+// @APITitle Vape API
+// @APIDescription API for user/org management and authentication
+
 func init() {
 	// we're creating a separate router instances to listen on separate ports
 	// as a result, we have to be repeat ourselves
