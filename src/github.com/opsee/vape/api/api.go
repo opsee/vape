@@ -49,6 +49,7 @@ func init() {
 		router.Middleware((*Context).UserSession)
 		router.NotFound((*Context).NotFound)
 		router.Get("/health", (*Context).Health)
+		router.Get("/swagger.json", (*Context).Docs)
 	}
 }
 
@@ -68,6 +69,10 @@ func ListenAndServe(publicAddr string, privateAddr string) {
 // endpoints
 //
 func (c *Context) Health(rw web.ResponseWriter, r *web.Request) {}
+
+func (c *Context) Docs(rw web.ResponseWriter, r *web.Request) {
+	rw.Write([]byte(swaggerJson))
+}
 
 //
 // middleware
@@ -177,7 +182,7 @@ func (c *Context) Cors(rw web.ResponseWriter, r *web.Request, next web.NextMiddl
 func (c *Context) Options(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
 	if r.Method == "OPTIONS" {
 		header := rw.Header()
-		header.Set("Access-Control-Allow-Method", "GET, PUT, POST, PATCH, DELETE")
+		header.Set("Access-Control-Allow-Methods", "GET, PUT, POST, PATCH, DELETE")
 		header.Set("Access-Control-Allow-Headers", "Accept-Encoding,Authorization,Content-Type")
 		header.Set("Access-Control-Max-Age", "1728000")
 		return

@@ -26,7 +26,9 @@ Documentation for annotating api and model files can be found here: https://gith
 # install the go swagger tool
 go get github.com/yvasiyarov/swagger
 
-# generate the swagger files
+# you'll also need a spec converter tool since we don't have swagger 2.0 in go yet
+npm install -g api-spec-converter
+
+# generate the swagger file
 make swagger
 ```
-

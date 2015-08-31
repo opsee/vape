@@ -16,7 +16,6 @@ type UserContext struct {
 
 var userRouter *web.Router
 
-// @SubApi User API [/users]
 func init() {
 	userRouter = publicRouter.Subrouter(UserContext{}, "/users")
 	userRouter.Middleware((*UserContext).Authorized)
