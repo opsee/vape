@@ -3,26 +3,6 @@ vape
 
 A tokin' generator and login management. It will manage teams/organizations also. We'll see.
 
-
-authentications
-- password
-- refresh
-- oauth callback
-
-logins
-- delete
-- update
-- show
-
-signups
-- create
-- list
-- show
-- approve
-- claim
-
-
-
 ### migrations
 
 ```
@@ -33,6 +13,20 @@ go get github.com/mattes/migrate
 migrate -url postgres://snorecone@localhost/vape_dev?sslmode=disable -path ./migrations create my_migration_name
 
 # migrate up
-migrate -url postgres://snorecone@localhost/vape_dev?sslmode=disable -path ./migrations up
+make migrate
 
 ```
+
+### swagger
+
+Documentation for annotating api and model files can be found here: https://github.com/yvasiyarov/swagger/wiki/Declarative-Comments-Format
+
+
+```
+# install the go swagger tool
+go get github.com/yvasiyarov/swagger
+
+# generate the swagger files
+make swagger
+```
+
