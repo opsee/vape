@@ -6,14 +6,14 @@
     "apis": [
         {
             "path": "/authenticate/password",
-            "description": "authenticates a user with email and password",
+            "description": "Authenticates a user with email and password.",
             "operations": [
                 {
                     "httpMethod": "POST",
                     "nickname": "authenticateFromPassword",
                     "type": "interface",
                     "items": {},
-                    "summary": "authenticates a user with email and password",
+                    "summary": "Authenticates a user with email and password.",
                     "parameters": [
                         {
                             "paramType": "query",
@@ -59,14 +59,14 @@
         },
         {
             "path": "/authenticate/echo",
-            "description": "echos a user session given an authentication token",
+            "description": "Echos a user session given an authentication token.",
             "operations": [
                 {
                     "httpMethod": "GET",
                     "nickname": "echoSession",
                     "type": "github.com.opsee.vape.model.User",
                     "items": {},
-                    "summary": "echos a user session given an authentication token",
+                    "summary": "Echos a user session given an authentication token.",
                     "parameters": [
                         {
                             "paramType": "header",

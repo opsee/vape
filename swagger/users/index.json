@@ -1,0 +1,252 @@
+{
+    "apiVersion": "0.0.1",
+    "swaggerVersion": "1.2",
+    "basePath": "{{.}}",
+    "resourcePath": "/users",
+    "apis": [
+        {
+            "path": "/users/{id}",
+            "description": "Get a single user.",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "nickname": "getUser",
+                    "type": "github.com.opsee.vape.model.User",
+                    "items": {},
+                    "summary": "Get a single user.",
+                    "parameters": [
+                        {
+                            "paramType": "header",
+                            "name": "Authorization",
+                            "description": "The Bearer token - an admin user token or a token with matching id is required",
+                            "dataType": "string",
+                            "type": "string",
+                            "format": "",
+                            "allowMultiple": false,
+                            "required": true,
+                            "minimum": 0,
+                            "maximum": 0
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "description": "The user id",
+                            "dataType": "int",
+                            "type": "int",
+                            "format": "",
+                            "allowMultiple": false,
+                            "required": true,
+                            "minimum": 0,
+                            "maximum": 0
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 200,
+                            "message": "",
+                            "responseType": "object",
+                            "responseModel": "github.com.opsee.vape.model.User"
+                        },
+                        {
+                            "code": 401,
+                            "message": "Response will be empty",
+                            "responseType": "object",
+                            "responseModel": "interface"
+                        }
+                    ]
+                },
+                {
+                    "httpMethod": "PUT",
+                    "nickname": "updateUser",
+                    "type": "github.com.opsee.vape.model.User",
+                    "items": {},
+                    "summary": "Update a single user.",
+                    "parameters": [
+                        {
+                            "paramType": "header",
+                            "name": "Authorization",
+                            "description": "The Bearer token - an admin user token or a token with matching id is required",
+                            "dataType": "string",
+                            "type": "string",
+                            "format": "",
+                            "allowMultiple": false,
+                            "required": true,
+                            "minimum": 0,
+                            "maximum": 0
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "description": "The user id",
+                            "dataType": "int",
+                            "type": "int",
+                            "format": "",
+                            "allowMultiple": false,
+                            "required": true,
+                            "minimum": 0,
+                            "maximum": 0
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "email",
+                            "description": "A new email address",
+                            "dataType": "string",
+                            "type": "string",
+                            "format": "",
+                            "allowMultiple": false,
+                            "required": true,
+                            "minimum": 0,
+                            "maximum": 0
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "name",
+                            "description": "A new name",
+                            "dataType": "string",
+                            "type": "string",
+                            "format": "",
+                            "allowMultiple": false,
+                            "required": true,
+                            "minimum": 0,
+                            "maximum": 0
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "password",
+                            "description": "A new password",
+                            "dataType": "string",
+                            "type": "string",
+                            "format": "",
+                            "allowMultiple": false,
+                            "required": true,
+                            "minimum": 0,
+                            "maximum": 0
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 200,
+                            "message": "",
+                            "responseType": "object",
+                            "responseModel": "github.com.opsee.vape.model.User"
+                        },
+                        {
+                            "code": 401,
+                            "message": "Response will be empty",
+                            "responseType": "object",
+                            "responseModel": "interface"
+                        }
+                    ]
+                },
+                {
+                    "httpMethod": "DELETE",
+                    "nickname": "deleteUser",
+                    "type": "interface",
+                    "items": {},
+                    "summary": "Update a single user.",
+                    "parameters": [
+                        {
+                            "paramType": "header",
+                            "name": "Authorization",
+                            "description": "The Bearer token - an admin user token or a token with matching id is required",
+                            "dataType": "string",
+                            "type": "string",
+                            "format": "",
+                            "allowMultiple": false,
+                            "required": true,
+                            "minimum": 0,
+                            "maximum": 0
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "description": "The user id",
+                            "dataType": "int",
+                            "type": "int",
+                            "format": "",
+                            "allowMultiple": false,
+                            "required": true,
+                            "minimum": 0,
+                            "maximum": 0
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 200,
+                            "message": "Response will be empty",
+                            "responseType": "object",
+                            "responseModel": "interface"
+                        },
+                        {
+                            "code": 401,
+                            "message": "Response will be empty",
+                            "responseType": "object",
+                            "responseModel": "interface"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "github.com.opsee.vape.model.User": {
+            "id": "github.com.opsee.vape.model.User",
+            "properties": {
+                "active": {
+                    "type": "bool",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "admin": {
+                    "type": "bool",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "created_at": {
+                    "type": "Time",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "email": {
+                    "type": "string",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "id": {
+                    "type": "int",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "name": {
+                    "type": "string",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "org_id": {
+                    "type": "int",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "updated_at": {
+                    "type": "Time",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "verified": {
+                    "type": "bool",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                }
+            }
+        }
+    }
+}

@@ -18,7 +18,6 @@ const tokenExpHours = 1
 var authRouter *web.Router
 
 // @SubApi Authentication API [/authenticate]
-
 func init() {
 	authRouter = publicRouter.Subrouter(AuthContext{}, "/authenticate")
 	authRouter.Post("/password", (*AuthContext).CreateAuthPassword)
@@ -33,7 +32,6 @@ func init() {
 // @Success 200 {object}    interface                    "Response will be empty"
 // @Failure 401 {object}    interface           	 "Response will be empty"
 // @Router /authenticate/password [post]
-
 func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) {
 	postJson, err := readJson(r)
 	if err != nil || postJson["email"] == nil || postJson["password"] == nil {
@@ -81,7 +79,6 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 // @Param   Authorization   header   string  true         "The Bearer token"
 // @Success 200 {object}    model.User
 // @Router /authenticate/echo [get]
-
 func (c *AuthContext) Echo(rw web.ResponseWriter, r *web.Request) {
 	writeJson(rw, c.CurrentUser)
 }

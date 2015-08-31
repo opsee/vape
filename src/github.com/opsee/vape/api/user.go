@@ -17,7 +17,6 @@ type UserContext struct {
 var userRouter *web.Router
 
 // @SubApi User API [/users]
-
 func init() {
 	userRouter = publicRouter.Subrouter(UserContext{}, "/users")
 	userRouter.Middleware((*UserContext).Authorized)
@@ -73,11 +72,10 @@ func (c *UserContext) FetchUser(rw web.ResponseWriter, r *web.Request, next web.
 // @Description Get a single user.
 // @Accept  json
 // @Param   Authorization    header string  true        "The Bearer token - an admin user token or a token with matching id is required"
-// @Param   id               path   integer  true       "The user id"
+// @Param   id               path   int     true       "The user id"
 // @Success 200 {object}     model.User              ""
 // @Failure 401 {object}     interface           	 "Response will be empty"
 // @Router /users/{id} [get]
-
 func (c *UserContext) GetUser(rw web.ResponseWriter, r *web.Request) {
 	writeJson(rw, c.User)
 }
@@ -86,14 +84,13 @@ func (c *UserContext) GetUser(rw web.ResponseWriter, r *web.Request) {
 // @Description Update a single user.
 // @Accept  json
 // @Param   Authorization    header string  true        "The Bearer token - an admin user token or a token with matching id is required"
-// @Param   id               path   integer  true       "The user id"
+// @Param   id               path   int     true       "The user id"
 // @Param   email            body   string  true        "A new email address"
 // @Param   name             body   string  true        "A new name"
 // @Param   password         body   string  true        "A new password"
 // @Success 200 {object}     model.User                  ""
 // @Failure 401 {object}     interface           	 "Response will be empty"
 // @Router /users/{id} [put]
-
 func (c *UserContext) UpdateUser(rw web.ResponseWriter, r *web.Request) {
 	userJson, err := readJson(r)
 	if err != nil {
@@ -116,11 +113,10 @@ func (c *UserContext) UpdateUser(rw web.ResponseWriter, r *web.Request) {
 // @Description Update a single user.
 // @Accept  json
 // @Param   Authorization    header string  true        "The Bearer token - an admin user token or a token with matching id is required"
-// @Param   id               path   integer  true       "The user id"
+// @Param   id               path   int     true       "The user id"
 // @Success 200 {object}     interface                  "Response will be empty"
 // @Failure 401 {object}     interface           	"Response will be empty"
 // @Router /users/{id} [delete]
-
 func (c *UserContext) DeleteUser(rw web.ResponseWriter, r *web.Request) {
 	err := servicer.DeleteUser(c.Id)
 	if err != nil {

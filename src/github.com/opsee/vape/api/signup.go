@@ -18,7 +18,6 @@ type SignupContext struct {
 var signupRouter *web.Router
 
 // @SubApi Signup API [/signups]
-
 func init() {
 	signupRouter = publicRouter.Subrouter(SignupContext{}, "/signups")
 	signupRouter.Post("/", (*SignupContext).CreateSignup)
@@ -32,12 +31,11 @@ func init() {
 // @Description List all signups.
 // @Accept  json
 // @Param   Authorization   header   string  true        "The Bearer token - an admin user token is required"
-// @Param   per_page        query   integer  false       "Pagination - number of records per page"
-// @Param   page            query   integer  false       "Pagination - which page"
+// @Param   per_page        query    int     false       "Pagination - number of records per page"
+// @Param   page            query    int     false       "Pagination - which page"
 // @Success 200 {array}     model.Signup                 ""
 // @Failure 401 {object}    interface           	 "Response will be empty"
 // @Router /signups [get]
-
 func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
 	if c.CurrentUser == nil || c.CurrentUser.Admin != true {
 		rw.WriteHeader(http.StatusUnauthorized)
@@ -72,7 +70,6 @@ func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
 // @Param   email            body   string  true       "The user's email"
 // @Success 200 {object}     model.Signup              ""
 // @Router /signups [post]
-
 func (c *SignupContext) CreateSignup(rw web.ResponseWriter, r *web.Request) {
 	json, err := readJson(r)
 	if err != nil {
@@ -114,10 +111,9 @@ func (c *SignupContext) CreateSignup(rw web.ResponseWriter, r *web.Request) {
 // @Title activateSignup
 // @Description Sends the activation email for a signup. Can be called multiple times to send multiple emails.
 // @Accept  json
-// @Param   id               path   integer  true   "The signup's id"
+// @Param   id               path      int   true   "The signup's id"
 // @Success 200 {object}     interface              "An object with the claim token used to verify the signup (sent in email)"
 // @Router /signups/{id}/activate [put]
-
 func (c *SignupContext) ActivateSignup(rw web.ResponseWriter, r *web.Request) {
 	if c.CurrentUser == nil || c.CurrentUser.Admin != true {
 		rw.WriteHeader(http.StatusUnauthorized)
@@ -148,11 +144,10 @@ func (c *SignupContext) ActivateSignup(rw web.ResponseWriter, r *web.Request) {
 // @Description Get a single signup.
 // @Accept  json
 // @Param   Authorization   header   string  true        "The Bearer token - an admin user token is required"
-// @Param   id              path     integer  true       "The signup id"
+// @Param   id              path     int     true       "The signup id"
 // @Success 200 {object}    model.Signup                 ""
 // @Failure 401 {object}    interface           	 "Response will be empty"
 // @Router /signups/{id} [get]
-
 func (c *SignupContext) GetSignup(rw web.ResponseWriter, r *web.Request) {
 	if c.CurrentUser == nil || c.CurrentUser.Admin != true {
 		rw.WriteHeader(http.StatusUnauthorized)
@@ -176,14 +171,13 @@ func (c *SignupContext) GetSignup(rw web.ResponseWriter, r *web.Request) {
 // @Title claimSignup
 // @Description Claim a signup and turn it into a user (usually from a url in an activation email).
 // @Accept  json
-// @Param   id              path   integer true       "The signup id"
+// @Param   id              path   int     true       "The signup id"
 // @Param   token           body   string  true       "The signup verification token"
 // @Param   password        body   string  true       "The desired plaintext password for the new user"
 // @Success 200 {array}     model.User                 ""
 // @Failure 401 {object}    interface           	 "Response will be empty"
 // @Failure 409 {object}    interface           	 "Response will be empty"
 // @Router /signups/{id}/claim [post]
-
 func (c *SignupContext) ClaimSignup(rw web.ResponseWriter, r *web.Request) {
 	json, err := readJson(r)
 	if err != nil {

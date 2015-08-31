@@ -3,16 +3,16 @@
     "swaggerVersion": "1.2",
     "apis": [
         {
-            "path": "/authenticate",
-            "description": "Authentication API"
-        },
-        {
             "path": "/signups",
             "description": "Signup API"
         },
         {
             "path": "/users",
             "description": "User API"
+        },
+        {
+            "path": "/authenticate",
+            "description": "Authentication API"
         }
     ],
     "info": {
