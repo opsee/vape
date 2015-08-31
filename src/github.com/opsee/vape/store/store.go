@@ -30,7 +30,7 @@ var queries = map[string]string{
 	"insert-new-org": "insert into orgs (name) values (NULL) returning id",
 
 	// bastions
-	"insert-bastion":           "insert into bastions (password_hash, org_id) values (:password_hash, :org_id) returning *",
+	"insert-bastion":           "insert into bastions (password_hash, org_id, active) values (:password_hash, :org_id, :active) returning *",
 	"bastion-by-id-and-active": "select * from bastions where id = $1 and active = $2",
 }
 
