@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
+	"github.com/opsee/vape/token"
+	"time"
 )
 
 func GetUser(id int) (*model.User, error) {
@@ -33,4 +35,9 @@ func UpdateUser(user *model.User, newUserParams map[string]interface{}) error {
 func DeleteUser(id int) error {
 	_, err := store.Exec("delete-user-by-id", id)
 	return err
+}
+
+func TokenUser(user *model.User) (string, error) {
+	token := token.New(user, user.Email, time.Now(), time.Now().Add(time.Hour*token.ExpHours))
+	return token.Marshal()
 }

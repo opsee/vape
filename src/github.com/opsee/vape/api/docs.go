@@ -307,10 +307,8 @@ var swaggerJson = `
           "200": {
             "description": "Description was not specified",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/github.com.opsee.vape.model.User"
-              }
+              "$ref": "#/definitions/github.com.opsee.vape.model.User",
+              "items": {}
             }
           },
           "401": {

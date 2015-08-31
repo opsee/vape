@@ -131,7 +131,9 @@ func (c *SignupContext) ActivateSignup(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	err = servicer.ActivateSignup(c.Signup.Id)
+	referer := r.Header.Get("Referer")
+
+	err = servicer.ActivateSignup(c.Signup.Id, referer)
 	if err != nil {
 		c.Job.EventErr("error.fetch", err)
 		return
@@ -174,9 +176,9 @@ func (c *SignupContext) GetSignup(rw web.ResponseWriter, r *web.Request) {
 // @Param   id              path   int     true       "The signup id"
 // @Param   token           body   string  true       "The signup verification token"
 // @Param   password        body   string  true       "The desired plaintext password for the new user"
-// @Success 200 {array}     model.User                 ""
-// @Failure 401 {object}    interface           	 "Response will be empty"
-// @Failure 409 {object}    interface           	 "Response will be empty"
+// @Success 200 {object}    model.User                ""
+// @Failure 401 {object}    interface                 "Response will be empty"
+// @Failure 409 {object}    interface                 "Response will be empty"
 // @Router /signups/{id}/claim [post]
 func (c *SignupContext) ClaimSignup(rw web.ResponseWriter, r *web.Request) {
 	json, err := readJson(r)
@@ -223,7 +225,17 @@ func (c *SignupContext) ClaimSignup(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	writeJson(rw, user)
+	tokenString, err := servicer.TokenUser(user)
+	if err != nil {
+		c.Job.EventErr("error.token", err)
+		rw.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	writeJson(rw, map[string]interface{}{
+		"user":  user,
+		"token": tokenString,
+	})
 }
 
 func (c *SignupContext) FetchSignup(rw web.ResponseWriter, r *web.Request) error {

@@ -3,17 +3,14 @@ package api
 import (
 	"github.com/gocraft/web"
 	"github.com/opsee/vape/model"
+	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
-	"github.com/opsee/vape/token"
 	"net/http"
-	"time"
 )
 
 type AuthContext struct {
 	*Context
 }
-
-const tokenExpHours = 1
 
 var authRouter *web.Router
 
@@ -59,8 +56,7 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 		return
 	}
 
-	token := token.New(user, user.Email, time.Now(), time.Now().Add(time.Hour*tokenExpHours))
-	tokenString, err := token.Marshal()
+	token, err := servicer.TokenUser(user)
 	if err != nil {
 		c.Job.EventErr("token-marshal", err)
 		rw.WriteHeader(http.StatusInternalServerError)
@@ -69,7 +65,7 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 
 	writeJson(rw, map[string]interface{}{
 		"user":  user,
-		"token": tokenString,
+		"token": token,
 	})
 }
 
