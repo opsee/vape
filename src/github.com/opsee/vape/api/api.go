@@ -45,6 +45,7 @@ func init() {
 		router.Middleware((*Context).CatchPanics)
 		router.Middleware((*Context).SetContentType)
 		router.Middleware((*Context).Cors)
+		router.Middleware((*Context).Options)
 		router.Middleware((*Context).UserSession)
 		router.NotFound((*Context).NotFound)
 		router.Get("/health", (*Context).Health)
@@ -169,6 +170,17 @@ func (c *Context) Cors(rw web.ResponseWriter, r *web.Request, next web.NextMiddl
 			header := rw.Header()
 			header.Set("Access-Control-Allow-Origin", o)
 		}
+	}
+	next(rw, r)
+}
+
+func (c *Context) Options(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
+	if r.Method == "OPTIONS" {
+		header := rw.Header()
+		header.Set("Access-Control-Allow-Method", "GET, PUT, POST, PATCH, DELETE")
+		header.Set("Access-Control-Allow-Headers", "Accept-Encoding,Authorization,Content-Type")
+		header.Set("Access-Control-Max-Age", "1728000")
+		return
 	}
 	next(rw, r)
 }
