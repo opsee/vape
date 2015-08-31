@@ -17,11 +17,22 @@ const tokenExpHours = 1
 
 var authRouter *web.Router
 
+// @SubApi Authentication API [/authenticate]
+
 func init() {
 	authRouter = publicRouter.Subrouter(AuthContext{}, "/authenticate")
 	authRouter.Post("/password", (*AuthContext).CreateAuthPassword)
 	authRouter.Get("/echo", (*AuthContext).Echo) // for testing
 }
+
+// @Title authenticateFromPassword
+// @Description Authenticates a user with email and password.
+// @Accept  json
+// @Param   email           query   string  true         "A user's email"
+// @Param   password        body    string  true         "A user's password"
+// @Success 200 {object}    interface                    "Response will be empty"
+// @Failure 401 {object}    interface           	 "Response will be empty"
+// @Router /authenticate/password [post]
 
 func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) {
 	postJson, err := readJson(r)
@@ -63,6 +74,13 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 		"token": tokenString,
 	})
 }
+
+// @Title echoSession
+// @Description Echos a user session given an authentication token.
+// @Accept  json
+// @Param   Authorization   header   string  true         "The Bearer token"
+// @Success 200 {object}    model.User
+// @Router /authenticate/echo [get]
 
 func (c *AuthContext) Echo(rw web.ResponseWriter, r *web.Request) {
 	writeJson(rw, c.CurrentUser)

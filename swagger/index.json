@@ -1,0 +1,22 @@
+{
+    "apiVersion": "0.0.1",
+    "swaggerVersion": "1.2",
+    "apis": [
+        {
+            "path": "/signups",
+            "description": "Signup API"
+        },
+        {
+            "path": "/users",
+            "description": "User API"
+        },
+        {
+            "path": "/authenticate",
+            "description": "Authentication API"
+        }
+    ],
+    "info": {
+        "title": "Vape API",
+        "description": "API for user/org management and authentication"
+    }
+}

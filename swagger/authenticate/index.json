@@ -1,0 +1,157 @@
+{
+    "apiVersion": "0.0.1",
+    "swaggerVersion": "1.2",
+    "basePath": "{{.}}",
+    "resourcePath": "/authenticate",
+    "apis": [
+        {
+            "path": "/authenticate/password",
+            "description": "authenticates a user with email and password",
+            "operations": [
+                {
+                    "httpMethod": "POST",
+                    "nickname": "authenticateFromPassword",
+                    "type": "interface",
+                    "items": {},
+                    "summary": "authenticates a user with email and password",
+                    "parameters": [
+                        {
+                            "paramType": "query",
+                            "name": "email",
+                            "description": "A user's email",
+                            "dataType": "string",
+                            "type": "string",
+                            "format": "",
+                            "allowMultiple": false,
+                            "required": true,
+                            "minimum": 0,
+                            "maximum": 0
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "password",
+                            "description": "A user's password",
+                            "dataType": "string",
+                            "type": "string",
+                            "format": "",
+                            "allowMultiple": false,
+                            "required": true,
+                            "minimum": 0,
+                            "maximum": 0
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 200,
+                            "message": "Response will be empty",
+                            "responseType": "object",
+                            "responseModel": "interface"
+                        },
+                        {
+                            "code": 401,
+                            "message": "Response will be empty",
+                            "responseType": "object",
+                            "responseModel": "interface"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/authenticate/echo",
+            "description": "echos a user session given an authentication token",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "nickname": "echoSession",
+                    "type": "github.com.opsee.vape.model.User",
+                    "items": {},
+                    "summary": "echos a user session given an authentication token",
+                    "parameters": [
+                        {
+                            "paramType": "header",
+                            "name": "Authorization",
+                            "description": "The Bearer token",
+                            "dataType": "string",
+                            "type": "string",
+                            "format": "",
+                            "allowMultiple": false,
+                            "required": true,
+                            "minimum": 0,
+                            "maximum": 0
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 200,
+                            "message": "",
+                            "responseType": "object",
+                            "responseModel": "github.com.opsee.vape.model.User"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "github.com.opsee.vape.model.User": {
+            "id": "github.com.opsee.vape.model.User",
+            "properties": {
+                "active": {
+                    "type": "bool",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "admin": {
+                    "type": "bool",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "created_at": {
+                    "type": "Time",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "email": {
+                    "type": "string",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "id": {
+                    "type": "int",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "name": {
+                    "type": "string",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "org_id": {
+                    "type": "int",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "updated_at": {
+                    "type": "Time",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                },
+                "verified": {
+                    "type": "bool",
+                    "description": "",
+                    "items": {},
+                    "format": ""
+                }
+            }
+        }
+    }
+}
