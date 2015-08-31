@@ -17,6 +17,7 @@ type SignupContext struct {
 
 var signupRouter *web.Router
 
+// @SubApi Signup API [/signups]
 func init() {
 	signupRouter = publicRouter.Subrouter(SignupContext{}, "/signups")
 	signupRouter.Post("/", (*SignupContext).CreateSignup)

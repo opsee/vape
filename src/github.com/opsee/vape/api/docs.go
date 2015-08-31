@@ -12,15 +12,15 @@ var swaggerJson = `
   "tags": [
     {
       "name": "authenticate",
-      "description": "Authenticates a user with email and password."
+      "description": "Authentication API"
     },
     {
       "name": "signups",
-      "description": "List all signups."
+      "description": "Signup API"
     },
     {
       "name": "users",
-      "description": "Get a single user."
+      "description": "User API"
     }
   ],
   "paths": {
