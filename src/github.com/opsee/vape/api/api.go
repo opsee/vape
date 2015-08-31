@@ -192,12 +192,10 @@ func (c *Context) Options(rw web.ResponseWriter, r *web.Request, next web.NextMi
 
 func (c *Context) NotFound(rw web.ResponseWriter, r *web.Request) {
 	rw.WriteHeader(http.StatusNotFound)
-	fmt.Fprintf(rw, "{\"errors\":{\"error\":\"not found\"}}\n")
 }
 
 func renderServerError(rw web.ResponseWriter) {
 	rw.WriteHeader(500)
-	fmt.Fprintf(rw, "{\"errors\":{\"error\":\"not good\"}}\n")
 }
 
 func writeJson(rw web.ResponseWriter, data interface{}) {
