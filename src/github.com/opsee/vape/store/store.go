@@ -18,7 +18,7 @@ var queries = map[string]string{
 	"user-by-id":               "select * from users where id = $1",
 	"delete-user-by-id":        "delete from users where id = $1",
 	"update-user":              "update users set name = :name, email = :email, password_hash = :password_hash where id = :id",
-	"insert-user":              "insert into users (org_id, email, name, verified, active, password_hash) values (:org_id, :email, :name, :verified, :active, :password_hash) returning *",
+	"insert-user":              "insert into users (customer_id, email, name, verified, active, password_hash) values (:customer_id, :email, :name, :verified, :active, :password_hash) returning *",
 
 	// signups
 	"signup-by-id":  "select * from signups where id = $1",
@@ -26,11 +26,11 @@ var queries = map[string]string{
 	"list-signups":  "select * from signups limit $1 offset $2",
 	"claim-signup":  "update signups set claimed = true where id = $1",
 
-	// orgs
-	"insert-new-org": "insert into orgs (name) values (NULL) returning id",
+	// customers
+	"insert-new-customer": "insert into customers (name) values (NULL) returning id",
 
 	// bastions
-	"insert-bastion":           "insert into bastions (password_hash, org_id, active) values (:password_hash, :org_id, :active) returning *",
+	"insert-bastion":           "insert into bastions (password_hash, customer_id, active) values (:password_hash, :customer_id, :active) returning *",
 	"bastion-by-id-and-active": "select * from bastions where id = $1 and active = $2",
 }
 

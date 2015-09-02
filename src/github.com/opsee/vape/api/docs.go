@@ -1,13 +1,13 @@
 package api
 
-var swaggerJson = `
+var swaggerJson=`
 {
   "basePath": "/%7B%7B.%7D%7D",
   "swagger": "2.0",
   "info": {
     "title": "Vape API",
     "version": "0.0.1",
-    "description": "API for user/org management and authentication"
+    "description": "API for user/customer management and authentication"
   },
   "tags": [
     {
@@ -491,6 +491,10 @@ var swaggerJson = `
           "$ref": "#/definitions/Time",
           "items": {}
         },
+        "customer_id": {
+          "type": "string",
+          "items": {}
+        },
         "email": {
           "type": "string",
           "items": {}
@@ -502,11 +506,6 @@ var swaggerJson = `
         },
         "name": {
           "type": "string",
-          "items": {}
-        },
-        "org_id": {
-          "type": "integer",
-          "format": "int32",
           "items": {}
         },
         "updated_at": {
