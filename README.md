@@ -1,7 +1,7 @@
 vape
 =====
 
-A tokin' generator and login management. It will manage teams/organizations also. We'll see.
+A tokin' generator and login management. It will manage teams/customers also. We'll see.
 
 ### migrations
 
