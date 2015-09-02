@@ -43,9 +43,9 @@ func init() {
 	for _, router := range []*web.Router{publicRouter, privateRouter} {
 		router.Middleware((*Context).Log)
 		router.Middleware((*Context).CatchPanics)
-		router.Middleware((*Context).SetContentType)
 		router.Middleware((*Context).Cors)
 		router.Middleware((*Context).Options)
+		router.Middleware((*Context).SetContentType)
 		router.Middleware((*Context).UserSession)
 		router.NotFound((*Context).NotFound)
 		router.Get("/health", (*Context).Health)
@@ -174,6 +174,9 @@ func (c *Context) Cors(rw web.ResponseWriter, r *web.Request, next web.NextMiddl
 		if o == origin {
 			header := rw.Header()
 			header.Set("Access-Control-Allow-Origin", o)
+			header.Set("Access-Control-Allow-Methods", "GET, PUT, POST, PATCH, DELETE")
+			header.Set("Access-Control-Allow-Headers", "Accept-Encoding,Authorization,Content-Type")
+			header.Set("Access-Control-Max-Age", "1728000")
 		}
 	}
 	next(rw, r)
@@ -181,10 +184,6 @@ func (c *Context) Cors(rw web.ResponseWriter, r *web.Request, next web.NextMiddl
 
 func (c *Context) Options(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
 	if r.Method == "OPTIONS" {
-		header := rw.Header()
-		header.Set("Access-Control-Allow-Methods", "GET, PUT, POST, PATCH, DELETE")
-		header.Set("Access-Control-Allow-Headers", "Accept-Encoding,Authorization,Content-Type")
-		header.Set("Access-Control-Max-Age", "1728000")
 		return
 	}
 	next(rw, r)
@@ -196,6 +195,10 @@ func (c *Context) NotFound(rw web.ResponseWriter, r *web.Request) {
 
 func renderServerError(rw web.ResponseWriter) {
 	rw.WriteHeader(500)
+	writeJson(rw, map[string]string{
+		"type":    "unknown",
+		"message": messages["internal-server-error"],
+	})
 }
 
 func writeJson(rw web.ResponseWriter, data interface{}) {

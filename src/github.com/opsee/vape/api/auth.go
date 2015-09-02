@@ -24,7 +24,7 @@ func init() {
 // @Title authenticateFromPassword
 // @Description Authenticates a user with email and password.
 // @Accept  json
-// @Param   email           query   string  true         "A user's email"
+// @Param   email           body    string  true         "A user's email"
 // @Param   password        body    string  true         "A user's password"
 // @Success 200 {object}    interface                    "Response will be empty"
 // @Failure 401 {object}    interface           	 "Response will be empty"
