@@ -1,6 +1,6 @@
 package api
 
-var swaggerJson=`
+var swaggerJson = `
 {
   "basePath": "/%7B%7B.%7D%7D",
   "swagger": "2.0",
