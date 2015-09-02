@@ -13,7 +13,7 @@ ENV AWS_INSTANCE_ID=""
 ENV AWS_SESSION_TOKEN=""
 
 RUN apk add --update bash ca-certificates curl
-RUN curl -Lo /opt/bin/migrate https://s3-us-west-2.amazonaws.com/opsee-releases/go/migrate-linux-amd64 && \
+RUN curl -Lo /opt/bin/migrate https://s3-us-west-2.amazonaws.com/opsee-releases/go/migrate/migrate-linux-amd64 && \
     chmod 755 /opt/bin/migrate
 RUN curl -Lo /opt/bin/ec2-env https://s3-us-west-2.amazonaws.com/opsee-releases/go/ec2-env/ec2-env && \
     chmod 755 /opt/bin/ec2-env
