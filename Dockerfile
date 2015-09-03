@@ -21,6 +21,7 @@ RUN curl -Lo /opt/bin/ec2-env https://s3-us-west-2.amazonaws.com/opsee-releases/
 COPY run.sh /
 COPY target/linux/amd64/bin/* /
 COPY vape.test.key /
+COPY migrations /migrations
 
 EXPOSE 8081 9091
 CMD ["/vape"]

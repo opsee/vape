@@ -13,5 +13,5 @@ eval "$(< /ec2env)"
 # /opt/bin/s3kms get -b opsee-keys -o dev/vape-key.pem > /vape-key.pem
 
 source /vapenv && \
-	/opt/bin/migrate -url "$POSTGRES_CONN" -path ./migrations up && \
+	/opt/bin/migrate -url "$POSTGRES_CONN" -path /migrations up && \
 	/vape
