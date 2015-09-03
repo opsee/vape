@@ -5,8 +5,8 @@ import (
 	"github.com/opsee/vape/store"
 )
 
-func CreateBastion(orgId int) (*model.Bastion, string, error) {
-	bastion, plaintext, err := model.NewBastion(orgId)
+func CreateBastion(customerId string) (*model.Bastion, string, error) {
+	bastion, plaintext, err := model.NewBastion(customerId)
 	if err != nil {
 		return nil, "", err
 	}

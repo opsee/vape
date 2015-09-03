@@ -23,20 +23,20 @@ func SetupFixtures(db DB, c *check.C) {
 	if err != nil {
 		c.Fatal(err)
 	}
-	_, err = tx.Exec("delete from orgs")
+	_, err = tx.Exec("delete from customers")
 	if err != nil {
 		c.Fatal(err)
 	}
 
-	// fk constraint on org_id
-	var id int
-	err = tx.Get(&id, "insert into orgs (name) values ('markorg') returning id")
+	// fk constraint on customer_id
+	var id string
+	err = tx.Get(&id, "insert into customers (name) values ('markorg') returning id")
 	if err != nil {
 		c.Fatal(err)
 	}
 	_, err = tx.Exec(
 		"insert into users (id, email, password_hash, admin, active, verified, "+
-			"org_id, name) values (1, 'mark@opsee.co', "+
+			"customer_id, name) values (1, 'mark@opsee.co', "+
 			"'$2a$10$QcgjlXDKnRys50Oc30duFuNcZW6Rmqd7pcIJX9GWheIXJExUooZ7W', true, true, true, "+
 			"$1, 'mark')", id)
 	if err != nil {

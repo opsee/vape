@@ -7,10 +7,11 @@ eval "$(< /ec2env)"
 /opt/bin/s3kms get -b opsee-keys -o dev/vapenv > /vapenv
 /opt/bin/s3kms get -b opsee-keys -o dev/vape.key > /vape.key
 
-# TODO: migration command!
-
 # these will have to wait
 # TODO: tls from load-balancer -> vape
 # /opt/bin/s3kms get -b opsee-keys -o dev/vape-cert.pem > /vape-cert.pem
 # /opt/bin/s3kms get -b opsee-keys -o dev/vape-key.pem > /vape-key.pem
-source /vapenv && /vape
+
+source /vapenv && \
+	/opt/bin/migrate -url "$POSTGRES_CONN" -path /migrations up && \
+	/vape

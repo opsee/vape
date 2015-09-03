@@ -26,27 +26,27 @@ func (c *BastionContext) Create(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	if err = mustPresent(json, "org_id"); err != nil {
+	if err = mustPresent(json, "customer_id"); err != nil {
 		c.Job.EventErr("error.parse", err)
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	orgId, ok := json["org_id"].(float64)
+	customerId, ok := json["customer_id"].(string)
 	if !ok {
-		c.Job.Event("error.cast.float64")
+		c.Job.Event("error.cast.string")
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	bastion, plaintext, err := servicer.CreateBastion(int(orgId))
+	bastion, plaintext, err := servicer.CreateBastion(customerId)
 	if err != nil {
 		c.Job.EventErr("error.create", err)
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	writeJson(rw, map[string]interface{}{"id": bastion.Id, "password": plaintext, "org_id": orgId})
+	writeJson(rw, map[string]interface{}{"id": bastion.Id, "password": plaintext, "customer_id": customerId})
 }
 
 func (c *BastionContext) Authenticate(rw web.ResponseWriter, r *web.Request) {

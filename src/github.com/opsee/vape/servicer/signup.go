@@ -95,13 +95,13 @@ func ClaimSignup(signup *model.Signup, token, password string) (*model.User, err
 		return nil, err
 	}
 
-	// need an org id for the user
-	var orgId int
-	if err = tx.Get(&orgId, "insert-new-org"); err != nil {
+	// need an customer id for the user
+	var customerId string
+	if err = tx.Get(&customerId, "insert-new-customer"); err != nil {
 		tx.Rollback()
 		return nil, err
 	}
-	user.OrgId = orgId
+	user.CustomerId = customerId
 
 	if _, err := tx.Exec("claim-signup", signup.Id); err != nil {
 		tx.Rollback()
