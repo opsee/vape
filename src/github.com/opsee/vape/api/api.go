@@ -19,6 +19,8 @@ type Context struct {
 	Job         *health.Job
 	Panic       bool
 	CurrentUser *model.User
+	JsonBody    func(s interface{}) interface{}
+	
 }
 
 var (
@@ -47,6 +49,7 @@ func init() {
 		router.Middleware((*Context).Options)
 		router.Middleware((*Context).SetContentType)
 		router.Middleware((*Context).UserSession)
+		router.Middleware((*Context).JsonBodyFunc)
 		router.NotFound((*Context).NotFound)
 		router.Get("/health", (*Context).Health)
 		router.Get("/swagger.json", (*Context).Docs)
@@ -77,6 +80,19 @@ func (c *Context) Docs(rw web.ResponseWriter, r *web.Request) {
 //
 // middleware
 //
+func (c *Context) JsonBodyFunc(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
+	c.JsonBody = func(s interface{}) interface{} {
+		decoder := json.NewDecoder(r.Body)
+		err := decoder.Decode(&s)
+		if err != nil {
+			return nil, err
+		}
+		return value, nil
+	}
+
+	next(rw, r)
+}
+
 func (c *Context) UserSession(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
 	auth := r.Header.Get("Authorization")
 	authslice := strings.Split(auth, " ")
@@ -209,13 +225,7 @@ func writeJson(rw web.ResponseWriter, data interface{}) {
 }
 
 func readJson(r *web.Request) (map[string]interface{}, error) {
-	value := make(map[string]interface{})
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&value)
-	if err != nil {
-		return nil, err
-	}
-	return value, nil
+	
 }
 
 func mustPresent(json map[string]interface{}, keys ...string) error {
