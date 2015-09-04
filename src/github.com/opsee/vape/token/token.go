@@ -13,7 +13,7 @@ type Token map[string]interface{}
 const (
 	Algorithm  = jose.A128GCMKW
 	Encryption = jose.A128GCM
-	ExpHours   = 1
+	ExpHours   = 12
 )
 
 var vapeKey []byte
