@@ -1,15 +1,13 @@
 package servicer
 
 import (
-	"errors"
 	"github.com/keighl/mandrill"
 )
 
 const mandrillAPIKey = "V2M1onmVdOXJ42Vr8Gr_ew"
 
 var (
-	RecordNotFound = errors.New("record not found")
-	mailClient     *mandrill.Client
+	mailClient *mandrill.Client
 )
 
 func init() {

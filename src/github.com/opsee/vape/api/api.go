@@ -16,11 +16,14 @@ import (
 )
 
 type Context struct {
-	Job         *health.Job
-	Panic       bool
-	CurrentUser *model.User
-	JsonBody    func(s interface{}) interface{}
-	
+	Job                 *health.Job
+	Panic               bool
+	CurrentUser         *model.User
+	RequestJson         func(interface{}) error
+	ResponseJson        func(interface{})
+	BadRequest          func(string, ...interface{})
+	Unauthorized        func(string, ...interface{})
+	InternalServerError func(string, ...interface{})
 }
 
 var (
@@ -34,6 +37,10 @@ var (
 	}
 )
 
+type MessageResponse struct {
+	Message string `json:"message"`
+}
+
 // @APIVersion 0.0.1
 // @APITitle Vape API
 // @APIDescription API for user/customer management and authentication
@@ -43,13 +50,13 @@ func init() {
 	// as a result, we have to be repeat ourselves
 	// this may be another good reason to use go-restful
 	for _, router := range []*web.Router{publicRouter, privateRouter} {
+		router.Middleware((*Context).HelperFuncs)
 		router.Middleware((*Context).Log)
 		router.Middleware((*Context).CatchPanics)
 		router.Middleware((*Context).Cors)
 		router.Middleware((*Context).Options)
 		router.Middleware((*Context).SetContentType)
 		router.Middleware((*Context).UserSession)
-		router.Middleware((*Context).JsonBodyFunc)
 		router.NotFound((*Context).NotFound)
 		router.Get("/health", (*Context).Health)
 		router.Get("/swagger.json", (*Context).Docs)
@@ -80,15 +87,26 @@ func (c *Context) Docs(rw web.ResponseWriter, r *web.Request) {
 //
 // middleware
 //
-func (c *Context) JsonBodyFunc(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
-	c.JsonBody = func(s interface{}) interface{} {
+func (c *Context) HelperFuncs(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
+	c.RequestJson = func(s interface{}) error {
 		decoder := json.NewDecoder(r.Body)
-		err := decoder.Decode(&s)
+		err := decoder.Decode(s)
 		if err != nil {
-			return nil, err
+			return err
 		}
-		return value, nil
+		return nil
 	}
+
+	c.ResponseJson = func(data interface{}) {
+		encoder := json.NewEncoder(rw)
+		if err := encoder.Encode(data); err != nil {
+			panic(err)
+		}
+	}
+
+	c.BadRequest = c.responseFunc(rw, http.StatusBadRequest)
+	c.Unauthorized = c.responseFunc(rw, http.StatusUnauthorized)
+	c.InternalServerError = c.responseFunc(rw, http.StatusInternalServerError)
 
 	next(rw, r)
 }
@@ -170,7 +188,7 @@ func (c *Context) CatchPanics(rw web.ResponseWriter, r *web.Request, next web.Ne
 			errorishError := errors.New(fmt.Sprint(err))
 
 			c.Job.EventErrKv("panic", errorishError, health.Kvs{"stack": string(stack)})
-			renderServerError(rw)
+			rw.WriteHeader(http.StatusInternalServerError)
 		}
 	}()
 
@@ -209,12 +227,28 @@ func (c *Context) NotFound(rw web.ResponseWriter, r *web.Request) {
 	rw.WriteHeader(http.StatusNotFound)
 }
 
-func renderServerError(rw web.ResponseWriter) {
-	rw.WriteHeader(500)
-	writeJson(rw, map[string]string{
-		"type":    "unknown",
-		"message": messages["internal-server-error"],
-	})
+func (c *Context) responseFunc(rw web.ResponseWriter, status int) func(string, ...interface{}) {
+	return func(msg string, args ...interface{}) {
+		rw.WriteHeader(status)
+		c.ResponseJson(MessageResponse{Message: msg})
+
+		if len(args) == 1 {
+			c.Job.EventErr(msg, args[0].(error))
+		}
+		if len(args) == 2 {
+			c.Job.EventErrKv(msg, args[0].(error), args[1].(map[string]string))
+		}
+	}
+}
+
+func readJson(r *web.Request) (map[string]interface{}, error) {
+	value := make(map[string]interface{})
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&value)
+	if err != nil {
+		return nil, err
+	}
+	return value, nil
 }
 
 func writeJson(rw web.ResponseWriter, data interface{}) {
@@ -222,10 +256,6 @@ func writeJson(rw web.ResponseWriter, data interface{}) {
 	if err := encoder.Encode(data); err != nil {
 		panic(err)
 	}
-}
-
-func readJson(r *web.Request) (map[string]interface{}, error) {
-	
 }
 
 func mustPresent(json map[string]interface{}, keys ...string) error {

@@ -2,15 +2,9 @@ package servicer
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
-)
-
-var (
-	SignupAlreadyClaimed = errors.New("signup already claimed")
-	SignupInvalidToken   = errors.New("invalid token for signup")
 )
 
 func GetSignup(id int) (*model.Signup, error) {

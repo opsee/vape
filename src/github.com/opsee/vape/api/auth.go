@@ -5,7 +5,6 @@ import (
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
-	"net/http"
 )
 
 type AuthContext struct {
@@ -21,49 +20,61 @@ func init() {
 	authRouter.Get("/echo", (*AuthContext).Echo) // for testing
 }
 
+type UserTokenResponse struct {
+	Token string      `json:"token"`
+	User  *model.User `json:"user"`
+}
+
 // @Title authenticateFromPassword
 // @Description Authenticates a user with email and password.
 // @Accept  json
 // @Param   email           body    string  true         "A user's email"
 // @Param   password        body    string  true         "A user's password"
-// @Success 200 {object}    interface                    "Response will be empty"
-// @Failure 401 {object}    interface           	 "Response will be empty"
+// @Success 200 {object}    UserTokenResponse
+// @Failure 401 {object}    MessageResponse
 // @Router /authenticate/password [post]
 func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) {
-	postJson, err := readJson(r)
-	if err != nil || postJson["email"] == nil || postJson["password"] == nil {
-		c.Job.EventErr("create-auth", err)
-		rw.WriteHeader(http.StatusBadRequest)
+	var request struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	err := c.RequestJson(&request)
+	if err != nil {
+		c.BadRequest("malformed request body", err)
 		return
 	}
 
-	email := postJson["email"].(string)
-	password := postJson["password"].(string)
-	c.Job.EventKv("create-auth.enter", map[string]string{"email": email})
+	if request.Email == "" {
+		c.BadRequest("missing email")
+		return
+	}
+
+	if request.Password == "" {
+		c.BadRequest("missing password")
+		return
+	}
 
 	user := new(model.User)
-	err = store.Get(user, "user-by-email-and-active", email, true)
+	err = store.Get(user, "user-by-email-and-active", request.Email, true)
 	if err != nil {
-		c.Job.EventErr("get-user", err)
-		rw.WriteHeader(http.StatusUnauthorized)
+		c.Unauthorized("credentials do not match an existing user", err)
 		return
 	}
 
-	err = user.Authenticate(password)
+	err = user.Authenticate(request.Password)
 	if err != nil {
-		c.Job.EventErr("authenticate-user", err)
-		rw.WriteHeader(http.StatusUnauthorized)
+		c.Unauthorized("credentials do not match an existing user", err)
 		return
 	}
 
 	token, err := servicer.TokenUser(user)
 	if err != nil {
-		c.Job.EventErr("token-marshal", err)
-		rw.WriteHeader(http.StatusInternalServerError)
+		c.InternalServerError("internal server error", err)
 		return
 	}
 
-	writeJson(rw, map[string]interface{}{
+	c.ResponseJson(map[string]interface{}{
 		"user":  user,
 		"token": token,
 	})
@@ -76,5 +87,10 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 // @Success 200 {object}    model.User
 // @Router /authenticate/echo [get]
 func (c *AuthContext) Echo(rw web.ResponseWriter, r *web.Request) {
-	writeJson(rw, c.CurrentUser)
+	if c.CurrentUser == nil {
+		c.Unauthorized("a user token is required")
+		return
+	}
+
+	c.ResponseJson(c.CurrentUser)
 }

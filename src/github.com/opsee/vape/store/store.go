@@ -27,11 +27,12 @@ var queries = map[string]string{
 	"claim-signup":  "update signups set claimed = true where id = $1",
 
 	// customers
-	"insert-new-customer": "insert into customers (name) values (NULL) returning id",
+	"customer-by-id-and-active": "select * from customers where id = $1 and active = $2",
+	"insert-new-customer":       "insert into customers (name, active) values (NULL, true) returning id",
 
 	// bastions
-	"insert-bastion":           "insert into bastions (password_hash, customer_id, active) values (:password_hash, :customer_id, :active) returning *",
-	"bastion-by-id-and-active": "select * from bastions where id = $1 and active = $2",
+	"insert-bastion":                         "insert into bastions (password_hash, customer_id, active) values (:password_hash, :customer_id, :active) returning *",
+	"bastion-join-customer-by-id-and-active": "select b.* from bastions b inner join customers c on b.customer_id = c.id where b.id = $1 and b.active = $2 and c.active = $3",
 }
 
 func Init(pgConnection string) error {

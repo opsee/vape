@@ -3,7 +3,6 @@ package api
 import (
 	"github.com/gocraft/web"
 	"github.com/opsee/vape/servicer"
-	"net/http"
 )
 
 type BastionContext struct {
@@ -18,54 +17,66 @@ func init() {
 	bastionRouter.Post("/authenticate", (*BastionContext).Authenticate)
 }
 
+type BastionResponse struct {
+	Id         string `json:"id"`
+	Password   string `json:"password"`
+	CustomerId string `json:"customer_id"`
+}
+
 func (c *BastionContext) Create(rw web.ResponseWriter, r *web.Request) {
-	json, err := readJson(r)
+	var request struct {
+		CustomerId string `json:"customer_id"`
+	}
+
+	err := c.RequestJson(&request)
 	if err != nil {
-		c.Job.EventErr("error.parse", err)
-		rw.WriteHeader(http.StatusBadRequest)
+		c.BadRequest("malformed request", err)
 		return
 	}
 
-	if err = mustPresent(json, "customer_id"); err != nil {
-		c.Job.EventErr("error.parse", err)
-		rw.WriteHeader(http.StatusBadRequest)
+	if request.CustomerId == "" {
+		c.BadRequest("missing customer_id")
 		return
 	}
 
-	customerId, ok := json["customer_id"].(string)
-	if !ok {
-		c.Job.Event("error.cast.string")
-		rw.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	bastion, plaintext, err := servicer.CreateBastion(customerId)
+	bastion, plaintext, err := servicer.CreateBastion(request.CustomerId)
 	if err != nil {
-		c.Job.EventErr("error.create", err)
-		rw.WriteHeader(http.StatusInternalServerError)
+		if err == servicer.CustomerNotFound {
+			c.Unauthorized("no active customer with that id")
+		} else {
+			c.InternalServerError("internal server error", err)
+		}
+
 		return
 	}
 
-	writeJson(rw, map[string]interface{}{"id": bastion.Id, "password": plaintext, "customer_id": customerId})
+	c.ResponseJson(&BastionResponse{Id: bastion.Id, Password: plaintext, CustomerId: request.CustomerId})
 }
 
 func (c *BastionContext) Authenticate(rw web.ResponseWriter, r *web.Request) {
-	json, err := readJson(r)
+	var request struct {
+		Id       string `json:"id"`
+		Password string `json:"password"`
+	}
+
+	err := c.RequestJson(&request)
 	if err != nil {
-		c.Job.EventErr("error.parse", err)
-		rw.WriteHeader(http.StatusBadRequest)
+		c.BadRequest("malformed request", err)
 		return
 	}
 
-	if err = mustPresent(json, "id", "password"); err != nil {
-		c.Job.EventErr("error.parse", err)
-		rw.WriteHeader(http.StatusBadRequest)
+	if request.Id == "" {
+		c.BadRequest("missing id")
 		return
 	}
 
-	if err = servicer.AuthenticateBastion(json["id"].(string), json["password"].(string)); err != nil {
-		c.Job.EventErr("error.auth", err)
-		rw.WriteHeader(http.StatusUnauthorized)
+	if request.Password == "" {
+		c.BadRequest("missing password")
+		return
+	}
+
+	if err = servicer.AuthenticateBastion(request.Id, request.Password); err != nil {
+		c.Unauthorized("couldn't authenticate bastion", err, map[string]string{"id": request.Id})
 		return
 	}
 }
