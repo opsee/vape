@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"github.com/gocraft/web"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
@@ -34,33 +33,40 @@ func init() {
 // @Param   per_page        query    int     false       "Pagination - number of records per page"
 // @Param   page            query    int     false       "Pagination - which page"
 // @Success 200 {array}     model.Signup                 ""
-// @Failure 401 {object}    interface           	 "Response will be empty"
+// @Failure 401 {object}    MessageResponse           	 "Response will be empty"
 // @Router /signups [get]
 func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
 	if c.CurrentUser == nil || c.CurrentUser.Admin != true {
-		rw.WriteHeader(http.StatusUnauthorized)
+		c.Unauthorized("must be an administrator to access this resource")
 		return
 	}
 
-	perPage, err := strconv.Atoi(r.FormValue("per_page"))
-	if err != nil {
-		perPage = 20
+	var request struct {
+		Page    int `json:"page"`
+		PerPage int `json:"per_page"`
 	}
 
-	page, err := strconv.Atoi(r.FormValue("page"))
+	err := c.RequestJson(&request)
 	if err != nil {
-		page = 1
-	}
-
-	c.Job.EventKv("list.params", map[string]string{"page": fmt.Sprint(page), "per_page": fmt.Sprint(perPage)})
-	signups, err := servicer.ListSignups(perPage, page)
-	if err != nil {
-		c.Job.EventErr("error.select", err)
-		rw.WriteHeader(http.StatusInternalServerError)
+		c.BadRequest("malformed request", err)
 		return
 	}
 
-	writeJson(rw, signups)
+	if request.PerPage <= 0 {
+		request.PerPage = 20
+	}
+
+	if request.Page <= 0 {
+		request.Page = 1
+	}
+
+	signups, err := servicer.ListSignups(request.PerPage, request.Page)
+	if err != nil {
+		c.InternalServerError("internal server error", err)
+		return
+	}
+
+	c.ResponseJson(signups)
 }
 
 // @Title createSignup
@@ -71,41 +77,40 @@ func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
 // @Success 200 {object}     model.Signup              ""
 // @Router /signups [post]
 func (c *SignupContext) CreateSignup(rw web.ResponseWriter, r *web.Request) {
-	json, err := readJson(r)
+	var request struct {
+		Name  string `json:"name"`
+		Email string `json:"email"`
+	}
+
+	err := c.RequestJson(&request)
 	if err != nil {
-		rw.WriteHeader(http.StatusBadRequest)
+		c.BadRequest("malformed request", err)
 		return
 	}
 
-	if err = mustPresent(json, "name", "email"); err != nil {
-		c.Job.EventErr("error.parse", err)
-		rw.WriteHeader(http.StatusBadRequest)
+	if request.Name == "" {
+		c.BadRequest("missing name")
 		return
 	}
 
-	email, ok := json["email"].(string)
-	if !ok {
-		c.Job.EventErr("error.parse", err)
-		rw.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	name, ok := json["name"].(string)
-	if !ok {
-		c.Job.EventErr("error.parse", err)
-		rw.WriteHeader(http.StatusBadRequest)
+	if request.Email == "" {
+		c.BadRequest("missing email")
 		return
 	}
 
 	// anyone is authorized for this
-	signup, err := servicer.CreateSignup(email, name)
+	signup, err := servicer.CreateSignup(request.Email, request.Name)
 	if err != nil {
-		c.Job.EventErr("error.create", err)
-		rw.WriteHeader(http.StatusInternalServerError)
+		if err == servicer.SignupExists {
+			c.Conflict("that email address has been taken")
+			return
+		}
+
+		c.InternalServerError("internal server error", err)
 		return
 	}
 
-	writeJson(rw, signup)
+	c.ResponseJson(signup)
 }
 
 // @Title activateSignup

@@ -21,10 +21,11 @@ var queries = map[string]string{
 	"insert-user":              "insert into users (customer_id, email, name, verified, active, password_hash) values (:customer_id, :email, :name, :verified, :active, :password_hash) returning *",
 
 	// signups
-	"signup-by-id":  "select * from signups where id = $1",
-	"insert-signup": "insert into signups (email, name) values (:email, :name) returning *",
-	"list-signups":  "select * from signups limit $1 offset $2",
-	"claim-signup":  "update signups set claimed = true where id = $1",
+	"signup-by-id":    "select * from signups where id = $1",
+	"signup-by-email": "select * from signups where email = $1",
+	"insert-signup":   "insert into signups (email, name) values (:email, :name) returning *",
+	"list-signups":    "select * from signups limit $1 offset $2",
+	"claim-signup":    "update signups set claimed = true where id = $1",
 
 	// customers
 	"customer-by-id-and-active": "select * from customers where id = $1 and active = $2",

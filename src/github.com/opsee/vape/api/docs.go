@@ -1,6 +1,6 @@
 package api
 
-var swaggerJson = `
+var swaggerJson=`
 {
   "basePath": "/%7B%7B.%7D%7D",
   "swagger": "2.0",
@@ -11,19 +11,93 @@ var swaggerJson = `
   },
   "tags": [
     {
+      "name": "authenticate",
+      "description": "Authentication API"
+    },
+    {
       "name": "signups",
       "description": "Signup API"
     },
     {
       "name": "users",
       "description": "User API"
-    },
-    {
-      "name": "authenticate",
-      "description": "Authentication API"
     }
   ],
   "paths": {
+    "/authenticate/password": {
+      "post": {
+        "tags": [
+          "authenticate"
+        ],
+        "operationId": "authenticateFromPassword",
+        "summary": "Authenticates a user with email and password.",
+        "parameters": [
+          {
+            "in": "body",
+            "description": "A user's email",
+            "name": "email",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 0,
+              "maximum": 0
+            }
+          },
+          {
+            "in": "body",
+            "description": "A user's password",
+            "name": "password",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 0,
+              "maximum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Description was not specified",
+            "schema": {
+              "$ref": "#/definitions/github.com.opsee.vape.api.UserTokenResponse",
+              "items": {}
+            }
+          },
+          "401": {
+            "description": "Description was not specified"
+          }
+        }
+      }
+    },
+    "/authenticate/echo": {
+      "get": {
+        "tags": [
+          "authenticate"
+        ],
+        "operationId": "echoSession",
+        "summary": "Echos a user session given an authentication token.",
+        "parameters": [
+          {
+            "in": "header",
+            "description": "The Bearer token",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "minimum": 0,
+            "maximum": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Description was not specified",
+            "schema": {
+              "$ref": "#/definitions/github.com.opsee.vape.model.User",
+              "items": {}
+            }
+          }
+        }
+      }
+    },
     "/signups": {
       "get": {
         "tags": [
@@ -402,108 +476,25 @@ var swaggerJson = `
           }
         }
       }
-    },
-    "/authenticate/password": {
-      "post": {
-        "tags": [
-          "authenticate"
-        ],
-        "operationId": "authenticateFromPassword",
-        "summary": "Authenticates a user with email and password.",
-        "parameters": [
-          {
-            "in": "body",
-            "description": "A user's email",
-            "name": "email",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minimum": 0,
-              "maximum": 0
-            }
-          },
-          {
-            "in": "body",
-            "description": "A user's password",
-            "name": "password",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minimum": 0,
-              "maximum": 0
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response will be empty",
-            "schema": {
-              "$ref": "#/definitions/github.com.opsee.vape.api.UserTokenResponse",
-              "items": {}
-            }
-          },
-          "401": {
-            "description": "Response will be empty"
-          }
-        }
-      }
-    },
-    "/authenticate/echo": {
-      "get": {
-        "tags": [
-          "authenticate"
-        ],
-        "operationId": "echoSession",
-        "summary": "Echos a user session given an authentication token.",
-        "parameters": [
-          {
-            "in": "header",
-            "description": "The Bearer token",
-            "name": "Authorization",
-            "required": true,
-            "type": "string",
-            "minimum": 0,
-            "maximum": 0
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Description was not specified",
-            "schema": {
-              "$ref": "#/definitions/github.com.opsee.vape.model.User",
-              "items": {}
-            }
-          }
-        }
-      }
     }
   },
   "definitions": {
-    "github.com.opsee.vape.model.Signup": {
+    "github.com.opsee.vape.api.MessageResponse": {
       "properties": {
-        "claimed": {
-          "$ref": "#/definitions/bool",
+        "message": {
+          "type": "string",
           "items": {}
-        },
-        "created_at": {
-          "$ref": "#/definitions/Time",
-          "items": {}
-        },
-        "email": {
+        }
+      }
+    },
+    "github.com.opsee.vape.api.UserTokenResponse": {
+      "properties": {
+        "token": {
           "type": "string",
           "items": {}
         },
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "items": {}
-        },
-        "name": {
-          "type": "string",
-          "items": {}
-        },
-        "updated_at": {
-          "$ref": "#/definitions/Time",
+        "user": {
+          "$ref": "#/definitions/github.com.opsee.vape.model.User",
           "items": {}
         }
       }
@@ -549,22 +540,31 @@ var swaggerJson = `
         }
       }
     },
-    "github.com.opsee.vape.api.MessageResponse": {
+    "github.com.opsee.vape.model.Signup": {
       "properties": {
-        "message": {
-          "type": "string",
+        "claimed": {
+          "$ref": "#/definitions/bool",
           "items": {}
-        }
-      }
-    },
-    "github.com.opsee.vape.api.UserTokenResponse": {
-      "properties": {
-        "token": {
+        },
+        "created_at": {
+          "$ref": "#/definitions/Time",
+          "items": {}
+        },
+        "email": {
           "type": "string",
           "items": {}
         },
-        "user": {
-          "$ref": "#/definitions/github.com.opsee.vape.model.User",
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "items": {}
+        },
+        "name": {
+          "type": "string",
+          "items": {}
+        },
+        "updated_at": {
+          "$ref": "#/definitions/Time",
           "items": {}
         }
       }

@@ -22,11 +22,20 @@ func GetSignup(id int) (*model.Signup, error) {
 }
 
 func CreateSignup(email, name string) (*model.Signup, error) {
+	existingSignup := new(model.Signup)
+	err := store.Get(existingSignup, "signup-by-email", email)
+	if err == nil {
+		return nil, SignupExists
+	} else if err != sql.ErrNoRows {
+		return nil, err
+	}
+
 	signup := model.NewSignup(email, name)
-	err := store.NamedInsert("insert-signup", signup)
+	err = store.NamedInsert("insert-signup", signup)
 	if err != nil {
 		return nil, err
 	}
+
 	return signup, err
 }
 

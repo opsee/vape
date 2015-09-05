@@ -23,6 +23,7 @@ type Context struct {
 	ResponseJson        func(interface{})
 	BadRequest          func(string, ...interface{})
 	Unauthorized        func(string, ...interface{})
+	Conflict            func(string, ...interface{})
 	InternalServerError func(string, ...interface{})
 }
 
@@ -106,6 +107,7 @@ func (c *Context) HelperFuncs(rw web.ResponseWriter, r *web.Request, next web.Ne
 
 	c.BadRequest = c.responseFunc(rw, http.StatusBadRequest)
 	c.Unauthorized = c.responseFunc(rw, http.StatusUnauthorized)
+	c.Conflict = c.responseFunc(rw, http.StatusConflict)
 	c.InternalServerError = c.responseFunc(rw, http.StatusInternalServerError)
 
 	next(rw, r)
