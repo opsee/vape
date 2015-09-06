@@ -50,7 +50,6 @@ type MessageResponse struct {
 func init() {
 	// we're creating a separate router instances to listen on separate ports
 	// as a result, we have to be repeat ourselves
-	// this may be another good reason to use go-restful
 	for _, router := range []*web.Router{publicRouter, privateRouter} {
 		router.Middleware((*Context).HelperFuncs)
 		router.Middleware((*Context).Log)

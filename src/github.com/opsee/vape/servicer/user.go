@@ -22,8 +22,8 @@ func GetUser(id int) (*model.User, error) {
 	return user, nil
 }
 
-func UpdateUser(user *model.User, newUserParams map[string]interface{}) error {
-	err := user.Merge(newUserParams)
+func UpdateUser(user *model.User, email, name, password string) error {
+	err := user.Merge(email, name, password)
 	if err != nil {
 		return err
 	}

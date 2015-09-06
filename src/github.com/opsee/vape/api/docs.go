@@ -291,7 +291,7 @@ var swaggerJson = `
             }
           },
           "401": {
-            "description": "Response will be empty"
+            "description": "Description was not specified"
           }
         }
       },
@@ -325,7 +325,7 @@ var swaggerJson = `
             "in": "body",
             "description": "A new email address",
             "name": "email",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string",
               "minimum": 0,
@@ -336,7 +336,7 @@ var swaggerJson = `
             "in": "body",
             "description": "A new name",
             "name": "name",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string",
               "minimum": 0,
@@ -347,7 +347,7 @@ var swaggerJson = `
             "in": "body",
             "description": "A new password",
             "name": "password",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string",
               "minimum": 0,
@@ -364,7 +364,7 @@ var swaggerJson = `
             }
           },
           "401": {
-            "description": "Response will be empty"
+            "description": "Description was not specified"
           }
         }
       },
@@ -397,14 +397,14 @@ var swaggerJson = `
         ],
         "responses": {
           "200": {
-            "description": "Response will be empty",
+            "description": "Description was not specified",
             "schema": {
-              "$ref": "#/definitions/interface",
+              "$ref": "#/definitions/github.com.opsee.vape.api.MessageResponse",
               "items": {}
             }
           },
           "401": {
-            "description": "Response will be empty"
+            "description": "Description was not specified"
           }
         }
       }
