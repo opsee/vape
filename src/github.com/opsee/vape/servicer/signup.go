@@ -12,7 +12,7 @@ func GetSignup(id int) (*model.Signup, error) {
 	err := store.Get(signup, "signup-by-id", id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, RecordNotFound
+			return nil, SignupNotFound
 		}
 
 		return nil, err
@@ -39,10 +39,10 @@ func CreateSignup(email, name string) (*model.Signup, error) {
 	return signup, err
 }
 
-func ActivateSignup(id int, referer string) error {
+func ActivateSignup(id int, referer string) (*model.Signup, error) {
 	signup, err := GetSignup(id)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// send an email here!
@@ -56,7 +56,7 @@ func ActivateSignup(id int, referer string) error {
 		mailTemplatedMessage(signup.Email, signup.Name, "activation", mergeVars)
 	}()
 
-	return nil
+	return signup, nil
 }
 
 func ListSignups(perPage int, page int) ([]*model.Signup, error) {
@@ -80,9 +80,19 @@ func ListSignups(perPage int, page int) ([]*model.Signup, error) {
 	return signups, nil
 }
 
-func ClaimSignup(signup *model.Signup, token, password string) (*model.User, error) {
+func ClaimSignup(id int, token, password string) (*model.User, error) {
+	signup, err := GetSignup(id)
+	if err != nil {
+		return nil, err
+	}
+
 	if signup.Validate(token) == false {
 		return nil, SignupInvalidToken
+	}
+
+	// make sure user hasn't been claimed
+	if signup.Claimed {
+		return nil, SignupAlreadyClaimed
 	}
 
 	// ok, pop that stuff in the user, and make sure they're verified

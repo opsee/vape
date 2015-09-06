@@ -24,6 +24,7 @@ type Context struct {
 	BadRequest          func(string, ...interface{})
 	Unauthorized        func(string, ...interface{})
 	Conflict            func(string, ...interface{})
+	NotFound            func(string, ...interface{})
 	InternalServerError func(string, ...interface{})
 }
 
@@ -58,7 +59,7 @@ func init() {
 		router.Middleware((*Context).Options)
 		router.Middleware((*Context).SetContentType)
 		router.Middleware((*Context).UserSession)
-		router.NotFound((*Context).NotFound)
+		router.NotFound(notFound)
 		router.Get("/health", (*Context).Health)
 		router.Get("/swagger.json", (*Context).Docs)
 	}
@@ -109,6 +110,7 @@ func (c *Context) HelperFuncs(rw web.ResponseWriter, r *web.Request, next web.Ne
 	c.Unauthorized = c.responseFunc(rw, http.StatusUnauthorized)
 	c.Conflict = c.responseFunc(rw, http.StatusConflict)
 	c.InternalServerError = c.responseFunc(rw, http.StatusInternalServerError)
+	c.NotFound = c.responseFunc(rw, http.StatusNotFound)
 
 	next(rw, r)
 }
@@ -225,7 +227,7 @@ func (c *Context) Options(rw web.ResponseWriter, r *web.Request, next web.NextMi
 	next(rw, r)
 }
 
-func (c *Context) NotFound(rw web.ResponseWriter, r *web.Request) {
+func notFound(rw web.ResponseWriter, r *web.Request) {
 	rw.WriteHeader(http.StatusNotFound)
 }
 
