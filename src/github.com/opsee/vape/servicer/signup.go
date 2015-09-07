@@ -36,6 +36,12 @@ func CreateSignup(email, name string) (*model.Signup, error) {
 		return nil, err
 	}
 
+	// send an email here!
+	go func() {
+		mergeVars := map[string]string{}
+		mailTemplatedMessage(signup.Email, signup.Name, "signup-confirmation", mergeVars)
+	}()
+
 	return signup, err
 }
 
@@ -53,7 +59,7 @@ func ActivateSignup(id int, referer string) (*model.Signup, error) {
 			"name":    signup.Name,
 			"referer": referer,
 		}
-		mailTemplatedMessage(signup.Email, signup.Name, "activation", mergeVars)
+		mailTemplatedMessage(signup.Email, signup.Name, "beta-approval", mergeVars)
 	}()
 
 	return signup, nil

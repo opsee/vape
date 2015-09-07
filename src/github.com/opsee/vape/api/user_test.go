@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	. "gopkg.in/check.v1"
 	"github.com/opsee/vape/model"
 )
@@ -43,4 +44,24 @@ func (s *ApiSuite) TestUserGet(c *C) {
 		c.Fatal(err)
 	}
 	c.Assert(rec.Code, DeepEquals, 404)
+}
+
+func (s *ApiSuite) TestUserUpdate(c *C) {
+	rec, err := testAuthedReq(&model.User{Id: 1, Email: "cliff@leaninto.it", Admin: false}, "PUT",
+		"https://vape/users/1", bytes.NewBuffer([]byte(`{"name": "vin diesel"}`)), nil)
+	if err != nil {
+		c.Fatal(err)
+	}
+
+	c.Assert(rec.Code, DeepEquals, 200)
+
+	rec, err = testAuthedReq(&model.User{Id: 1, Email: "cliff@leaninto.it", Admin: false}, "GET",
+		"https://vape/users/1", nil, nil)
+	if err != nil {
+		c.Fatal(err)
+	}
+
+	user := &model.User{}
+	err = loadResponse(user, rec.Body)
+	c.Assert(user.Name, DeepEquals, "vin diesel")
 }

@@ -28,7 +28,7 @@ func UpdateUser(user *model.User, email, name, password string) error {
 		return err
 	}
 
-	_, err = store.Exec("update-user", user)
+	_, err = store.NamedExec("update-user", user)
 	return err
 }
 

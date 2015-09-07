@@ -4,6 +4,8 @@ import (
 	"github.com/opsee/vape/api"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vape/token"
+	"github.com/opsee/vape/servicer"
+	"github.com/keighl/mandrill"
 	"io/ioutil"
 	"log"
 	"os"
@@ -39,6 +41,14 @@ func main() {
 	}
 	if privateHost == "" {
 		log.Fatal("Must set VAPE_PRIVATE_HOST environment variable.")
+	}
+
+	mandrillAPIKey := os.Getenv("MANDRILL_API_KEY")
+	if mandrillAPIKey == "" {
+		log.Println("WARN: MANDRILL_API_KEY not set, we won't send emails.")
+	} else {
+		mandrill := mandrill.ClientWithKey(mandrillAPIKey)
+		servicer.Init(mandrill)
 	}
 
 	api.ListenAndServe(os.Getenv("VAPE_PUBLIC_HOST"), os.Getenv("VAPE_PRIVATE_HOST"))

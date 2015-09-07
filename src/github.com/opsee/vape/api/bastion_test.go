@@ -12,9 +12,7 @@ func (s *ApiSuite) TestBastionAuthBadMissingCustomer(c *C) {
 		c.Fatal(err)
 	}
 
-	resp := &MessageResponse{}
-	loadResponse(resp, rec.Body)
-	c.Assert(Messages.CustomerIdRequired, DeepEquals, resp.Message)
+	assertMessage(c, rec, Messages.CustomerIdRequired)
 }
 
 func (s *ApiSuite) TestBastionAuthBadCustomer(c *C) {
@@ -23,9 +21,7 @@ func (s *ApiSuite) TestBastionAuthBadCustomer(c *C) {
 		c.Fatal(err)
 	}
 
-	resp := &MessageResponse{}
-	loadResponse(resp, rec.Body)
-	c.Assert(Messages.CustomerNotAuthorized, DeepEquals, resp.Message)
+	assertMessage(c, rec, Messages.CustomerNotAuthorized)
 }
 
 func (s *ApiSuite) TestBastionAuth(c *C) {

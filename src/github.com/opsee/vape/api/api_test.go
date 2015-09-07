@@ -15,6 +15,7 @@ import (
 	"os"
 	"testing"
 	"time"
+	"github.com/keighl/mandrill"
 )
 
 type ApiSuite struct{}
@@ -31,6 +32,19 @@ func (s *ApiSuite) SetUpTest(c *C) {
 	token.Init(testVapeKey)
 	store.Init(os.Getenv("TEST_POSTGRES_CONN"))
 	testutil.SetupFixtures(store.DB, c)
+}
+
+type testMailer struct {
+	Message *mandrill.Message
+	Template string
+	Content interface{}
+}
+
+func (t *testMailer) MessagesSendTemplate(msg *mandrill.Message, templateName string, templateContent interface{}) ([]*mandrill.Response, error) {
+	t.Message = msg
+	t.Template = templateName
+	t.Content = templateContent
+	return nil, nil
 }
 
 func (s *ApiSuite) TestCors(c *C) {
@@ -100,4 +114,10 @@ func loadResponse(thing interface{}, body io.Reader) error {
 		return err
 	}
 	return nil
+}
+
+func assertMessage(c *C, rec *httptest.ResponseRecorder, msg string) {
+	resp := &MessageResponse{}
+	loadResponse(resp, rec.Body)
+	c.Assert(msg, DeepEquals, resp.Message)
 }
