@@ -41,36 +41,36 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 
 	err := c.RequestJson(&request)
 	if err != nil {
-		c.BadRequest("malformed request body", err)
+		c.BadRequest(Messages.BadRequest, err)
 		return
 	}
 
 	if request.Email == "" {
-		c.BadRequest("missing email")
+		c.BadRequest(Messages.EmailRequired)
 		return
 	}
 
 	if request.Password == "" {
-		c.BadRequest("missing password")
+		c.BadRequest(Messages.PasswordRequired)
 		return
 	}
 
 	user := new(model.User)
 	err = store.Get(user, "user-by-email-and-active", request.Email, true)
 	if err != nil {
-		c.Unauthorized("credentials do not match an existing user", err)
+		c.Unauthorized(Messages.CredentialsMismatch, err)
 		return
 	}
 
 	err = user.Authenticate(request.Password)
 	if err != nil {
-		c.Unauthorized("credentials do not match an existing user", err)
+		c.Unauthorized(Messages.CredentialsMismatch, err)
 		return
 	}
 
 	token, err := servicer.TokenUser(user)
 	if err != nil {
-		c.InternalServerError("internal server error", err)
+		c.InternalServerError(Messages.InternalServerError, err)
 		return
 	}
 
@@ -88,7 +88,7 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 // @Router /authenticate/echo [get]
 func (c *AuthContext) Echo(rw web.ResponseWriter, r *web.Request) {
 	if c.CurrentUser == nil {
-		c.Unauthorized("a user token is required")
+		c.Unauthorized(Messages.TokenRequired)
 		return
 	}
 

@@ -36,7 +36,7 @@ func init() {
 // @Router /signups [get]
 func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
 	if c.CurrentUser == nil || c.CurrentUser.Admin != true {
-		c.Unauthorized("must be an administrator to access this resource")
+		c.Unauthorized(Messages.AdminRequired)
 		return
 	}
 
@@ -47,7 +47,7 @@ func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
 
 	err := c.RequestJson(&request)
 	if err != nil {
-		c.BadRequest("malformed request", err)
+		c.BadRequest(Messages.BadRequest, err)
 		return
 	}
 
@@ -61,7 +61,7 @@ func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
 
 	signups, err := servicer.ListSignups(request.PerPage, request.Page)
 	if err != nil {
-		c.InternalServerError("internal server error", err)
+		c.InternalServerError(Messages.InternalServerError, err)
 		return
 	}
 
@@ -84,17 +84,17 @@ func (c *SignupContext) CreateSignup(rw web.ResponseWriter, r *web.Request) {
 
 	err := c.RequestJson(&request)
 	if err != nil {
-		c.BadRequest("malformed request", err)
+		c.BadRequest(Messages.BadRequest, err)
 		return
 	}
 
 	if request.Name == "" {
-		c.BadRequest("name is required")
+		c.BadRequest(Messages.NameRequired)
 		return
 	}
 
 	if request.Email == "" {
-		c.BadRequest("email is required")
+		c.BadRequest(Messages.EmailRequired)
 		return
 	}
 
@@ -102,11 +102,11 @@ func (c *SignupContext) CreateSignup(rw web.ResponseWriter, r *web.Request) {
 	signup, err := servicer.CreateSignup(request.Email, request.Name)
 	if err != nil {
 		if err == servicer.SignupExists {
-			c.Conflict("that email address has been taken")
+			c.Conflict(Messages.EmailConflict)
 			return
 		}
 
-		c.InternalServerError("internal server error", err)
+		c.InternalServerError(Messages.InternalServerError, err)
 		return
 	}
 
@@ -126,13 +126,13 @@ type SignupResponse struct {
 // @Router /signups/{id}/activate [put]
 func (c *SignupContext) ActivateSignup(rw web.ResponseWriter, r *web.Request) {
 	if c.CurrentUser == nil || c.CurrentUser.Admin != true {
-		c.Unauthorized("must be an administrator to access this resource")
+		c.Unauthorized(Messages.AdminRequired)
 		return
 	}
 
 	id, err := strconv.Atoi(r.PathParams["id"])
 	if err != nil {
-		c.BadRequest("need a valid id in request path")
+		c.BadRequest(Messages.IdRequired)
 		return
 	}
 
@@ -141,9 +141,9 @@ func (c *SignupContext) ActivateSignup(rw web.ResponseWriter, r *web.Request) {
 	signup, err := servicer.ActivateSignup(id, referer)
 	if err != nil {
 		if err == servicer.SignupNotFound {
-			c.NotFound("signup not found")
+			c.NotFound(Messages.SignupNotFound)
 		} else {
-			c.InternalServerError("internal server error", err)
+			c.InternalServerError(Messages.InternalServerError, err)
 		}
 
 		return
@@ -162,22 +162,22 @@ func (c *SignupContext) ActivateSignup(rw web.ResponseWriter, r *web.Request) {
 // @Router /signups/{id} [get]
 func (c *SignupContext) GetSignup(rw web.ResponseWriter, r *web.Request) {
 	if c.CurrentUser == nil || c.CurrentUser.Admin != true {
-		c.Unauthorized("must be an administrator to access this resource")
+		c.Unauthorized(Messages.AdminRequired)
 		return
 	}
 
 	id, err := strconv.Atoi(r.PathParams["id"])
 	if err != nil {
-		c.BadRequest("need a valid id in request path")
+		c.BadRequest(Messages.IdRequired)
 		return
 	}
 
 	signup, err := servicer.GetSignup(id)
 	if err != nil {
 		if err == servicer.SignupNotFound {
-			c.NotFound("signup not found")
+			c.NotFound(Messages.SignupNotFound)
 		} else {
-			c.InternalServerError("internal server error", err)
+			c.InternalServerError(Messages.InternalServerError, err)
 		}
 
 		return
@@ -204,23 +204,23 @@ func (c *SignupContext) ClaimSignup(rw web.ResponseWriter, r *web.Request) {
 
 	err := c.RequestJson(&request)
 	if err != nil {
-		c.BadRequest("malformed request", err)
+		c.BadRequest(Messages.BadRequest, err)
 		return
 	}
 
 	if request.Password == "" {
-		c.BadRequest("password is required")
+		c.BadRequest(Messages.PasswordRequired)
 		return
 	}
 
 	if request.Token == "" {
-		c.BadRequest("token is required")
+		c.BadRequest(Messages.TokenRequired)
 		return
 	}
 
 	id, err := strconv.Atoi(r.PathParams["id"])
 	if err != nil {
-		c.BadRequest("need a valid id in request path")
+		c.BadRequest(Messages.IdRequired)
 		return
 	}
 
@@ -228,20 +228,20 @@ func (c *SignupContext) ClaimSignup(rw web.ResponseWriter, r *web.Request) {
 	if err != nil {
 		switch err {
 		case servicer.SignupAlreadyClaimed:
-			c.Conflict("user has already been claimed")
+			c.Conflict(Messages.UserConflict)
 		case servicer.SignupNotFound:
-			c.NotFound("signup not found")
+			c.NotFound(Messages.SignupNotFound)
 		case servicer.SignupInvalidToken:
-			c.Unauthorized("invalid token for signup")
+			c.Unauthorized(Messages.InvalidToken)
 		default:
-			c.InternalServerError("internal server error", err)
+			c.InternalServerError(Messages.InternalServerError, err)
 		}
 		return
 	}
 
 	tokenString, err := servicer.TokenUser(user)
 	if err != nil {
-		c.InternalServerError("internal server error", err)
+		c.InternalServerError(Messages.InternalServerError, err)
 		return
 	}
 

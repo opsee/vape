@@ -30,21 +30,21 @@ func (c *BastionContext) Create(rw web.ResponseWriter, r *web.Request) {
 
 	err := c.RequestJson(&request)
 	if err != nil {
-		c.BadRequest("malformed request", err)
+		c.BadRequest(Messages.BadRequest, err)
 		return
 	}
 
 	if request.CustomerId == "" {
-		c.BadRequest("missing customer_id")
+		c.BadRequest(Messages.CustomerIdRequired)
 		return
 	}
 
 	bastion, plaintext, err := servicer.CreateBastion(request.CustomerId)
 	if err != nil {
 		if err == servicer.CustomerNotFound {
-			c.Unauthorized("no active customer with that id")
+			c.Unauthorized(Messages.CustomerNotAuthorized)
 		} else {
-			c.InternalServerError("internal server error", err)
+			c.InternalServerError(Messages.InternalServerError, err)
 		}
 
 		return
@@ -61,22 +61,22 @@ func (c *BastionContext) Authenticate(rw web.ResponseWriter, r *web.Request) {
 
 	err := c.RequestJson(&request)
 	if err != nil {
-		c.BadRequest("malformed request", err)
+		c.BadRequest(Messages.BadRequest, err)
 		return
 	}
 
 	if request.Id == "" {
-		c.BadRequest("missing id")
+		c.BadRequest(Messages.IdRequired)
 		return
 	}
 
 	if request.Password == "" {
-		c.BadRequest("missing password")
+		c.BadRequest(Messages.PasswordRequired)
 		return
 	}
 
 	if err = servicer.AuthenticateBastion(request.Id, request.Password); err != nil {
-		c.Unauthorized("couldn't authenticate bastion", err, map[string]string{"id": request.Id})
+		c.Unauthorized(Messages.BastionCredentialsMismatch, err, map[string]string{"id": request.Id})
 		return
 	}
 }

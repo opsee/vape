@@ -243,29 +243,3 @@ func (c *Context) responseFunc(rw web.ResponseWriter, status int) func(string, .
 		}
 	}
 }
-
-func readJson(r *web.Request) (map[string]interface{}, error) {
-	value := make(map[string]interface{})
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&value)
-	if err != nil {
-		return nil, err
-	}
-	return value, nil
-}
-
-func writeJson(rw web.ResponseWriter, data interface{}) {
-	encoder := json.NewEncoder(rw)
-	if err := encoder.Encode(data); err != nil {
-		panic(err)
-	}
-}
-
-func mustPresent(json map[string]interface{}, keys ...string) error {
-	for _, k := range keys {
-		if _, ok := json[k]; !ok {
-			return errors.New("no key in json")
-		}
-	}
-	return nil
-}

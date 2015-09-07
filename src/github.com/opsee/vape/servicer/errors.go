@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	RecordNotFound       = errors.New("record not found")
+	UserNotFound         = errors.New("user not found")
 	CustomerNotFound     = errors.New("customer not found")
 	SignupNotFound       = errors.New("customer not found")
 	SignupExists         = errors.New("signup exists with that email")

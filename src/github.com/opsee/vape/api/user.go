@@ -27,13 +27,13 @@ func init() {
 
 func (c *UserContext) Authorized(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
 	if c.CurrentUser == nil {
-		c.Unauthorized("a user or admin is required")
+		c.Unauthorized(Messages.UserOrAdminRequired)
 		return
 	}
 
 	id, err := strconv.Atoi(r.PathParams["id"])
 	if err != nil {
-		c.BadRequest("a valid id is required")
+		c.BadRequest(Messages.IdRequired)
 		return
 	}
 	c.Id = id
@@ -41,22 +41,22 @@ func (c *UserContext) Authorized(rw web.ResponseWriter, r *web.Request, next web
 	if (c.Id != 0 && c.CurrentUser.Id == c.Id) || c.CurrentUser.Admin {
 		next(rw, r)
 	} else {
-		c.Unauthorized("a user or admin is required")
+		c.Unauthorized(Messages.UserOrAdminRequired)
 	}
 }
 
 func (c *UserContext) FetchUser(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
 	if c.Id == 0 {
-		c.BadRequest("a valid id is required")
+		c.BadRequest(Messages.IdRequired)
 		return
 	}
 
 	user, err := servicer.GetUser(c.Id)
 	if err != nil {
-		if err == servicer.RecordNotFound {
-			c.NotFound("user not found")
+		if err == servicer.UserNotFound {
+			c.NotFound(Messages.UserNotFound)
 		} else {
-			c.InternalServerError("internal server error", err)
+			c.InternalServerError(Messages.InternalServerError, err)
 		}
 		return
 	}
@@ -97,13 +97,13 @@ func (c *UserContext) UpdateUser(rw web.ResponseWriter, r *web.Request) {
 
 	err := c.RequestJson(&request)
 	if err != nil {
-		c.BadRequest("malformed request")
+		c.BadRequest(Messages.BadRequest)
 		return
 	}
 
 	err = servicer.UpdateUser(c.User, request.Email, request.Name, request.Password)
 	if err != nil {
-		c.InternalServerError("internal server error", err)
+		c.InternalServerError(Messages.InternalServerError, err)
 		return
 	}
 
@@ -121,9 +121,9 @@ func (c *UserContext) UpdateUser(rw web.ResponseWriter, r *web.Request) {
 func (c *UserContext) DeleteUser(rw web.ResponseWriter, r *web.Request) {
 	err := servicer.DeleteUser(c.Id)
 	if err != nil {
-		c.InternalServerError("internal server error", err)
+		c.InternalServerError(Messages.InternalServerError, err)
 		return
 	}
 
-	c.ResponseJson(&MessageResponse{Message: "user has been deleted"})
+	c.ResponseJson(&MessageResponse{Message: Messages.UserDeleted})
 }
