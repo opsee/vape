@@ -19,6 +19,14 @@ func SetupFixtures(db DB, c *check.C) {
 	}
 
 	// teardown first since it's nice to have lingering data to play with after a test
+	_, err = tx.Exec("delete from signups")
+	if err != nil {
+		c.Fatal(err)
+	}
+	_, err = tx.Exec("delete from bastions")
+	if err != nil {
+		c.Fatal(err)
+	}
 	_, err = tx.Exec("delete from users")
 	if err != nil {
 		c.Fatal(err)
@@ -28,9 +36,9 @@ func SetupFixtures(db DB, c *check.C) {
 		c.Fatal(err)
 	}
 
-	// fk constraint on customer_id
+	// create an admin user (fk constraint on customer_id)
 	var id string
-	err = tx.Get(&id, "insert into customers (name) values ('markorg') returning id")
+	err = tx.Get(&id, "insert into customers (name, active) values ('markorg', true) returning id")
 	if err != nil {
 		c.Fatal(err)
 	}
@@ -42,5 +50,6 @@ func SetupFixtures(db DB, c *check.C) {
 	if err != nil {
 		c.Fatal(err)
 	}
+
 	tx.Commit()
 }

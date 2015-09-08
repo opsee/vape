@@ -2,15 +2,9 @@ package servicer
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
-)
-
-var (
-	SignupAlreadyClaimed = errors.New("signup already claimed")
-	SignupInvalidToken   = errors.New("invalid token for signup")
 )
 
 func GetSignup(id int) (*model.Signup, error) {
@@ -18,7 +12,7 @@ func GetSignup(id int) (*model.Signup, error) {
 	err := store.Get(signup, "signup-by-id", id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, RecordNotFound
+			return nil, SignupNotFound
 		}
 
 		return nil, err
@@ -28,32 +22,47 @@ func GetSignup(id int) (*model.Signup, error) {
 }
 
 func CreateSignup(email, name string) (*model.Signup, error) {
+	existingSignup := new(model.Signup)
+	err := store.Get(existingSignup, "signup-by-email", email)
+	if err == nil {
+		return nil, SignupExists
+	} else if err != sql.ErrNoRows {
+		return nil, err
+	}
+
 	signup := model.NewSignup(email, name)
-	err := store.NamedInsert("insert-signup", signup)
+	err = store.NamedInsert("insert-signup", signup)
 	if err != nil {
 		return nil, err
 	}
+
+	// send an email here!
+	go func() {
+		mergeVars := map[string]string{}
+		mailTemplatedMessage(signup.Email, signup.Name, "signup-confirmation", mergeVars)
+	}()
+
 	return signup, err
 }
 
-func ActivateSignup(id int, referer string) error {
+func ActivateSignup(id int, referer string) (*model.Signup, error) {
 	signup, err := GetSignup(id)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// send an email here!
 	go func() {
 		mergeVars := map[string]string{
-			"id":      fmt.Sprint(signup.Id),
-			"token":   signup.Token(),
-			"name":    signup.Name,
-			"referer": referer,
+			"signup_id":    fmt.Sprint(signup.Id),
+			"signup_token": signup.Token(),
+			"signup_name":  signup.Name,
+			"referer":      referer,
 		}
-		mailTemplatedMessage(signup.Email, signup.Name, "activation", mergeVars)
+		mailTemplatedMessage(signup.Email, signup.Name, "beta-approval", mergeVars)
 	}()
 
-	return nil
+	return signup, nil
 }
 
 func ListSignups(perPage int, page int) ([]*model.Signup, error) {
@@ -77,9 +86,19 @@ func ListSignups(perPage int, page int) ([]*model.Signup, error) {
 	return signups, nil
 }
 
-func ClaimSignup(signup *model.Signup, token, password string) (*model.User, error) {
+func ClaimSignup(id int, token, password string) (*model.User, error) {
+	signup, err := GetSignup(id)
+	if err != nil {
+		return nil, err
+	}
+
 	if signup.Validate(token) == false {
 		return nil, SignupInvalidToken
+	}
+
+	// make sure user hasn't been claimed
+	if signup.Claimed {
+		return nil, SignupAlreadyClaimed
 	}
 
 	// ok, pop that stuff in the user, and make sure they're verified

@@ -4,7 +4,6 @@ import (
 	"github.com/gocraft/web"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
-	"net/http"
 	"strconv"
 )
 
@@ -28,14 +27,13 @@ func init() {
 
 func (c *UserContext) Authorized(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
 	if c.CurrentUser == nil {
-		rw.WriteHeader(http.StatusUnauthorized)
+		c.Unauthorized(Messages.UserOrAdminRequired)
 		return
 	}
 
 	id, err := strconv.Atoi(r.PathParams["id"])
 	if err != nil {
-		c.Job.EventErr("error.atoi", err)
-		rw.WriteHeader(http.StatusBadRequest)
+		c.BadRequest(Messages.IdRequired)
 		return
 	}
 	c.Id = id
@@ -43,23 +41,22 @@ func (c *UserContext) Authorized(rw web.ResponseWriter, r *web.Request, next web
 	if (c.Id != 0 && c.CurrentUser.Id == c.Id) || c.CurrentUser.Admin {
 		next(rw, r)
 	} else {
-		rw.WriteHeader(http.StatusUnauthorized)
+		c.Unauthorized(Messages.UserOrAdminRequired)
 	}
 }
 
 func (c *UserContext) FetchUser(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
 	if c.Id == 0 {
-		rw.WriteHeader(http.StatusBadRequest)
+		c.BadRequest(Messages.IdRequired)
 		return
 	}
 
 	user, err := servicer.GetUser(c.Id)
 	if err != nil {
-		c.Job.EventErr("error.getuser", err)
-		if err == servicer.RecordNotFound {
-			rw.WriteHeader(http.StatusNotFound)
+		if err == servicer.UserNotFound {
+			c.NotFound(Messages.UserNotFound)
 		} else {
-			rw.WriteHeader(http.StatusInternalServerError)
+			c.InternalServerError(Messages.InternalServerError, err)
 		}
 		return
 	}
@@ -72,56 +69,61 @@ func (c *UserContext) FetchUser(rw web.ResponseWriter, r *web.Request, next web.
 // @Description Get a single user.
 // @Accept  json
 // @Param   Authorization    header string  true        "The Bearer token - an admin user token or a token with matching id is required"
-// @Param   id               path   int     true       "The user id"
-// @Success 200 {object}     model.User              ""
-// @Failure 401 {object}     interface           	 "Response will be empty"
+// @Param   id               path   int     true        "The user id"
+// @Success 200 {object}     model.User                 ""
+// @Failure 401 {object}     MessageResponse           	""
 // @Router /users/{id} [get]
 func (c *UserContext) GetUser(rw web.ResponseWriter, r *web.Request) {
-	writeJson(rw, c.User)
+	c.ResponseJson(c.User)
 }
 
 // @Title updateUser
 // @Description Update a single user.
 // @Accept  json
 // @Param   Authorization    header string  true        "The Bearer token - an admin user token or a token with matching id is required"
-// @Param   id               path   int     true       "The user id"
-// @Param   email            body   string  true        "A new email address"
-// @Param   name             body   string  true        "A new name"
-// @Param   password         body   string  true        "A new password"
+// @Param   id               path   int     true        "The user id"
+// @Param   email            body   string  false       "A new email address"
+// @Param   name             body   string  false       "A new name"
+// @Param   password         body   string  false       "A new password"
 // @Success 200 {object}     model.User                  ""
-// @Failure 401 {object}     interface           	 "Response will be empty"
+// @Failure 401 {object}     MessageResponse           	 ""
 // @Router /users/{id} [put]
 func (c *UserContext) UpdateUser(rw web.ResponseWriter, r *web.Request) {
-	userJson, err := readJson(r)
+	var request struct {
+		Email    string `json:"email"`
+		Name     string `json:"name"`
+		Password string `json:"password"`
+	}
+
+	err := c.RequestJson(&request)
 	if err != nil {
-		c.Job.EventErr("error.json", err)
-		rw.WriteHeader(http.StatusBadRequest)
+		c.BadRequest(Messages.BadRequest)
 		return
 	}
 
-	err = servicer.UpdateUser(c.User, userJson)
+	err = servicer.UpdateUser(c.User, request.Email, request.Name, request.Password)
 	if err != nil {
-		c.Job.Event("error.update")
-		rw.WriteHeader(http.StatusInternalServerError)
+		c.InternalServerError(Messages.InternalServerError, err)
 		return
 	}
 
-	writeJson(rw, c.User)
+	c.ResponseJson(c.User)
 }
 
 // @Title deleteUser
 // @Description Update a single user.
 // @Accept  json
 // @Param   Authorization    header string  true        "The Bearer token - an admin user token or a token with matching id is required"
-// @Param   id               path   int     true       "The user id"
-// @Success 200 {object}     interface                  "Response will be empty"
-// @Failure 401 {object}     interface           	"Response will be empty"
+// @Param   id               path   int     true        "The user id"
+// @Success 200 {object}     MessageResponse            ""
+// @Failure 401 {object}     MessageResponse           	""
 // @Router /users/{id} [delete]
 func (c *UserContext) DeleteUser(rw web.ResponseWriter, r *web.Request) {
 	err := servicer.DeleteUser(c.Id)
 	if err != nil {
-		c.Job.Event("error.delete")
-		rw.WriteHeader(http.StatusInternalServerError)
+		c.InternalServerError(Messages.InternalServerError, err)
 		return
 	}
+
+	c.ResponseJson(&MessageResponse{Message: Messages.UserDeleted})
 }

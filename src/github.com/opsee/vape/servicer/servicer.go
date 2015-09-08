@@ -1,22 +1,26 @@
 package servicer
 
 import (
-	"errors"
 	"github.com/keighl/mandrill"
 )
 
-const mandrillAPIKey = "V2M1onmVdOXJ42Vr8Gr_ew"
+type MandrillMailer interface {
+	MessagesSendTemplate(*mandrill.Message, string, interface{}) ([]*mandrill.Response, error)
+}
 
 var (
-	RecordNotFound = errors.New("record not found")
-	mailClient     *mandrill.Client
+	mailClient MandrillMailer
 )
 
-func init() {
-	mailClient = mandrill.ClientWithKey(mandrillAPIKey)
+func Init(mailer MandrillMailer) {
+	mailClient = mailer
 }
 
 func mailTemplatedMessage(toEmail, toName, templateName string, mergeVars interface{}) ([]*mandrill.Response, error) {
+	if mailClient == nil {
+		return nil, nil
+	}
+
 	message := &mandrill.Message{}
 	message.AddRecipient(toEmail, toName, "to")
 	message.Merge = true

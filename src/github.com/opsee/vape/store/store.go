@@ -14,6 +14,7 @@ var DB *sqlx.DB
 
 var queries = map[string]string{
 	// users
+	"user-by-email":            "select * from users where email = $1",
 	"user-by-email-and-active": "select * from users where email = $1 and active = $2",
 	"user-by-id":               "select * from users where id = $1",
 	"delete-user-by-id":        "delete from users where id = $1",
@@ -21,17 +22,19 @@ var queries = map[string]string{
 	"insert-user":              "insert into users (customer_id, email, name, verified, active, password_hash) values (:customer_id, :email, :name, :verified, :active, :password_hash) returning *",
 
 	// signups
-	"signup-by-id":  "select * from signups where id = $1",
-	"insert-signup": "insert into signups (email, name) values (:email, :name) returning *",
-	"list-signups":  "select * from signups limit $1 offset $2",
-	"claim-signup":  "update signups set claimed = true where id = $1",
+	"signup-by-id":    "select * from signups where id = $1",
+	"signup-by-email": "select * from signups where email = $1",
+	"insert-signup":   "insert into signups (email, name) values (:email, :name) returning *",
+	"list-signups":    "select * from signups limit $1 offset $2",
+	"claim-signup":    "update signups set claimed = true where id = $1",
 
 	// customers
-	"insert-new-customer": "insert into customers (name) values (NULL) returning id",
+	"customer-by-id-and-active": "select * from customers where id = $1 and active = $2",
+	"insert-new-customer":       "insert into customers (name, active) values (NULL, true) returning id",
 
 	// bastions
-	"insert-bastion":           "insert into bastions (password_hash, customer_id, active) values (:password_hash, :customer_id, :active) returning *",
-	"bastion-by-id-and-active": "select * from bastions where id = $1 and active = $2",
+	"insert-bastion":                         "insert into bastions (password_hash, customer_id, active) values (:password_hash, :customer_id, :active) returning *",
+	"bastion-join-customer-by-id-and-active": "select b.* from bastions b inner join customers c on b.customer_id = c.id where b.id = $1 and b.active = $2 and c.active = $3",
 }
 
 func Init(pgConnection string) error {

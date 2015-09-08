@@ -8,8 +8,8 @@ import (
 type User struct {
 	Id           int       `json:"id" token:"id"`
 	CustomerId   string    `json:"customer_id" token:"customer_id" db:"customer_id"`
-	Email        string    `json:"email" token:"email"`
-	Name         string    `json:"name" token:"name"`
+	Email        string    `json:"email"`
+	Name         string    `json:"name"`
 	Verified     bool      `json:"verified" token:"verified"`
 	Admin        bool      `json:"admin" token:"admin"`
 	Active       bool      `json:"active" token:"active"`
@@ -35,20 +35,17 @@ func (user *User) Authenticate(password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 }
 
-func (user *User) Merge(params map[string]interface{}) error {
-	email, ok := params["email"]
-	if ok {
-		user.Email = email.(string)
+func (user *User) Merge(email, name, password string) error {
+	if email != "" {
+		user.Email = email
 	}
 
-	name, ok := params["name"]
-	if ok {
-		user.Name = name.(string)
+	if name != "" {
+		user.Name = name
 	}
 
-	password, ok := params["password"]
-	if ok {
-		passwordHash, err := bcrypt.GenerateFromPassword([]byte(password.(string)), 10)
+	if password != "" {
+		passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
 		if err != nil {
 			return err
 		}
