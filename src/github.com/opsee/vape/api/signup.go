@@ -45,11 +45,8 @@ func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
 		PerPage int `json:"per_page"`
 	}
 
-	err := c.RequestJson(&request)
-	if err != nil {
-		c.BadRequest(Messages.BadRequest, err)
-		return
-	}
+	// ignore errors since all params are optional
+	c.RequestJson(&request)
 
 	if request.PerPage <= 0 {
 		request.PerPage = 20
@@ -113,7 +110,7 @@ func (c *SignupContext) CreateSignup(rw web.ResponseWriter, r *web.Request) {
 	c.ResponseJson(signup)
 }
 
-type SignupResponse struct {
+type SignupActivationResponse struct {
 	Token string `json:"token"`
 }
 
@@ -149,7 +146,7 @@ func (c *SignupContext) ActivateSignup(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	c.ResponseJson(&SignupResponse{Token: signup.Token()})
+	c.ResponseJson(&SignupActivationResponse{Token: signup.Token()})
 }
 
 // @Title getSignup

@@ -36,7 +36,7 @@ func SetupFixtures(db DB, c *check.C) {
 		c.Fatal(err)
 	}
 
-	// fk constraint on customer_id
+	// create an admin user (fk constraint on customer_id)
 	var id string
 	err = tx.Get(&id, "insert into customers (name, active) values ('markorg', true) returning id")
 	if err != nil {
@@ -50,5 +50,6 @@ func SetupFixtures(db DB, c *check.C) {
 	if err != nil {
 		c.Fatal(err)
 	}
+
 	tx.Commit()
 }
