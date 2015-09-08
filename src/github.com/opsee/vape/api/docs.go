@@ -144,7 +144,7 @@ var swaggerJson = `
           "200": {
             "description": "An object with the claim token used to verify the signup (sent in email)",
             "schema": {
-              "$ref": "#/definitions/github.com.opsee.vape.api.SignupResponse",
+              "$ref": "#/definitions/github.com.opsee.vape.api.SignupActivationResponse",
               "items": {}
             }
           },
@@ -454,6 +454,40 @@ var swaggerJson = `
         }
       }
     },
+    "/authenticate/token": {
+      "post": {
+        "tags": [
+          "authenticate"
+        ],
+        "operationId": "authenticateFromToken",
+        "summary": "Authenticates a user by emailing a Bearer token.",
+        "parameters": [
+          {
+            "in": "body",
+            "description": "A user's email",
+            "name": "email",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 0,
+              "maximum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Description was not specified",
+            "schema": {
+              "$ref": "#/definitions/github.com.opsee.vape.api.MessageResponse",
+              "items": {}
+            }
+          },
+          "401": {
+            "description": "Description was not specified"
+          }
+        }
+      }
+    },
     "/authenticate/echo": {
       "get": {
         "tags": [
@@ -493,7 +527,7 @@ var swaggerJson = `
         }
       }
     },
-    "github.com.opsee.vape.api.SignupResponse": {
+    "github.com.opsee.vape.api.SignupActivationResponse": {
       "properties": {
         "token": {
           "type": "string",

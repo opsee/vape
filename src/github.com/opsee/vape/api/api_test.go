@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/gocraft/web"
+	"github.com/keighl/mandrill"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vape/testutil"
@@ -15,7 +16,6 @@ import (
 	"os"
 	"testing"
 	"time"
-	"github.com/keighl/mandrill"
 )
 
 type ApiSuite struct{}
@@ -35,9 +35,9 @@ func (s *ApiSuite) SetUpTest(c *C) {
 }
 
 type testMailer struct {
-	Message *mandrill.Message
+	Message  *mandrill.Message
 	Template string
-	Content interface{}
+	Content  interface{}
 }
 
 func (t *testMailer) MessagesSendTemplate(msg *mandrill.Message, templateName string, templateContent interface{}) ([]*mandrill.Response, error) {

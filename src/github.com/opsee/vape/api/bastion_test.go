@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/opsee/vape/store"
 	"bytes"
+	"github.com/opsee/vape/store"
 	. "gopkg.in/check.v1"
 )
 
@@ -33,7 +33,7 @@ func (s *ApiSuite) TestBastionAuth(c *C) {
 	}
 
 	// create a bastion auth
-	rec, err := testReq(privateRouter, "POST", "https://vape/bastions", bytes.NewBuffer([]byte(`{"customer_id": "` + customerId + `"}`)), nil)
+	rec, err := testReq(privateRouter, "POST", "https://vape/bastions", bytes.NewBuffer([]byte(`{"customer_id": "`+customerId+`"}`)), nil)
 	if err != nil {
 		c.Fatal(err)
 	}
@@ -42,9 +42,8 @@ func (s *ApiSuite) TestBastionAuth(c *C) {
 	loadResponse(bastion, rec.Body)
 	c.Assert(bastion.Password, NotNil)
 
-
 	// test the auth
-	rec, err = testReq(privateRouter, "POST", "https://vape/bastions/authenticate", bytes.NewBuffer([]byte(`{"id": "` + bastion.Id + `", "password": "` + bastion.Password + `"}`)), nil)
+	rec, err = testReq(privateRouter, "POST", "https://vape/bastions/authenticate", bytes.NewBuffer([]byte(`{"id": "`+bastion.Id+`", "password": "`+bastion.Password+`"}`)), nil)
 	if err != nil {
 		c.Fatal(err)
 	}

@@ -5,6 +5,7 @@ import (
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
 	"strconv"
+	"time"
 )
 
 type SignupContext struct {
@@ -117,9 +118,9 @@ type SignupActivationResponse struct {
 // @Title activateSignup
 // @Description Sends the activation email for a signup. Can be called multiple times to send multiple emails.
 // @Accept  json
-// @Param   id               path      int   true   "The signup's id"
-// @Success 200 {object}     SignupResponse         "An object with the claim token used to verify the signup (sent in email)"
-// @Failure 401 {object}     MessageResponse        ""
+// @Param   id               path      int   true       "The signup's id"
+// @Success 200 {object}     SignupActivationResponse   "An object with the claim token used to verify the signup (sent in email)"
+// @Failure 401 {object}     MessageResponse            ""
 // @Router /signups/{id}/activate [put]
 func (c *SignupContext) ActivateSignup(rw web.ResponseWriter, r *web.Request) {
 	if c.CurrentUser == nil || c.CurrentUser.Admin != true {
@@ -236,7 +237,7 @@ func (c *SignupContext) ClaimSignup(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	tokenString, err := servicer.TokenUser(user)
+	tokenString, err := servicer.TokenUser(user, time.Hour*12)
 	if err != nil {
 		c.InternalServerError(Messages.InternalServerError, err)
 		return

@@ -1,6 +1,7 @@
 package api
 
 type messages struct {
+	Ok                         string
 	InternalServerError        string
 	BadRequest                 string
 	IdRequired                 string
@@ -23,6 +24,7 @@ type messages struct {
 }
 
 var Messages = &messages{
+	Ok:                         "ok",
 	InternalServerError:        "an unexpected error happened!",
 	BadRequest:                 "malformed request",
 	IdRequired:                 "id is required",

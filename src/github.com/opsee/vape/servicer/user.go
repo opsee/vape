@@ -22,6 +22,20 @@ func GetUser(id int) (*model.User, error) {
 	return user, nil
 }
 
+func GetUserEmail(email string) (*model.User, error) {
+	user := new(model.User)
+	err := store.Get(user, "user-by-email", email)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, UserNotFound
+		}
+
+		return nil, err
+	}
+
+	return user, nil
+}
+
 func UpdateUser(user *model.User, email, name, password string) error {
 	err := user.Merge(email, name, password)
 	if err != nil {
@@ -37,7 +51,26 @@ func DeleteUser(id int) error {
 	return err
 }
 
-func TokenUser(user *model.User) (string, error) {
-	token := token.New(user, user.Email, time.Now(), time.Now().Add(time.Hour*token.ExpHours))
+func TokenUser(user *model.User, duration time.Duration) (string, error) {
+	token := token.New(user, user.Email, time.Now(), time.Now().Add(duration))
 	return token.Marshal()
+}
+
+func EmailTokenUser(user *model.User, duration time.Duration, referer string) error {
+	token := token.New(user, user.Email, time.Now(), time.Now().Add(duration))
+	tokenString, err := token.Marshal()
+	if err != nil {
+		return err
+	}
+
+	// email that token
+	go func() {
+		mergeVars := map[string]string{
+			"user_token": tokenString,
+			"referer":    referer,
+		}
+		mailTemplatedMessage(user.Email, user.Name, "password-reset", mergeVars)
+	}()
+
+	return nil
 }

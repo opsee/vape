@@ -5,6 +5,7 @@ import (
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
+	"time"
 )
 
 type AuthContext struct {
@@ -17,6 +18,7 @@ var authRouter *web.Router
 func init() {
 	authRouter = publicRouter.Subrouter(AuthContext{}, "/authenticate")
 	authRouter.Post("/password", (*AuthContext).CreateAuthPassword)
+	authRouter.Post("/token", (*AuthContext).CreateAuthToken)
 	authRouter.Get("/echo", (*AuthContext).Echo) // for testing
 }
 
@@ -68,7 +70,7 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 		return
 	}
 
-	token, err := servicer.TokenUser(user)
+	token, err := servicer.TokenUser(user, time.Hour*12)
 	if err != nil {
 		c.InternalServerError(Messages.InternalServerError, err)
 		return
@@ -78,6 +80,46 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 		"user":  user,
 		"token": token,
 	})
+}
+
+// @Title authenticateFromToken
+// @Description Authenticates a user by emailing a Bearer token.
+// @Accept  json
+// @Param   email           body    string  true         "A user's email"
+// @Success 200 {object}    MessageResponse
+// @Failure 401 {object}    MessageResponse
+// @Router /authenticate/token [post]
+func (c *AuthContext) CreateAuthToken(rw web.ResponseWriter, r *web.Request) {
+	var request struct {
+		Email string `json:"email"`
+	}
+
+	err := c.RequestJson(&request)
+	if err != nil {
+		c.BadRequest(Messages.BadRequest, err)
+		return
+	}
+
+	if request.Email == "" {
+		c.BadRequest(Messages.EmailRequired)
+		return
+	}
+
+	user := new(model.User)
+	err = store.Get(user, "user-by-email-and-active", request.Email, true)
+	if err != nil {
+		c.Unauthorized(Messages.UserNotFound)
+		return
+	}
+
+	referer := r.Header.Get("Referer")
+	err = servicer.EmailTokenUser(user, time.Hour, referer)
+	if err != nil {
+		c.InternalServerError(Messages.InternalServerError, err)
+		return
+	}
+
+	c.ResponseJson(&MessageResponse{Message: Messages.Ok})
 }
 
 // @Title echoSession

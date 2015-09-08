@@ -2,8 +2,8 @@ package api
 
 import (
 	"bytes"
-	. "gopkg.in/check.v1"
 	"github.com/opsee/vape/model"
+	. "gopkg.in/check.v1"
 )
 
 func (s *ApiSuite) TestUserGet(c *C) {

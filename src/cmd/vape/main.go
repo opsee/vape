@@ -1,11 +1,11 @@
 package main
 
 import (
+	"github.com/keighl/mandrill"
 	"github.com/opsee/vape/api"
+	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vape/token"
-	"github.com/opsee/vape/servicer"
-	"github.com/keighl/mandrill"
 	"io/ioutil"
 	"log"
 	"os"

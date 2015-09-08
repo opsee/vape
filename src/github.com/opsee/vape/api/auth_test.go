@@ -2,8 +2,10 @@ package api
 
 import (
 	"bytes"
-	. "gopkg.in/check.v1"
 	"github.com/opsee/vape/model"
+	"github.com/opsee/vape/servicer"
+	. "gopkg.in/check.v1"
+	"time"
 )
 
 func (s *ApiSuite) TestUserSessionEcho(c *C) {
@@ -16,7 +18,6 @@ func (s *ApiSuite) TestUserSessionEcho(c *C) {
 	user := &model.User{}
 	err = loadResponse(user, rec.Body)
 	c.Assert(user.Id, DeepEquals, 1)
-	c.Assert(user.Email, DeepEquals, "cliff@leaninto.it")
 	c.Assert(user.Admin, DeepEquals, true)
 }
 
@@ -38,4 +39,23 @@ func (s *ApiSuite) TestCreateAuthPassword(c *C) {
 		c.Fatal(err)
 	}
 	c.Assert(rec.Code, DeepEquals, 401)
+}
+
+func (s *ApiSuite) TestCreateAuthToken(c *C) {
+	mailer := &testMailer{}
+	servicer.Init(mailer)
+
+	// test a non-existent email
+	rec, _ := testReq(publicRouter, "POST", "https://vape/authenticate/token", bytes.NewBuffer([]byte(`{"email": "what@rudoing.com"}`)), nil)
+	c.Assert(rec.Code, DeepEquals, 401)
+
+	// ok, this is a real user
+	rec, _ = testReq(publicRouter, "POST", "https://vape/authenticate/token", bytes.NewBuffer([]byte(`{"email": "mark@opsee.co"}`)), nil)
+	messageResponse := &MessageResponse{}
+	loadResponse(messageResponse, rec.Body)
+	c.Assert(messageResponse.Message, DeepEquals, Messages.Ok)
+
+	// look for our token email
+	time.Sleep(5 * time.Millisecond) // wait for the goroutine to finish emailing, easier than passing a channel around somehow
+	c.Assert(mailer.Template, DeepEquals, "password-reset")
 }

@@ -54,10 +54,10 @@ func ActivateSignup(id int, referer string) (*model.Signup, error) {
 	// send an email here!
 	go func() {
 		mergeVars := map[string]string{
-			"signup_id":      fmt.Sprint(signup.Id),
-			"signup_token":   signup.Token(),
-			"signup_name":    signup.Name,
-			"referer": referer,
+			"signup_id":    fmt.Sprint(signup.Id),
+			"signup_token": signup.Token(),
+			"signup_name":  signup.Name,
+			"referer":      referer,
 		}
 		mailTemplatedMessage(signup.Email, signup.Name, "beta-approval", mergeVars)
 	}()
