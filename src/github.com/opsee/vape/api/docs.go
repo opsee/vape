@@ -11,19 +11,127 @@ var swaggerJson = `
   },
   "tags": [
     {
+      "name": "authenticate",
+      "description": "Authentication API"
+    },
+    {
       "name": "signups",
       "description": "Signup API"
     },
     {
       "name": "users",
       "description": "User API"
-    },
-    {
-      "name": "authenticate",
-      "description": "Authentication API"
     }
   ],
   "paths": {
+    "/authenticate/password": {
+      "post": {
+        "tags": [
+          "authenticate"
+        ],
+        "operationId": "authenticateFromPassword",
+        "summary": "Authenticates a user with email and password.",
+        "parameters": [
+          {
+            "in": "body",
+            "description": "A user's email",
+            "name": "email",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 0,
+              "maximum": 0
+            }
+          },
+          {
+            "in": "body",
+            "description": "A user's password",
+            "name": "password",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 0,
+              "maximum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Description was not specified",
+            "schema": {
+              "$ref": "#/definitions/github.com.opsee.vape.api.UserTokenResponse",
+              "items": {}
+            }
+          },
+          "401": {
+            "description": "Description was not specified"
+          }
+        }
+      }
+    },
+    "/authenticate/token": {
+      "post": {
+        "tags": [
+          "authenticate"
+        ],
+        "operationId": "authenticateFromToken",
+        "summary": "Authenticates a user by emailing a Bearer token.",
+        "parameters": [
+          {
+            "in": "body",
+            "description": "A user's email",
+            "name": "email",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 0,
+              "maximum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Description was not specified",
+            "schema": {
+              "$ref": "#/definitions/github.com.opsee.vape.api.MessageResponse",
+              "items": {}
+            }
+          },
+          "401": {
+            "description": "Description was not specified"
+          }
+        }
+      }
+    },
+    "/authenticate/echo": {
+      "get": {
+        "tags": [
+          "authenticate"
+        ],
+        "operationId": "echoSession",
+        "summary": "Echos a user session given an authentication token.",
+        "parameters": [
+          {
+            "in": "header",
+            "description": "The Bearer token",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "minimum": 0,
+            "maximum": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Description was not specified",
+            "schema": {
+              "$ref": "#/definitions/github.com.opsee.vape.model.User",
+              "items": {}
+            }
+          }
+        }
+      }
+    },
     "/signups": {
       "get": {
         "tags": [
@@ -408,128 +516,12 @@ var swaggerJson = `
           }
         }
       }
-    },
-    "/authenticate/password": {
-      "post": {
-        "tags": [
-          "authenticate"
-        ],
-        "operationId": "authenticateFromPassword",
-        "summary": "Authenticates a user with email and password.",
-        "parameters": [
-          {
-            "in": "body",
-            "description": "A user's email",
-            "name": "email",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minimum": 0,
-              "maximum": 0
-            }
-          },
-          {
-            "in": "body",
-            "description": "A user's password",
-            "name": "password",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minimum": 0,
-              "maximum": 0
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Description was not specified",
-            "schema": {
-              "$ref": "#/definitions/github.com.opsee.vape.api.UserTokenResponse",
-              "items": {}
-            }
-          },
-          "401": {
-            "description": "Description was not specified"
-          }
-        }
-      }
-    },
-    "/authenticate/token": {
-      "post": {
-        "tags": [
-          "authenticate"
-        ],
-        "operationId": "authenticateFromToken",
-        "summary": "Authenticates a user by emailing a Bearer token.",
-        "parameters": [
-          {
-            "in": "body",
-            "description": "A user's email",
-            "name": "email",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minimum": 0,
-              "maximum": 0
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Description was not specified",
-            "schema": {
-              "$ref": "#/definitions/github.com.opsee.vape.api.MessageResponse",
-              "items": {}
-            }
-          },
-          "401": {
-            "description": "Description was not specified"
-          }
-        }
-      }
-    },
-    "/authenticate/echo": {
-      "get": {
-        "tags": [
-          "authenticate"
-        ],
-        "operationId": "echoSession",
-        "summary": "Echos a user session given an authentication token.",
-        "parameters": [
-          {
-            "in": "header",
-            "description": "The Bearer token",
-            "name": "Authorization",
-            "required": true,
-            "type": "string",
-            "minimum": 0,
-            "maximum": 0
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Description was not specified",
-            "schema": {
-              "$ref": "#/definitions/github.com.opsee.vape.model.User",
-              "items": {}
-            }
-          }
-        }
-      }
     }
   },
   "definitions": {
     "github.com.opsee.vape.api.MessageResponse": {
       "properties": {
         "message": {
-          "type": "string",
-          "items": {}
-        }
-      }
-    },
-    "github.com.opsee.vape.api.SignupActivationResponse": {
-      "properties": {
-        "token": {
           "type": "string",
           "items": {}
         }
@@ -543,35 +535,6 @@ var swaggerJson = `
         },
         "user": {
           "$ref": "#/definitions/github.com.opsee.vape.model.User",
-          "items": {}
-        }
-      }
-    },
-    "github.com.opsee.vape.model.Signup": {
-      "properties": {
-        "claimed": {
-          "$ref": "#/definitions/bool",
-          "items": {}
-        },
-        "created_at": {
-          "$ref": "#/definitions/Time",
-          "items": {}
-        },
-        "email": {
-          "type": "string",
-          "items": {}
-        },
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "items": {}
-        },
-        "name": {
-          "type": "string",
-          "items": {}
-        },
-        "updated_at": {
-          "$ref": "#/definitions/Time",
           "items": {}
         }
       }
@@ -613,6 +576,47 @@ var swaggerJson = `
         },
         "verified": {
           "$ref": "#/definitions/bool",
+          "items": {}
+        }
+      }
+    },
+    "github.com.opsee.vape.api.SignupActivationResponse": {
+      "properties": {
+        "token": {
+          "type": "string",
+          "items": {}
+        }
+      }
+    },
+    "github.com.opsee.vape.model.Signup": {
+      "properties": {
+        "activated": {
+          "$ref": "#/definitions/bool",
+          "items": {}
+        },
+        "claimed": {
+          "$ref": "#/definitions/bool",
+          "items": {}
+        },
+        "created_at": {
+          "$ref": "#/definitions/Time",
+          "items": {}
+        },
+        "email": {
+          "type": "string",
+          "items": {}
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "items": {}
+        },
+        "name": {
+          "type": "string",
+          "items": {}
+        },
+        "updated_at": {
+          "$ref": "#/definitions/Time",
           "items": {}
         }
       }

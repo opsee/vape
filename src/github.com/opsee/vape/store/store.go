@@ -26,6 +26,7 @@ var queries = map[string]string{
 	"signup-by-email": "select * from signups where email = $1",
 	"insert-signup":   "insert into signups (email, name) values (:email, :name) returning *",
 	"list-signups":    "select * from signups limit $1 offset $2",
+	"activate-signup": "update signups set activated = true where id = $1",
 	"claim-signup":    "update signups set claimed = true where id = $1",
 
 	// customers

@@ -51,6 +51,11 @@ func ActivateSignup(id int, referer string) (*model.Signup, error) {
 		return nil, err
 	}
 
+	_, err = store.Exec("activate-signup", signup.Id)
+	if err != nil {
+		return nil, err
+	}
+
 	// send an email here!
 	go func() {
 		mergeVars := map[string]string{
