@@ -2,6 +2,7 @@ package servicer
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vape/token"
@@ -66,6 +67,7 @@ func EmailTokenUser(user *model.User, duration time.Duration, referer string) er
 	// email that token
 	go func() {
 		mergeVars := map[string]string{
+			"user_id":    fmt.Sprint(user.Id),
 			"user_token": tokenString,
 			"referer":    referer,
 		}
