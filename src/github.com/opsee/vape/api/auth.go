@@ -112,7 +112,7 @@ func (c *AuthContext) CreateAuthToken(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	referer := r.Header.Get("Referer")
+	referer := r.Header.Get("Origin")
 	err = servicer.EmailTokenUser(user, time.Hour, referer)
 	if err != nil {
 		c.InternalServerError(Messages.InternalServerError, err)

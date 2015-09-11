@@ -135,7 +135,7 @@ func (c *SignupContext) ActivateSignup(rw web.ResponseWriter, r *web.Request) {
 	}
 
 	// sending referer should be temporary for developing email templates
-	referer := r.Header.Get("Referer")
+	referer := r.Header.Get("Origin")
 	signup, err := servicer.ActivateSignup(id, referer)
 	if err != nil {
 		if err == servicer.SignupNotFound {
