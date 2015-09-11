@@ -37,14 +37,18 @@ func GetUserEmail(email string) (*model.User, error) {
 	return user, nil
 }
 
-func UpdateUser(user *model.User, email, name, password string) error {
+func UpdateUser(user *model.User, email, name, password string, duration time.Duration) (string, error) {
 	err := user.Merge(email, name, password)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	_, err = store.NamedExec("update-user", user)
-	return err
+	if err != nil {
+		return "", err
+	}
+
+	return TokenUser(user, duration)
 }
 
 func DeleteUser(id int) error {
@@ -58,8 +62,7 @@ func TokenUser(user *model.User, duration time.Duration) (string, error) {
 }
 
 func EmailTokenUser(user *model.User, duration time.Duration, referer string) error {
-	token := token.New(user, user.Email, time.Now(), time.Now().Add(duration))
-	tokenString, err := token.Marshal()
+	tokenString, err := TokenUser(user, duration)
 	if err != nil {
 		return err
 	}

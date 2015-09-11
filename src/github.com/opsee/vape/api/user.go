@@ -5,6 +5,7 @@ import (
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
 	"strconv"
+	"time"
 )
 
 type UserContext struct {
@@ -85,8 +86,8 @@ func (c *UserContext) GetUser(rw web.ResponseWriter, r *web.Request) {
 // @Param   email            body   string  false       "A new email address"
 // @Param   name             body   string  false       "A new name"
 // @Param   password         body   string  false       "A new password"
-// @Success 200 {object}     model.User                  ""
-// @Failure 401 {object}     MessageResponse           	 ""
+// @Success 200 {object}     UserTokenResponse          ""
+// @Failure 401 {object}     MessageResponse     	 ""
 // @Router /users/{id} [put]
 func (c *UserContext) UpdateUser(rw web.ResponseWriter, r *web.Request) {
 	var request struct {
@@ -101,13 +102,13 @@ func (c *UserContext) UpdateUser(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	err = servicer.UpdateUser(c.User, request.Email, request.Name, request.Password)
+	tokenString, err := servicer.UpdateUser(c.User, request.Email, request.Name, request.Password, time.Hour*12)
 	if err != nil {
 		c.InternalServerError(Messages.InternalServerError, err)
 		return
 	}
 
-	c.ResponseJson(c.User)
+	c.ResponseJson(&UserTokenResponse{Token: tokenString, User: c.User})
 }
 
 // @Title deleteUser
