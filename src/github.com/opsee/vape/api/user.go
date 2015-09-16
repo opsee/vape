@@ -25,6 +25,7 @@ func init() {
 	userRouter.Get("/:id", (*UserContext).GetUser)
 	userRouter.Put("/:id", (*UserContext).UpdateUser)
 	userRouter.Delete("/:id", (*UserContext).DeleteUser)
+	userRouter.Get("/:id/data", (*UserContext).GetUserData)
 	userRouter.Put("/:id/data", (*UserContext).UpdateUserData)
 }
 
@@ -132,6 +133,23 @@ func (c *UserContext) DeleteUser(rw web.ResponseWriter, r *web.Request) {
 }
 
 type UserDataResponse map[string]interface{}
+
+// @Title getUserData
+// @Description Update a single user.
+// @Accept  json
+// @Param   Authorization    header string  true        "The Bearer token - an admin user token or a token with matching id is required"
+// @Param   id               path   int     true        "The user id"
+// @Success 200 {object}     UserDataResponse           ""
+// @Failure 401 {object}     MessageResponse    	 ""
+// @Router /users/{id}/data [get]
+func (c *UserContext) GetUserData(rw web.ResponseWriter, r *web.Request) {
+	data, err := servicer.GetUserData(c.Id)
+	if err != nil {
+		c.InternalServerError(Messages.InternalServerError, err)
+	}
+
+	rw.Write(data)
+}
 
 // @Title updateUserData
 // @Description Update a single user.
