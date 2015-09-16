@@ -21,6 +21,10 @@ var queries = map[string]string{
 	"update-user":              "update users set name = :name, email = :email, password_hash = :password_hash where id = :id",
 	"insert-user":              "insert into users (customer_id, email, name, verified, active, password_hash) values (:customer_id, :email, :name, :verified, :active, :password_hash) returning *",
 
+	// userdata
+	"userdata-by-id": "select * from userdata where id = $1",
+	"merge-userdata": "update userdata set data = json_merge(data, $2::jsonb) where user_id = $1 returning data",
+
 	// signups
 	"signup-by-id":    "select * from signups where id = $1",
 	"signup-by-email": "select * from signups where email = $1",

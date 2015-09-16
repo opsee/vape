@@ -79,3 +79,16 @@ func EmailTokenUser(user *model.User, duration time.Duration, referer string) er
 
 	return nil
 }
+
+func UpdateUserData(id int, data []byte) ([]byte, error) {
+	var userdata struct {
+		Data []byte
+	}
+
+	err := store.Get(&userdata, "merge-userdata", id, data)
+	if err != nil {
+		return nil, err
+	}
+
+	return userdata.Data, nil
+}

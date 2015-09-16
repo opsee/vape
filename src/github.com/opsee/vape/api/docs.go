@@ -516,6 +516,48 @@ var swaggerJson = `
           }
         }
       }
+    },
+    "/users/{id}/data": {
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "operationId": "updateUserData",
+        "summary": "Update a single user.",
+        "parameters": [
+          {
+            "in": "header",
+            "description": "The Bearer token - an admin user token or a token with matching id is required",
+            "name": "Authorization",
+            "required": true,
+            "type": "string",
+            "minimum": 0,
+            "maximum": 0
+          },
+          {
+            "in": "path",
+            "description": "The user id",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "maximum": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Description was not specified",
+            "schema": {
+              "$ref": "#/definitions/github.com.opsee.vape.api.UserDataResponse",
+              "items": {}
+            }
+          },
+          "401": {
+            "description": "Description was not specified"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -620,7 +662,8 @@ var swaggerJson = `
           "items": {}
         }
       }
-    }
+    },
+    "github.com.opsee.vape.api.UserDataResponse": {}
   }
 }
 `

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"github.com/gocraft/web"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
@@ -24,6 +25,7 @@ func init() {
 	userRouter.Get("/:id", (*UserContext).GetUser)
 	userRouter.Put("/:id", (*UserContext).UpdateUser)
 	userRouter.Delete("/:id", (*UserContext).DeleteUser)
+	userRouter.Put("/:id/data", (*UserContext).UpdateUserData)
 }
 
 func (c *UserContext) Authorized(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
@@ -127,4 +129,30 @@ func (c *UserContext) DeleteUser(rw web.ResponseWriter, r *web.Request) {
 	}
 
 	c.ResponseJson(&MessageResponse{Message: Messages.UserDeleted})
+}
+
+type UserDataResponse map[string]interface{}
+
+// @Title updateUserData
+// @Description Update a single user.
+// @Accept  json
+// @Param   Authorization    header string  true        "The Bearer token - an admin user token or a token with matching id is required"
+// @Param   id               path   int     true        "The user id"
+// @Success 200 {object}     UserDataResponse           ""
+// @Failure 401 {object}     MessageResponse    	 ""
+// @Router /users/{id}/data [put]
+func (c *UserContext) UpdateUserData(rw web.ResponseWriter, r *web.Request) {
+	buf := bytes.NewBuffer([]byte{})
+	_, err := buf.ReadFrom(r.Body)
+	if err != nil {
+		c.BadRequest(Messages.BadRequest)
+		return
+	}
+
+	data, err := servicer.UpdateUserData(c.Id, buf.Bytes())
+	if err != nil {
+		c.InternalServerError(Messages.InternalServerError, err)
+	}
+
+	rw.Write(data)
 }
