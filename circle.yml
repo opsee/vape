@@ -3,9 +3,6 @@ machine:
     - docker
   environment:
     ci: "true"
-notify:
-  webhooks:
-    - url: https://hooks.slack.com/services/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
 dependencies:
   cache_directories: []
   override:
@@ -13,7 +10,7 @@ dependencies:
     - go version
     - docker pull quay.io/opsee/build-go
     - docker pull sameersbn/postgresql:9.4-3
-    - docker run --name postgresql -d -e PSQL_TRUST_LOCALNET=true -e DB_USER=postgres -e DB_PASS= -e DB_NAME=vape_test sameersbn/postgresql:9.4-3
+    - docker run --name postgresql -d -e PSQL_TRUST_LOCALNET=true -e DB_USER=postgres -e DB_PASS= -e DB_NAME=vape_test sameersbn/postgresql:9.4-3 && sleep 10
 test:
   override:
     - docker run -e TEST_POSTGRES_CONN="host=postgresql user=postgres dbname=vape_test sslmode=disable" --link postgresql:postgresql -e "TARGETS=linux/amd64"  -v `pwd`:/build quay.io/opsee/build-go
