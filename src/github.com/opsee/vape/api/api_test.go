@@ -8,7 +8,7 @@ import (
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vape/testutil"
-	"github.com/opsee/vape/token"
+	"github.com/opsee/vaper"
 	. "gopkg.in/check.v1"
 	"io"
 	"net/http"
@@ -29,7 +29,7 @@ var (
 func Test(t *testing.T) { TestingT(t) }
 
 func (s *ApiSuite) SetUpTest(c *C) {
-	token.Init(testVapeKey)
+	vaper.Init(testVapeKey)
 	store.Init(os.Getenv("TEST_POSTGRES_CONN"))
 	testutil.SetupFixtures(store.DB, c)
 }

@@ -1,4 +1,4 @@
-package token
+package vaper
 
 import (
 	"encoding/json"

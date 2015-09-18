@@ -62,6 +62,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/opsee/vaper",
+			"repository": "ssh://github.com/opsee/vaper",
+			"revision": "14fea3b4439014c4429adf260e17ccd9ef5b6dae",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/prometheus/client_golang/prometheus",
 			"repository": "https://github.com/prometheus/client_golang",
 			"revision": "8c899cd8208a366b6899d397e4bc3ced7ab073e3",

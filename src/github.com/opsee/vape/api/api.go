@@ -8,7 +8,7 @@ import (
 	"github.com/gocraft/web"
 	"github.com/nu7hatch/gouuid"
 	"github.com/opsee/vape/model"
-	"github.com/opsee/vape/token"
+	"github.com/opsee/vaper"
 	"io"
 	"net/http"
 	"runtime"
@@ -122,7 +122,7 @@ func (c *Context) UserSession(rw web.ResponseWriter, r *web.Request, next web.Ne
 		switch authslice[0] {
 		case "Bearer":
 			tokenString := authslice[1]
-			decodedToken, err := token.Unmarshal(tokenString)
+			decodedToken, err := vaper.Unmarshal(tokenString)
 			if err != nil {
 				c.Job.EventErr("user_session.token_unmarshal", err)
 				break
