@@ -95,7 +95,7 @@ func testAuthedReq(u *model.User, method, url string, body io.Reader, headers ma
 
 	now := time.Now()
 	exp := now.Add(time.Hour * 1)
-	tok := token.New(u, u.Email, now, exp)
+	tok := vaper.New(u, u.Email, now, exp)
 	tokenString, err := tok.Marshal()
 	if err != nil {
 		return nil, err
