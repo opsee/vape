@@ -8,7 +8,7 @@ import (
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vape/testutil"
-	"github.com/opsee/vape/token"
+	"github.com/opsee/vaper"
 	. "gopkg.in/check.v1"
 	"io"
 	"net/http"
@@ -29,7 +29,7 @@ var (
 func Test(t *testing.T) { TestingT(t) }
 
 func (s *ApiSuite) SetUpTest(c *C) {
-	token.Init(testVapeKey)
+	vaper.Init(testVapeKey)
 	store.Init(os.Getenv("TEST_POSTGRES_CONN"))
 	testutil.SetupFixtures(store.DB, c)
 }
@@ -95,7 +95,7 @@ func testAuthedReq(u *model.User, method, url string, body io.Reader, headers ma
 
 	now := time.Now()
 	exp := now.Add(time.Hour * 1)
-	tok := token.New(u, u.Email, now, exp)
+	tok := vaper.New(u, u.Email, now, exp)
 	tokenString, err := tok.Marshal()
 	if err != nil {
 		return nil, err

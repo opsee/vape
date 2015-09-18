@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
-	"github.com/opsee/vape/token"
+	"github.com/opsee/vaper"
 	"time"
 )
 
@@ -57,7 +57,7 @@ func DeleteUser(id int) error {
 }
 
 func TokenUser(user *model.User, duration time.Duration) (string, error) {
-	token := token.New(user, user.Email, time.Now(), time.Now().Add(duration))
+	token := vaper.New(user, user.Email, time.Now(), time.Now().Add(duration))
 	return token.Marshal()
 }
 

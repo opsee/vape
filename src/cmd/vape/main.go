@@ -5,7 +5,7 @@ import (
 	"github.com/opsee/vape/api"
 	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
-	"github.com/opsee/vape/token"
+	"github.com/opsee/vaper"
 	"io/ioutil"
 	"log"
 	"os"
@@ -21,7 +21,7 @@ func main() {
 		log.Println("Unable to read keyfile:", keyPath)
 		log.Fatal(err)
 	}
-	token.Init(key)
+	vaper.Init(key)
 
 	pgConn := os.Getenv("POSTGRES_CONN")
 	if pgConn == "" {

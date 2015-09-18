@@ -1,4 +1,4 @@
-package token
+package vaper
 
 import (
 	. "gopkg.in/check.v1"
@@ -33,8 +33,8 @@ func (s *TokenSuite) TestNew(c *C) {
 
 	c.Assert((*token)["exp"], DeepEquals, exp.Unix())
 	c.Assert((*token)["ThisFieldIsIgnored"], DeepEquals, nil)
-	c.Assert((*token)["email"], DeepEquals, "cliff@leaninto.it")
-	c.Assert((*token)["sub"], DeepEquals, "cliff@leaninto.it")
+	c.Assert((*token)["email"], DeepEquals, "vapin@vape.it")
+	c.Assert((*token)["sub"], DeepEquals, "vapin@vape.it")
 }
 
 func (s *TokenSuite) TestReify(c *C) {
@@ -56,7 +56,7 @@ func (s *TokenSuite) TestReify(c *C) {
 	decoded.Reify(user)
 
 	c.Assert(user.Id, DeepEquals, 1)
-	c.Assert(user.Email, DeepEquals, "cliff@leaninto.it")
+	c.Assert(user.Email, DeepEquals, "vapin@vape.it")
 	c.Assert(user.CreatedAt, DeepEquals, now)
 	c.Assert(user.Admin, DeepEquals, true)
 }
@@ -77,8 +77,8 @@ func (s *TokenSuite) TestMarshalUnmarshal(c *C) {
 
 	c.Assert((*decoded)["exp"], DeepEquals, exp.Unix())
 	c.Assert((*decoded)["ThisFieldIsIgnored"], DeepEquals, nil)
-	c.Assert((*decoded)["email"], DeepEquals, "cliff@leaninto.it")
-	c.Assert((*decoded)["sub"], DeepEquals, "cliff@leaninto.it")
+	c.Assert((*decoded)["email"], DeepEquals, "vapin@vape.it")
+	c.Assert((*decoded)["sub"], DeepEquals, "vapin@vape.it")
 }
 
 func (s *TokenSuite) TestVerify(c *C) {
@@ -110,11 +110,11 @@ func (s *TokenSuite) TestVerify(c *C) {
 func newTestToken(now, exp time.Time) *Token {
 	user := &testUser{
 		Id:                 1,
-		Email:              "cliff@leaninto.it",
+		Email:              "vapin@vape.it",
 		CreatedAt:          now,
 		Admin:              true,
 		ThisFieldIsIgnored: true,
 	}
 
-	return New(user, "cliff@leaninto.it", now, exp)
+	return New(user, "vapin@vape.it", now, exp)
 }
