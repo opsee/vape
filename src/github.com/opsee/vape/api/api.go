@@ -35,7 +35,8 @@ var (
 	origins       = []string{
 		"http://localhost:8080",
 		"https://staging.opsy.co",
-		"https://opsee.co",
+		"https://app.opsee.co",
+		"https://app.opsee.com",
 	}
 )
 
