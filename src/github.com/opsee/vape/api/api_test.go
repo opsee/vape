@@ -54,7 +54,7 @@ func (s *ApiSuite) TestCors(c *C) {
 	}
 	c.Assert(rec.Header().Get("Access-Control-Allow-Origin"), DeepEquals, "")
 
-	for _, o := range []string{"https://staging.opsy.co", "https://opsee.co"} {
+	for _, o := range []string{"https://staging.opsy.co", "https://app.opsee.co", "https://app.opsee.com"} {
 		rec, err = testReq(publicRouter, "POST", "https://vape/", nil, map[string]string{"Origin": o})
 		if err != nil {
 			c.Fatal(err)
