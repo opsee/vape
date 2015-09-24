@@ -20,6 +20,7 @@ func init() {
 	authRouter.Post("/password", (*AuthContext).CreateAuthPassword)
 	authRouter.Post("/token", (*AuthContext).CreateAuthToken)
 	authRouter.Get("/echo", (*AuthContext).Echo) // for testing
+	authRouter.Put("/refresh", (*AuthContext).Refresh)
 }
 
 type UserTokenResponse struct {
@@ -135,4 +136,29 @@ func (c *AuthContext) Echo(rw web.ResponseWriter, r *web.Request) {
 	}
 
 	c.ResponseJson(c.CurrentUser)
+}
+
+// @Title refreshSession
+// @Description Refreshes a user session given an authentication token.
+// @Accept  json
+// @Param   Authorization   header   string  true         "The Bearer token"
+// @Success 200 {object}    UserTokenResponse
+// @Failure 401 {object}    MessageResponse
+// @Router /authenticate/refresh [put]
+func (c *AuthContext) Refresh(rw web.ResponseWriter, r *web.Request) {
+	if c.CurrentUser == nil {
+		c.Unauthorized(Messages.TokenRequired)
+		return
+	}
+
+	token, err := servicer.TokenUser(c.CurrentUser, time.Hour*12)
+	if err != nil {
+		c.InternalServerError(Messages.InternalServerError, err)
+		return
+	}
+
+	c.ResponseJson(map[string]interface{}{
+		"user":  c.CurrentUser,
+		"token": token,
+	})
 }
