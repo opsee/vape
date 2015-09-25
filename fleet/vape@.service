@@ -3,7 +3,7 @@ Description=Vape
 After=docker.service
 Requires=docker.service
 Wants=%p-private-elb@%i.service
-# Wants=%p-public-elb@%i.service
+Wants=%p-public-elb@%i.service
 
 [Service]
 Restart=always
