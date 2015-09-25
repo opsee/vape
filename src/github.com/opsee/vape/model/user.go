@@ -8,7 +8,7 @@ import (
 type User struct {
 	Id           int       `json:"id" token:"id"`
 	CustomerId   string    `json:"customer_id" token:"customer_id" db:"customer_id"`
-	Email        string    `json:"email"`
+	Email        string    `json:"email" token:"email"`
 	Name         string    `json:"name"`
 	Verified     bool      `json:"verified" token:"verified"`
 	Admin        bool      `json:"admin" token:"admin"`
