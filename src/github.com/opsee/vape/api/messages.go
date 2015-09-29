@@ -9,7 +9,9 @@ type messages struct {
 	NameRequired               string
 	PasswordRequired           string
 	TokenRequired              string
+	TemplateRequired           string
 	CustomerIdRequired         string
+	UserIdRequired             string
 	AdminRequired              string
 	UserOrAdminRequired        string
 	CredentialsMismatch        string
@@ -32,7 +34,9 @@ var Messages = &messages{
 	NameRequired:               "name is required",
 	PasswordRequired:           "password is required",
 	TokenRequired:              "a valid token is required",
+	TemplateRequired:           "template name is required",
 	CustomerIdRequired:         "customer id is required",
+	UserIdRequired:             "user id is required",
 	AdminRequired:              "an administrator is required to access this resource",
 	UserOrAdminRequired:        "an authorized user or administrator is required to access this resource",
 	CredentialsMismatch:        "credentials don't match an active user",
