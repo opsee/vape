@@ -43,7 +43,7 @@ func (s *ApiSuite) TestCreateAuthPassword(c *C) {
 
 func (s *ApiSuite) TestCreateAuthToken(c *C) {
 	mailer := &testMailer{}
-	servicer.Init(mailer)
+	servicer.Init("test.opsy.co", mailer)
 
 	// test a non-existent email
 	rec, _ := testReq(publicRouter, "POST", "https://vape/authenticate/token", bytes.NewBuffer([]byte(`{"email": "what@rudoing.com"}`)), nil)
