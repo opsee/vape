@@ -44,12 +44,20 @@ func main() {
 	}
 
 	mandrillAPIKey := os.Getenv("MANDRILL_API_KEY")
+	var mandrillClient *mandrill.Client
+
 	if mandrillAPIKey == "" {
 		log.Println("WARN: MANDRILL_API_KEY not set, we won't send emails.")
 	} else {
-		mandrill := mandrill.ClientWithKey(mandrillAPIKey)
-		servicer.Init(mandrill)
+		mandrillClient = mandrill.ClientWithKey(mandrillAPIKey)
 	}
+
+	host := os.Getenv("OPSEE_HOST")
+	if host == "" {
+		log.Fatal("Must set the OPSEE_HOST environment variable.")
+	}
+
+	servicer.Init(host, mandrillClient)
 
 	api.ListenAndServe(os.Getenv("VAPE_PUBLIC_HOST"), os.Getenv("VAPE_PRIVATE_HOST"))
 }

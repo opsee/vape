@@ -9,17 +9,21 @@ type MandrillMailer interface {
 }
 
 var (
+	opseeHost  string
 	mailClient MandrillMailer
 )
 
-func Init(mailer MandrillMailer) {
+func Init(host string, mailer MandrillMailer) {
+	opseeHost = host
 	mailClient = mailer
 }
 
-func mailTemplatedMessage(toEmail, toName, templateName string, mergeVars interface{}) ([]*mandrill.Response, error) {
+func mailTemplatedMessage(toEmail, toName, templateName string, mergeVars map[string]string) ([]*mandrill.Response, error) {
 	if mailClient == nil {
 		return nil, nil
 	}
+
+	mergeVars["opsee_host"] = opseeHost
 
 	message := &mandrill.Message{}
 	message.AddRecipient(toEmail, toName, "to")
