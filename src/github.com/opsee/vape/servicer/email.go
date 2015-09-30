@@ -5,10 +5,6 @@ import (
 )
 
 func SendTemplatedEmail(userId int, template string, vars map[string]string) (*model.User, error) {
-	if vars == nil {
-		vars = make(map[string]string)
-	}
-
 	user, err := GetUser(userId)
 	if err != nil {
 		return nil, err
