@@ -25,4 +25,20 @@ swagger:
 	@echo "\`" >> $(docfile)
 	@rm -fr swagger
 
-.PHONY: migrate clean all swagger
+docker: fmt
+	docker run -e POSTGRES_CONN="postgres://postgres@postgresql/vape_test?sslmode=disable" \
+		--link postgresql:postgresql \
+		-e "TARGETS=linux/amd64" \
+		-v `pwd`:/build quay.io/opsee/build-go \
+		&& docker build -t quay.io/opsee/vape .
+
+run: docker
+	docker run -e POSTGRES_CONN="postgres://postgres@postgresql/vape_test?sslmode=disable" \
+		--link postgresql:postgresql \
+		-e MANDRILL_API_KEY=$(MANDRILL_API_KEY) \
+		-p 8081:8081 \
+		-p 9091:9091 \
+		--rm \
+		quay.io/opsee/vape
+
+.PHONY: migrate clean all swagger docker run
