@@ -23,9 +23,9 @@ type SendEmalResponse struct {
 
 func (c *NotificationContext) SendEmail(rw web.ResponseWriter, r *web.Request) {
 	var request struct {
-		UserId   int               `json:"user_id"`
-		Template string            `json:"template"`
-		Vars     map[string]string `json:"vars"`
+		UserId   int                    `json:"user_id"`
+		Template string                 `json:"template"`
+		Vars     map[string]interface{} `json:"vars"`
 	}
 
 	err := c.RequestJson(&request)

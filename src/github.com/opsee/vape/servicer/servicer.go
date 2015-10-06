@@ -18,7 +18,7 @@ func Init(host string, mailer MandrillMailer) {
 	mailClient = mailer
 }
 
-func mailTemplatedMessage(toEmail, toName, templateName string, mergeVars map[string]string) ([]*mandrill.Response, error) {
+func mailTemplatedMessage(toEmail, toName, templateName string, mergeVars map[string]interface{}) ([]*mandrill.Response, error) {
 	if mailClient == nil {
 		return nil, nil
 	}

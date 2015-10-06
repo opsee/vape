@@ -69,7 +69,7 @@ func EmailTokenUser(user *model.User, duration time.Duration, referer string) er
 
 	// email that token
 	go func() {
-		mergeVars := map[string]string{
+		mergeVars := map[string]interface{}{
 			"user_id":    fmt.Sprint(user.Id),
 			"user_token": tokenString,
 			"referer":    referer,
