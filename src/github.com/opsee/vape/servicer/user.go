@@ -73,6 +73,7 @@ func EmailTokenUser(user *model.User, duration time.Duration, referer string) er
 			"user_id":    fmt.Sprint(user.Id),
 			"user_token": tokenString,
 			"referer":    referer,
+			"name":       user.Name,
 		}
 		mailTemplatedMessage(user.Email, user.Name, "password-reset", mergeVars)
 	}()

@@ -10,6 +10,9 @@ func SendTemplatedEmail(userId int, template string, vars map[string]interface{}
 		return nil, err
 	}
 
+	vars["name"] = user.Name
+	vars["email"] = user.Email
+
 	go func() {
 		mailTemplatedMessage(user.Email, user.Name, template, vars)
 	}()

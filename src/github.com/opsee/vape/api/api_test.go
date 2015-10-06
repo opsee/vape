@@ -30,7 +30,7 @@ func Test(t *testing.T) { TestingT(t) }
 
 func (s *ApiSuite) SetUpTest(c *C) {
 	vaper.Init(testVapeKey)
-	store.Init(os.Getenv("TEST_POSTGRES_CONN"))
+	store.Init(os.Getenv("POSTGRES_CONN"))
 	testutil.SetupFixtures(store.DB, c)
 }
 

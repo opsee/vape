@@ -17,7 +17,7 @@ var (
 func Test(t *testing.T) { TestingT(t) }
 
 func (s *UserSuite) SetUpTest(c *C) {
-	store.Init(os.Getenv("TEST_POSTGRES_CONN"))
+	store.Init(os.Getenv("POSTGRES_CONN"))
 	testutil.SetupFixtures(store.DB, c)
 }
 
