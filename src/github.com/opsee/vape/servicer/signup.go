@@ -38,7 +38,7 @@ func CreateSignup(email, name string) (*model.Signup, error) {
 
 	// send an email here!
 	go func() {
-		mergeVars := map[string]string{}
+		mergeVars := map[string]interface{}{}
 		mailTemplatedMessage(signup.Email, signup.Name, "signup-confirmation", mergeVars)
 	}()
 
@@ -58,7 +58,7 @@ func ActivateSignup(id int, referer string) (*model.Signup, error) {
 
 	// send an email here!
 	go func() {
-		mergeVars := map[string]string{
+		mergeVars := map[string]interface{}{
 			"signup_id":    fmt.Sprint(signup.Id),
 			"signup_token": signup.Token(),
 			"signup_name":  signup.Name,

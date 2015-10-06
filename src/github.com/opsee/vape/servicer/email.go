@@ -4,7 +4,7 @@ import (
 	"github.com/opsee/vape/model"
 )
 
-func SendTemplatedEmail(userId int, template string, vars map[string]string) (*model.User, error) {
+func SendTemplatedEmail(userId int, template string, vars map[string]interface{}) (*model.User, error) {
 	user, err := GetUser(userId)
 	if err != nil {
 		return nil, err
