@@ -40,7 +40,10 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 	var request struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
+		As       int    `json:"as"`
 	}
+
+	tokenExp := time.Hour * 12
 
 	err := c.RequestJson(&request)
 	if err != nil {
@@ -71,7 +74,26 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 		return
 	}
 
-	token, err := servicer.TokenUser(user, time.Hour*12)
+	// here is an admin requesting to log in as someone else
+	if user.Admin && request.As > 0 {
+		adminId := user.Id
+		user = nil
+
+		user, err = servicer.GetUser(request.As)
+		if err != nil {
+			if err == servicer.UserNotFound {
+				c.NotFound(Messages.UserNotFound)
+			} else {
+				c.InternalServerError(Messages.InternalServerError, err)
+			}
+			return
+		}
+
+		tokenExp = time.Minute * 15
+		user.AdminId = adminId
+	}
+
+	token, err := servicer.TokenUser(user, tokenExp)
 	if err != nil {
 		c.InternalServerError(Messages.InternalServerError, err)
 		return
