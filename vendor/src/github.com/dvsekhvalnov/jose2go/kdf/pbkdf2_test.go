@@ -3,8 +3,9 @@ package kdf
 import (
 	"crypto/sha256"
 	"crypto/sha512"
-	. "gopkg.in/check.v1"
 	"testing"
+
+	. "gopkg.in/check.v1"
 )
 
 func Test(t *testing.T) { TestingT(t) }

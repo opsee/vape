@@ -3,8 +3,9 @@
 package check_test
 
 import (
-	. "gopkg.in/check.v1"
 	"time"
+
+	. "gopkg.in/check.v1"
 )
 
 var benchmarkS = Suite(&BenchmarkS{})

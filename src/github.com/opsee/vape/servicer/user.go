@@ -3,10 +3,11 @@ package servicer
 import (
 	"database/sql"
 	"fmt"
+	"time"
+
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vaper"
-	"time"
 )
 
 func GetUser(id int) (*model.User, error) {

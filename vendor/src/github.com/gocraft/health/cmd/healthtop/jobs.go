@@ -3,13 +3,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/buger/goterm"
-	"github.com/gocraft/health/healthd"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/buger/goterm"
+	"github.com/gocraft/health/healthd"
 )
 
 type jobOptions struct {

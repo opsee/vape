@@ -3,7 +3,6 @@ package vaper
 import (
 	"encoding/json"
 	"errors"
-	"github.com/dvsekhvalnov/jose2go"
 	"reflect"
 	"time"
 )

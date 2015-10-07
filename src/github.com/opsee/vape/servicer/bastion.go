@@ -2,6 +2,7 @@ package servicer
 
 import (
 	"database/sql"
+
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 )

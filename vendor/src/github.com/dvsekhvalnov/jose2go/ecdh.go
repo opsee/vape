@@ -7,12 +7,13 @@ import (
 	"crypto/sha256"
 	"errors"
 	"fmt"
+	"math/big"
+
 	"github.com/dvsekhvalnov/jose2go/arrays"
 	"github.com/dvsekhvalnov/jose2go/base64url"
 	"github.com/dvsekhvalnov/jose2go/kdf"
 	"github.com/dvsekhvalnov/jose2go/keys/ecc"
 	"github.com/dvsekhvalnov/jose2go/padding"
-	"math/big"
 )
 
 func init() {

@@ -2,8 +2,9 @@
 package compact
 
 import (
-	"github.com/dvsekhvalnov/jose2go/base64url"
 	"strings"
+
+	"github.com/dvsekhvalnov/jose2go/base64url"
 )
 
 // Parse splitting & decoding compact serialized json web token, returns slice of byte arrays, each representing part of token

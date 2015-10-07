@@ -3,6 +3,7 @@ package jose
 import (
 	"errors"
 	"fmt"
+
 	"github.com/dvsekhvalnov/jose2go/aes"
 	"github.com/dvsekhvalnov/jose2go/arrays"
 )

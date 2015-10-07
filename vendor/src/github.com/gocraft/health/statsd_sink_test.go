@@ -4,12 +4,13 @@ import (
 	// "bytes"
 	// "errors"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"net"
 	"runtime"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var testAddr = "127.0.0.1:7890"

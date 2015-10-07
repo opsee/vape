@@ -2,11 +2,12 @@ package api
 
 import (
 	"bytes"
+	"strconv"
+	"time"
+
 	"github.com/gocraft/web"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
-	"strconv"
-	"time"
 )
 
 type UserContext struct {

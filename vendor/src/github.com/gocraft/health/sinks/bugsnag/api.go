@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/gocraft/health/stack"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/gocraft/health/stack"
 )
 
 type Config struct {

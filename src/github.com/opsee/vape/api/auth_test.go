@@ -2,10 +2,11 @@ package api
 
 import (
 	"bytes"
+	"time"
+
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
 	. "gopkg.in/check.v1"
-	"time"
 )
 
 func (s *ApiSuite) TestUserSessionEcho(c *C) {

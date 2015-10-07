@@ -2,12 +2,13 @@ package web
 
 import (
 	"bufio"
-	"github.com/stretchr/testify/assert"
 	"net"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type hijackableResponse struct {

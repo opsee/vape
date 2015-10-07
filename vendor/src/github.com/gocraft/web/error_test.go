@@ -3,11 +3,12 @@ package web
 import (
 	"bytes"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"log"
 	"net/http"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func ErrorHandlerWithNoContext(w ResponseWriter, r *Request, err interface{}) {

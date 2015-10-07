@@ -1,11 +1,12 @@
 package manners
 
 import (
-	helpers "github.com/braintree/manners/test_helpers"
 	"net"
 	"net/http"
 	"testing"
 	"time"
+
+	helpers "github.com/braintree/manners/test_helpers"
 )
 
 // Tests that the server allows in-flight requests to complete

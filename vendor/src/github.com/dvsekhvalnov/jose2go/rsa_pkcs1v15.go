@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"errors"
+
 	"github.com/dvsekhvalnov/jose2go/arrays"
 )
 

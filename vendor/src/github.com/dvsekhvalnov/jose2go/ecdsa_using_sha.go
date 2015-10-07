@@ -5,9 +5,10 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
+	"math/big"
+
 	"github.com/dvsekhvalnov/jose2go/arrays"
 	"github.com/dvsekhvalnov/jose2go/padding"
-	"math/big"
 )
 
 func init() {

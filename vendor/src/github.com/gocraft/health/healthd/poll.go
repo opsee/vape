@@ -2,10 +2,11 @@ package healthd
 
 import (
 	"encoding/json"
-	"github.com/gocraft/health"
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"github.com/gocraft/health"
 )
 
 type pollResponse struct {

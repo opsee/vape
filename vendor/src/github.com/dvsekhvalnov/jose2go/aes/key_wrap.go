@@ -5,6 +5,7 @@ import (
 	"crypto/cipher"
 	"crypto/hmac"
 	"errors"
+
 	"github.com/dvsekhvalnov/jose2go/arrays"
 )
 

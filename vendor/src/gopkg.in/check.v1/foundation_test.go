@@ -8,7 +8,6 @@ package check_test
 
 import (
 	"fmt"
-	"gopkg.in/check.v1"
 	"log"
 	"os"
 	"regexp"

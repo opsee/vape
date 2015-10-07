@@ -2,8 +2,9 @@ package bugsnag
 
 import (
 	"fmt"
-	"github.com/gocraft/health"
 	"os"
+
+	"github.com/gocraft/health"
 )
 
 // This sink emits to a StatsD deaemon by sending it a UDP packet.

@@ -4,11 +4,12 @@ import (
 	"crypto/ecdsa"
 	"crypto/rsa"
 	"fmt"
+	"strings"
+	"testing"
+
 	"github.com/dvsekhvalnov/jose2go/keys/ecc"
 	"github.com/dvsekhvalnov/jose2go/keys/rsa"
 	. "gopkg.in/check.v1"
-	"strings"
-	"testing"
 )
 
 func Test(t *testing.T) { TestingT(t) }

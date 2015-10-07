@@ -1,10 +1,11 @@
 package manners
 
 import (
-	helpers "github.com/braintree/manners/test_helpers"
 	"net/http"
 	"strings"
 	"testing"
+
+	helpers "github.com/braintree/manners/test_helpers"
 )
 
 func TestStateTransitions(t *testing.T) {
