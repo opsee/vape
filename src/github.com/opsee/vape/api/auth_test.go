@@ -39,6 +39,41 @@ func (s *ApiSuite) TestCreateAuthPassword(c *C) {
 		c.Fatal(err)
 	}
 	c.Assert(rec.Code, DeepEquals, 401)
+
+	// reglar ole login
+	rec, err = testReq(publicRouter, "POST", "https://vape/authenticate/password", bytes.NewBuffer([]byte(`{"email": "mark@opsee.co", "password": "eatshit"}`)), nil)
+	if err != nil {
+		c.Fatal(err)
+	}
+	c.Assert(rec.Code, DeepEquals, 200)
+
+	response := &UserTokenResponse{}
+	loadResponse(response, rec.Body)
+	c.Assert(response.User.Email, DeepEquals, "mark@opsee.co")
+
+	// admin login as user id 3
+	rec, err = testReq(publicRouter, "POST", "https://vape/authenticate/password", bytes.NewBuffer([]byte(`{"email": "mark@opsee.co", "password": "eatshit", "as": 3}`)), nil)
+	if err != nil {
+		c.Fatal(err)
+	}
+	c.Assert(rec.Code, DeepEquals, 200)
+
+	response = &UserTokenResponse{}
+	loadResponse(response, rec.Body)
+	c.Assert(response.User.Email, DeepEquals, "dan@opsee.co")
+	c.Assert(response.User.AdminId, DeepEquals, 1)
+
+	// non-admin shouldn't be able to log in as someone else
+	rec, err = testReq(publicRouter, "POST", "https://vape/authenticate/password", bytes.NewBuffer([]byte(`{"email": "dan@opsee.co", "password": "eatshit", "as": 1}`)), nil)
+	if err != nil {
+		c.Fatal(err)
+	}
+	c.Assert(rec.Code, DeepEquals, 200)
+
+	response = &UserTokenResponse{}
+	loadResponse(response, rec.Body)
+	c.Assert(response.User.Email, DeepEquals, "dan@opsee.co")
+	c.Assert(response.User.AdminId, DeepEquals, 0)
 }
 
 func (s *ApiSuite) TestCreateAuthToken(c *C) {

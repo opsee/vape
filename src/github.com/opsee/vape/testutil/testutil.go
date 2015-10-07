@@ -36,6 +36,7 @@ func SetupFixtures(db DB, c *check.C) {
 		c.Fatal(err)
 	}
 
+	// password for both users is "eatshit"
 	// create an admin user (fk constraint on customer_id)
 	var id string
 	err = tx.Get(&id, "insert into customers (name, active) values ('markorg', true) returning id")
@@ -47,6 +48,20 @@ func SetupFixtures(db DB, c *check.C) {
 			"customer_id, name) values (1, 'mark@opsee.co', "+
 			"'$2a$10$QcgjlXDKnRys50Oc30duFuNcZW6Rmqd7pcIJX9GWheIXJExUooZ7W', true, true, true, "+
 			"$1, 'mark')", id)
+	if err != nil {
+		c.Fatal(err)
+	}
+
+	// create a regular user (fk constraint on customer_id)
+	err = tx.Get(&id, "insert into customers (name, active) values ('danorg', true) returning id")
+	if err != nil {
+		c.Fatal(err)
+	}
+	_, err = tx.Exec(
+		"insert into users (id, email, password_hash, admin, active, verified, "+
+			"customer_id, name) values (3, 'dan@opsee.co', "+
+			"'$2a$10$QcgjlXDKnRys50Oc30duFuNcZW6Rmqd7pcIJX9GWheIXJExUooZ7W', false, true, true, "+
+			"$1, 'dan')", id)
 	if err != nil {
 		c.Fatal(err)
 	}

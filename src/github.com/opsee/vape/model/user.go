@@ -13,9 +13,10 @@ type User struct {
 	Verified     bool      `json:"verified" token:"verified"`
 	Admin        bool      `json:"admin" token:"admin"`
 	Active       bool      `json:"active" token:"active"`
-	PasswordHash string    `json:"-" db:"password_hash"`       // not going in token
-	CreatedAt    time.Time `json:"created_at" db:"created_at"` // not going in token
-	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"` // not going in token
+	AdminId      int       `json:"admin_id,ignoreempty" token:"admin_id"` // a virtual property for when an admin is ghosting a user
+	PasswordHash string    `json:"-" db:"password_hash"`                  // not going in token
+	CreatedAt    time.Time `json:"created_at" db:"created_at"`            // not going in token
+	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"`            // not going in token
 }
 
 func NewUser(name, email, password string) (*User, error) {
