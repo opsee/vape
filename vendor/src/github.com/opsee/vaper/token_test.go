@@ -1,10 +1,9 @@
 package vaper
 
 import (
+	. "gopkg.in/check.v1"
 	"testing"
 	"time"
-
-	. "gopkg.in/check.v1"
 )
 
 type TokenSuite struct{}

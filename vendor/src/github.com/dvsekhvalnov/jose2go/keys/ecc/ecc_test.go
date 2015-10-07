@@ -2,11 +2,10 @@ package ecc
 
 import (
 	"crypto/elliptic"
+	. "gopkg.in/check.v1"
 	"io/ioutil"
 	"math/big"
 	"testing"
-
-	. "gopkg.in/check.v1"
 )
 
 func Test(t *testing.T) { TestingT(t) }

@@ -3,9 +3,8 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"os"
-
 	tm "github.com/buger/goterm"
+	"os"
 )
 
 func main() {

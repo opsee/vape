@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-
 	"github.com/dvsekhvalnov/jose2go/compact"
 )
 

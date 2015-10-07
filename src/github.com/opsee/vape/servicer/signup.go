@@ -3,7 +3,6 @@ package servicer
 import (
 	"database/sql"
 	"fmt"
-
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 )

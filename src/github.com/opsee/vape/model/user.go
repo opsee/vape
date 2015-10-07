@@ -1,9 +1,8 @@
 package model
 
 import (
-	"time"
-
 	"golang.org/x/crypto/bcrypt"
+	"time"
 )
 
 type User struct {

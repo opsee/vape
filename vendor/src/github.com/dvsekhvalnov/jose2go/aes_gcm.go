@@ -5,7 +5,6 @@ import (
 	"crypto/cipher"
 	"errors"
 	"fmt"
-
 	"github.com/dvsekhvalnov/jose2go/arrays"
 )
 

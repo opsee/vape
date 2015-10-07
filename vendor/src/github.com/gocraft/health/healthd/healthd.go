@@ -2,11 +2,10 @@ package healthd
 
 import (
 	"fmt"
+	"github.com/gocraft/health"
 	"sort"
 	"sync"
 	"time"
-
-	"github.com/gocraft/health"
 )
 
 type HealthD struct {

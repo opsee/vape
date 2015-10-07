@@ -1,12 +1,11 @@
 package api
 
 import (
-	"strconv"
-	"time"
-
 	"github.com/gocraft/web"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
+	"strconv"
+	"time"
 )
 
 type SignupContext struct {

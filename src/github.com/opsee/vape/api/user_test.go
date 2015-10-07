@@ -2,7 +2,6 @@ package api
 
 import (
 	"bytes"
-
 	"github.com/opsee/vape/model"
 	. "gopkg.in/check.v1"
 )

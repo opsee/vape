@@ -2,8 +2,8 @@ package testutil
 
 import (
 	"database/sql"
-
 	"github.com/jmoiron/sqlx"
+	"gopkg.in/check.v1"
 )
 
 type DB interface {

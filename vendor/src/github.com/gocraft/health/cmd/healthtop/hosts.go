@@ -3,13 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/buger/goterm"
+	"github.com/gocraft/health/healthd"
 	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/buger/goterm"
-	"github.com/gocraft/health/healthd"
 )
 
 func hostsLoop() {

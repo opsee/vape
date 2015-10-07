@@ -4,15 +4,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/gocraft/health"
+	"github.com/gocraft/web"
+	"github.com/nu7hatch/gouuid"
+	"github.com/opsee/vape/model"
+	"github.com/opsee/vaper"
 	"io"
 	"net/http"
 	"runtime"
 	"strings"
-
-	"github.com/gocraft/health"
-	"github.com/gocraft/web"
-	"github.com/opsee/vape/model"
-	"github.com/opsee/vaper"
 )
 
 type Context struct {

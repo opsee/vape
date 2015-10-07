@@ -2,9 +2,8 @@ package health
 
 import (
 	"fmt"
-	"testing"
-
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 type testSink struct {

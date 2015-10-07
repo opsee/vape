@@ -4,11 +4,10 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"errors"
-	"hash"
-
 	"github.com/dvsekhvalnov/jose2go/arrays"
 	"github.com/dvsekhvalnov/jose2go/base64url"
 	"github.com/dvsekhvalnov/jose2go/kdf"
+	"hash"
 )
 
 func init() {

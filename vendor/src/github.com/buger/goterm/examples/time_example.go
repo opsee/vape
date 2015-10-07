@@ -1,9 +1,8 @@
 package main
 
 import (
-	"time"
-
 	tm "github.com/buger/goterm"
+	"time"
 )
 
 func main() {

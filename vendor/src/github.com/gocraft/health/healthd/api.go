@@ -3,15 +3,14 @@ package healthd
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/braintree/manners"
+	"github.com/gocraft/health"
+	"github.com/gocraft/web"
 	"math"
 	"net/http"
 	"sort"
 	"strconv"
 	"time"
-
-	"github.com/braintree/manners"
-	"github.com/gocraft/health"
-	"github.com/gocraft/web"
 )
 
 // Job represents a health.JobAggregation, but designed for JSON-ization without all the nested counters/timers

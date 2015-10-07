@@ -2,13 +2,12 @@ package bugsnag
 
 import (
 	"fmt"
-	"net/http"
-	"testing"
-	"time"
-
 	"github.com/gocraft/health"
 	"github.com/gocraft/health/stack"
 	"github.com/stretchr/testify/assert"
+	"net/http"
+	"testing"
+	"time"
 )
 
 func TestSink(t *testing.T) {

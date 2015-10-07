@@ -1,9 +1,8 @@
 package main
 
 import (
-	"math"
-
 	tm "github.com/buger/goterm"
+	"math"
 )
 
 func main() {

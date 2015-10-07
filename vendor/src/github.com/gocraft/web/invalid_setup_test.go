@@ -1,9 +1,8 @@
 package web
 
 import (
-	"testing"
-
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func (c *Context) InvalidHandler()                                     {}

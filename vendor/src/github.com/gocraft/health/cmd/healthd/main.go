@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/gocraft/health"
+	"github.com/gocraft/health/healthd"
 	"os"
 	"strings"
 	"time"
-
-	"github.com/gocraft/health"
-	"github.com/gocraft/health/healthd"
 )
 
 // TODO's:

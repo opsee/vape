@@ -3,13 +3,6 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	"io"
-	"net/http"
-	"net/http/httptest"
-	"os"
-	"testing"
-	"time"
-
 	"github.com/gocraft/web"
 	"github.com/keighl/mandrill"
 	"github.com/opsee/vape/model"
@@ -17,6 +10,12 @@ import (
 	"github.com/opsee/vape/testutil"
 	"github.com/opsee/vaper"
 	. "gopkg.in/check.v1"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"testing"
+	"time"
 )
 
 type ApiSuite struct{}

@@ -6,7 +6,6 @@ import (
 	"crypto/hmac"
 	"errors"
 	"fmt"
-
 	"github.com/dvsekhvalnov/jose2go/arrays"
 	"github.com/dvsekhvalnov/jose2go/padding"
 )

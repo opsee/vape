@@ -3,13 +3,12 @@ package bugsnag
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gocraft/health/stack"
+	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"strings"
 	"testing"
-
-	"github.com/gocraft/health/stack"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNotify(t *testing.T) {

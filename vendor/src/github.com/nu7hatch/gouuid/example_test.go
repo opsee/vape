@@ -1,6 +1,9 @@
 package uuid_test
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/nu7hatch/gouuid"
+)
 
 func ExampleNewV4() {
 	u4, err := uuid.NewV4()

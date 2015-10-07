@@ -3,9 +3,8 @@ package model
 import (
 	"crypto/rand"
 	"encoding/base64"
-	"time"
-
 	"golang.org/x/crypto/bcrypt"
+	"time"
 )
 
 type Bastion struct {

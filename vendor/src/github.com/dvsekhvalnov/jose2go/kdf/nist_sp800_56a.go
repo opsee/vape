@@ -1,10 +1,9 @@
 package kdf
 
 import (
+	"github.com/dvsekhvalnov/jose2go/arrays"
 	"hash"
 	"math"
-
-	"github.com/dvsekhvalnov/jose2go/arrays"
 )
 
 const (

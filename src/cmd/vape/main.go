@@ -1,15 +1,14 @@
 package main
 
 import (
-	"io/ioutil"
-	"log"
-	"os"
-
 	"github.com/keighl/mandrill"
 	"github.com/opsee/vape/api"
 	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vaper"
+	"io/ioutil"
+	"log"
+	"os"
 )
 
 func main() {

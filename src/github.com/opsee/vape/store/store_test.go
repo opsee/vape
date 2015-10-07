@@ -1,12 +1,11 @@
 package store
 
 import (
-	"os"
-	"testing"
-
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/testutil"
 	. "gopkg.in/check.v1"
+	"os"
+	"testing"
 )
 
 type StoreSuite struct{}

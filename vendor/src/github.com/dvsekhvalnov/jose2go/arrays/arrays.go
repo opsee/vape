@@ -6,7 +6,6 @@ import (
 	"crypto/rand"
 	"encoding/binary"
 	"fmt"
-
 	"github.com/dvsekhvalnov/jose2go/base64url"
 )
 
