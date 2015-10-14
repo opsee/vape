@@ -10,11 +10,17 @@ type NotificationContext struct {
 	*Context
 }
 
-var notificationRouter *web.Router
+var (
+	notificationRouter *web.Router
+	testNotificationRouter *web.Router
+)
 
 func init() {
 	notificationRouter = privateRouter.Subrouter(NotificationContext{}, "/notifications")
 	notificationRouter.Post("/send/email", (*NotificationContext).SendEmail)
+
+	testNotificationRouter = publicRouter.Subrouter(NotificationContext{}, "/notifications")
+	testNotificationRouter.Post("/test/email", (*NotificationContext).SendTestEmail)
 }
 
 type SendEmalResponse struct {
@@ -51,4 +57,13 @@ func (c *NotificationContext) SendEmail(rw web.ResponseWriter, r *web.Request) {
 	}
 
 	c.ResponseJson(&SendEmalResponse{User: user})
+}
+
+func (c *NotificationContext) SendTestEmail(rw web.ResponseWriter, r *web.Request) {
+	if c.CurrentUser == nil || c.CurrentUser.Admin != true {
+		c.Unauthorized(Messages.AdminRequired)
+		return
+	}
+
+	c.SendEmail(rw, r)
 }
