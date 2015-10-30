@@ -11,7 +11,7 @@ type NotificationContext struct {
 }
 
 var (
-	notificationRouter *web.Router
+	notificationRouter     *web.Router
 	testNotificationRouter *web.Router
 )
 
