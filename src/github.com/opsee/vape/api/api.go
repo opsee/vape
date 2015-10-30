@@ -11,6 +11,7 @@ import (
 	"github.com/opsee/vaper"
 	"io"
 	"net/http"
+	"regexp"
 	"runtime"
 	"strings"
 )
@@ -32,11 +33,9 @@ var (
 	stream        = health.NewStream()
 	publicRouter  = web.New(Context{})
 	privateRouter = web.New(Context{})
-	origins       = []string{
-		"http://localhost:8080",
-		"https://staging.opsy.co",
-		"https://app.opsee.co",
-		"https://app.opsee.com",
+	origins       = []*regexp.Regexp{
+		regexp.MustCompile(`https?://localhost:8080`),
+		regexp.MustCompile(`https://(\w+\.)?(opsy\.co|opsee\.co|opsee\.com)`),
 	}
 )
 
@@ -209,12 +208,13 @@ func (c *Context) Cors(rw web.ResponseWriter, r *web.Request, next web.NextMiddl
 	origin := r.Header.Get("Origin")
 
 	for _, o := range origins {
-		if o == origin {
+		if o.MatchString(origin) {
 			header := rw.Header()
-			header.Set("Access-Control-Allow-Origin", o)
+			header.Set("Access-Control-Allow-Origin", origin)
 			header.Set("Access-Control-Allow-Methods", "GET, PUT, POST, PATCH, DELETE")
 			header.Set("Access-Control-Allow-Headers", "Accept-Encoding,Authorization,Content-Type")
 			header.Set("Access-Control-Max-Age", "1728000")
+			break
 		}
 	}
 	next(rw, r)
