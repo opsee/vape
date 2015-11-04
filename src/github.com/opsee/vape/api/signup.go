@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"github.com/gocraft/web"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
