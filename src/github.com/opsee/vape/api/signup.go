@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"github.com/gocraft/web"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
@@ -41,23 +42,17 @@ func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	var request struct {
-		Page    int `json:"page"`
-		PerPage int `json:"per_page"`
+	perPage, err := strconv.Atoi(r.FormValue("per_page"))
+	if err != nil || perPage <= 0 {
+		perPage = 20
 	}
 
-	// ignore errors since all params are optional
-	c.RequestJson(&request)
-
-	if request.PerPage <= 0 {
-		request.PerPage = 20
+	page, err := strconv.Atoi(r.FormValue("page"))
+	if err != nil || page <= 0 {
+		page = 1
 	}
 
-	if request.Page <= 0 {
-		request.Page = 1
-	}
-
-	signups, err := servicer.ListSignups(request.PerPage, request.Page)
+	signups, err := servicer.ListSignups(perPage, page)
 	if err != nil {
 		c.InternalServerError(Messages.InternalServerError, err)
 		return
