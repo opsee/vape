@@ -14,6 +14,12 @@ fmt:
 migrate:
 	migrate -url $(POSTGRES_CONN) -path ./migrations up
 
+deps:
+	docker pull sameersbn/postgresql:9.4-3
+	@docker rm -f postgresql || true
+	@docker run --name postgresql -d -e PSQL_TRUST_LOCALNET=true -e DB_USER=postgres -e DB_PASS= -e DB_NAME=vape_test sameersbn/postgresql:9.4-3
+	@echo "started postgresql"
+
 swagger:
 	@mkdir -p swagger
 	GOPATH="$(PWD):$(PWD)/vendor:$(GOPATH)" swagger -apiPackage github.com/opsee/vape -mainApiFile github.com/opsee/vape/api/api.go -format swagger -output swagger
