@@ -52,12 +52,17 @@ func main() {
 		mandrillClient = mandrill.ClientWithKey(mandrillAPIKey)
 	}
 
+	intercomKey := os.Getenv("INTERCOM_KEY")
+	if intercomKey == "" {
+		log.Println("WARN: INTERCOM_KEY not set, we won't send user HMAC.")
+	}
+
 	host := os.Getenv("OPSEE_HOST")
 	if host == "" {
 		log.Fatal("Must set the OPSEE_HOST environment variable.")
 	}
 
-	servicer.Init(host, mandrillClient)
+	servicer.Init(host, mandrillClient, intercomKey)
 
 	api.ListenAndServe(os.Getenv("VAPE_PUBLIC_HOST"), os.Getenv("VAPE_PRIVATE_HOST"))
 }

@@ -9,13 +9,15 @@ type MandrillMailer interface {
 }
 
 var (
-	opseeHost  string
-	mailClient MandrillMailer
+	opseeHost   string
+	mailClient  MandrillMailer
+	intercomKey []byte
 )
 
-func Init(host string, mailer MandrillMailer) {
+func Init(host string, mailer MandrillMailer, intercom string) {
 	opseeHost = host
 	mailClient = mailer
+	intercomKey = []byte(intercom)
 }
 
 func mailTemplatedMessage(toEmail, toName, templateName string, mergeVars map[string]interface{}) ([]*mandrill.Response, error) {

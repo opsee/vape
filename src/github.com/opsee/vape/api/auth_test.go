@@ -22,6 +22,7 @@ func (s *ApiSuite) TestUserSessionEcho(c *C) {
 }
 
 func (s *ApiSuite) TestCreateAuthPassword(c *C) {
+	servicer.Init("test.opsy.co", nil, "fffff--fffffffffffffffffffffffffffffffff")
 	rec, err := testReq(publicRouter, "POST", "https://vape/authenticate/password", nil, nil)
 	if err != nil {
 		c.Fatal(err)
@@ -49,6 +50,7 @@ func (s *ApiSuite) TestCreateAuthPassword(c *C) {
 
 	response := &UserTokenResponse{}
 	loadResponse(response, rec.Body)
+	c.Assert(response.IntercomHMAC, DeepEquals, "6b30a7417724ab8aaa918f4a66cc6be8f1ff278ab9d9ee3bcafcdd46326f1605")
 	c.Assert(response.User.Email, DeepEquals, "mark@opsee.co")
 
 	// admin login as user id 3
@@ -78,7 +80,7 @@ func (s *ApiSuite) TestCreateAuthPassword(c *C) {
 
 func (s *ApiSuite) TestCreateAuthToken(c *C) {
 	mailer := &testMailer{}
-	servicer.Init("test.opsy.co", mailer)
+	servicer.Init("test.opsy.co", mailer, "fffff--fffffffffffffffffffffffffffffffff")
 
 	// test a non-existent email
 	rec, _ := testReq(publicRouter, "POST", "https://vape/authenticate/token", bytes.NewBuffer([]byte(`{"email": "what@rudoing.com"}`)), nil)

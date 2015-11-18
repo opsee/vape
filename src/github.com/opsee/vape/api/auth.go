@@ -24,8 +24,9 @@ func init() {
 }
 
 type UserTokenResponse struct {
-	Token string      `json:"token"`
-	User  *model.User `json:"user"`
+	Token        string      `json:"token"`
+	User         *model.User `json:"user"`
+	IntercomHMAC string      `json:"intercom_hmac"`
 }
 
 // @Title authenticateFromPassword
@@ -99,9 +100,16 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 		return
 	}
 
+	hmac, err := servicer.HMACIntercomUser(user)
+	if err != nil {
+		c.InternalServerError(Messages.InternalServerError, err)
+		return
+	}
+
 	c.ResponseJson(map[string]interface{}{
-		"user":  user,
-		"token": token,
+		"user":          user,
+		"token":         token,
+		"intercom_hmac": hmac,
 	})
 }
 

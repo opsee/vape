@@ -1,13 +1,30 @@
 package servicer
 
 import (
+	"crypto/hmac"
+	"crypto/sha256"
 	"database/sql"
+	"encoding/hex"
 	"fmt"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vaper"
 	"time"
 )
+
+func HMACIntercomUser(user *model.User) (string, error) {
+	if intercomKey == nil {
+		return "", nil
+	}
+
+	hashWriter := hmac.New(sha256.New, intercomKey)
+	_, err := hashWriter.Write([]byte(user.Email))
+	if err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(hashWriter.Sum(nil)), nil
+}
 
 func GetUser(id int) (*model.User, error) {
 	user := new(model.User)

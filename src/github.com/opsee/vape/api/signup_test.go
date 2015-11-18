@@ -11,7 +11,7 @@ import (
 
 func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 	mailer := &testMailer{}
-	servicer.Init("test.opsy.go", mailer)
+	servicer.Init("test.opsy.go", mailer, "fffff--fffffffffffffffffffffffffffffffff")
 
 	badReqs := map[string]string{
 		`{"email": "sackodonuts@hotmail.com"}`: Messages.NameRequired,
