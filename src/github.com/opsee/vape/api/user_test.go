@@ -65,3 +65,17 @@ func (s *ApiSuite) TestUserUpdate(c *C) {
 	err = loadResponse(user, rec.Body)
 	c.Assert(user.Name, DeepEquals, "vin diesel")
 }
+
+func (s *ApiSuite) TestGetListUsers(c *C) {
+	// get list, fail
+	rec, _ := testAuthedReq(&model.User{Id: 1, Email: "cliff@leaninto.it", Admin: false}, "GET", "https://vape/users/", nil, nil)
+	messageResponse := &MessageResponse{}
+	loadResponse(messageResponse, rec.Body)
+	c.Assert(messageResponse.Message, DeepEquals, Messages.UserOrAdminRequired)
+
+	// get list
+	rec, _ = testAuthedReq(&model.User{Id: 1, Email: "cliff@leaninto.it", Admin: true}, "GET", "https://vape/users/", nil, nil)
+	gotUsers := make([]*model.User, 2)
+	loadResponse(&gotUsers, rec.Body)
+	c.Assert(gotUsers[len(gotUsers)-1].Name, Not(DeepEquals), "")
+}
