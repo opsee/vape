@@ -36,7 +36,7 @@ func (c *UserContext) Authorized(rw web.ResponseWriter, r *web.Request, next web
 		return
 	}
 
-	if r.Path != "/" {
+	if r.RoutePath() != "/" {
 		id, err := strconv.Atoi(r.PathParams["id"])
 		if err != nil {
 			c.BadRequest(Messages.IdRequired)
@@ -53,7 +53,7 @@ func (c *UserContext) Authorized(rw web.ResponseWriter, r *web.Request, next web
 }
 
 func (c *UserContext) FetchUser(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
-	if r.Path != "/" && c.Id == 0 {
+	if r.RoutePath() != "/" && c.Id == 0 {
 		c.BadRequest(Messages.IdRequired)
 		return
 	}
