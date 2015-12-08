@@ -12,6 +12,27 @@ import (
 	"time"
 )
 
+func ListUsers(perPage int, page int) ([]*model.User, error) {
+	if perPage < 1 {
+		perPage = 20
+	}
+
+	if page < 1 {
+		page = 1
+	}
+
+	limit := perPage
+	offset := (perPage * page) - perPage
+
+	users := []*model.User{}
+	err := store.Select(&users, "list-users", limit, offset)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
 func HMACIntercomUser(user *model.User) (string, error) {
 	if intercomKey == nil {
 		return "", nil

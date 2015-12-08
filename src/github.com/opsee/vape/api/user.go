@@ -22,6 +22,7 @@ func init() {
 	userRouter = publicRouter.Subrouter(UserContext{}, "/users")
 	userRouter.Middleware((*UserContext).Authorized)
 	userRouter.Middleware((*UserContext).FetchUser)
+	userRouter.Get("/", (*UserContext).ListUsers)
 	userRouter.Get("/:id", (*UserContext).GetUser)
 	userRouter.Put("/:id", (*UserContext).UpdateUser)
 	userRouter.Delete("/:id", (*UserContext).DeleteUser)
@@ -35,12 +36,14 @@ func (c *UserContext) Authorized(rw web.ResponseWriter, r *web.Request, next web
 		return
 	}
 
-	id, err := strconv.Atoi(r.PathParams["id"])
-	if err != nil {
-		c.BadRequest(Messages.IdRequired)
-		return
+	if r.RoutePath() != "/" {
+		id, err := strconv.Atoi(r.PathParams["id"])
+		if err != nil {
+			c.BadRequest(Messages.IdRequired)
+			return
+		}
+		c.Id = id
 	}
-	c.Id = id
 
 	if (c.Id != 0 && c.CurrentUser.Id == c.Id) || c.CurrentUser.Admin {
 		next(rw, r)
@@ -50,7 +53,7 @@ func (c *UserContext) Authorized(rw web.ResponseWriter, r *web.Request, next web
 }
 
 func (c *UserContext) FetchUser(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
-	if c.Id == 0 {
+	if r.RoutePath() != "/" && c.Id == 0 {
 		c.BadRequest(Messages.IdRequired)
 		return
 	}
@@ -67,6 +70,26 @@ func (c *UserContext) FetchUser(rw web.ResponseWriter, r *web.Request, next web.
 
 	c.User = user
 	next(rw, r)
+}
+
+func (c *UserContext) ListUsers(rw web.ResponseWriter, r *web.Request) {
+	perPage, err := strconv.Atoi(r.FormValue("per_page"))
+	if err != nil || perPage <= 0 {
+		perPage = 20
+	}
+
+	page, err := strconv.Atoi(r.FormValue("page"))
+	if err != nil || page <= 0 {
+		page = 1
+	}
+
+	users, err := servicer.ListUsers(perPage, page)
+	if err != nil {
+		c.InternalServerError(Messages.InternalServerError, err)
+		return
+	}
+
+	c.ResponseJson(users)
 }
 
 // @Title getUser

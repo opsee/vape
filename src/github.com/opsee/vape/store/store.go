@@ -14,6 +14,7 @@ var DB *sqlx.DB
 
 var queries = map[string]string{
 	// users
+	"list-users":               "select * from users limit $1 offset $2",
 	"user-by-email":            "select * from users where email = $1",
 	"user-by-email-and-active": "select * from users where email = $1 and active = $2",
 	"user-by-id":               "select * from users where id = $1",
