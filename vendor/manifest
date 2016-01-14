@@ -75,6 +75,12 @@
 			"path": "/prometheus"
 		},
 		{
+			"importpath": "github.com/snorecone/closeio-go",
+			"repository": "https://github.com/snorecone/closeio-go",
+			"revision": "64c2abce0f6f74cae54a60908ce0755e96aad7e4",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/stretchr/testify/assert",
 			"repository": "https://github.com/stretchr/testify",
 			"revision": "f5520455607c0233cb6d7b056f71b22c1d265ef1",
