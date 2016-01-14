@@ -57,12 +57,17 @@ func main() {
 		log.Println("WARN: INTERCOM_KEY not set, we won't send user HMAC.")
 	}
 
+	closeioKey := os.Getenv("CLOSEIO_KEY")
+	if closeioKey == "" {
+		log.Println("WARN: CLOSEIO_KEY not set, we won't create leeeds.")
+	}
+
 	host := os.Getenv("OPSEE_HOST")
 	if host == "" {
 		log.Fatal("Must set the OPSEE_HOST environment variable.")
 	}
 
-	servicer.Init(host, mandrillClient, intercomKey)
+	servicer.Init(host, mandrillClient, intercomKey, closeioKey)
 
 	api.ListenAndServe(os.Getenv("VAPE_PUBLIC_HOST"), os.Getenv("VAPE_PRIVATE_HOST"))
 }

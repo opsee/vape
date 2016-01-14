@@ -3,6 +3,7 @@ package servicer
 import (
 	"database/sql"
 	"fmt"
+	"github.com/snorecone/closeio-go"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 )
@@ -42,6 +43,26 @@ func CreateSignup(email, name string) (*model.Signup, error) {
 			"name": signup.Name,
 		}
 		mailTemplatedMessage(signup.Email, signup.Name, "signup-confirmation", mergeVars)
+	}()
+
+	// create a lead here!
+	go func() {
+		createLead(
+			&closeio.Lead{
+				Name: signup.Name,
+				Contacts: []*closeio.Contact{
+					{
+						Name: signup.Name,
+						Emails: []*closeio.Email{
+							{
+								Type:  "work",
+								Email: signup.Email,
+							},
+						},
+					},
+				},
+			},
+		)
 	}()
 
 	return signup, err
