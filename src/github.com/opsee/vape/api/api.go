@@ -36,6 +36,7 @@ var (
 	origins       = []*regexp.Regexp{
 		regexp.MustCompile(`https?://localhost:8080`),
 		regexp.MustCompile(`https://(\w+\.)?(opsy\.co|opsee\.co|opsee\.com)`),
+		regexp.MustCompile(`https?://coreys-mbp-8:\d+`),
 	}
 )
 
