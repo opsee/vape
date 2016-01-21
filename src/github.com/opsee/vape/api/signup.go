@@ -231,11 +231,17 @@ func (c *SignupContext) ClaimSignup(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
+	hmac, err := servicer.HMACIntercomUser(user)
+	if err != nil {
+		c.InternalServerError(Messages.InternalServerError, err)
+		return
+	}
+
 	tokenString, err := servicer.TokenUser(user, time.Hour*12)
 	if err != nil {
 		c.InternalServerError(Messages.InternalServerError, err)
 		return
 	}
 
-	c.ResponseJson(&UserTokenResponse{Token: tokenString, User: user})
+	c.ResponseJson(&UserTokenResponse{Token: tokenString, User: user, IntercomHMAC: hmac})
 }
