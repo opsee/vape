@@ -1,9 +1,13 @@
 package servicer
 
 import (
-	"github.com/snorecone/closeio-go"
+	"bytes"
+	"github.com/hoisie/mustache"
 	"github.com/keighl/mandrill"
-	"log"
+	slacktmpl "github.com/opsee/notification-templates/dist/go/slack"
+	log "github.com/sirupsen/logrus"
+	"github.com/snorecone/closeio-go"
+	"net/http"
 )
 
 type MandrillMailer interface {
@@ -11,16 +15,30 @@ type MandrillMailer interface {
 }
 
 var (
-	opseeHost     string
-	mailClient    MandrillMailer
-	intercomKey   []byte
-	closeioClient *closeio.Closeio
+	opseeHost      string
+	mailClient     MandrillMailer
+	intercomKey    []byte
+	closeioClient  *closeio.Closeio
+	slackEndpoint  string
+	slackTemplates map[string]*mustache.Template
 )
 
-func Init(host string, mailer MandrillMailer, intercom, closeioKey string) {
+func init() {
+	slackTemplates = make(map[string]*mustache.Template)
+
+	tmpl, err := mustache.ParseString(slacktmpl.NewSignup)
+	if err != nil {
+		panic(err)
+	}
+
+	slackTemplates["new-signup"] = tmpl
+}
+
+func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl string) {
 	opseeHost = host
 	mailClient = mailer
 	intercomKey = []byte(intercom)
+	slackEndpoint = slackUrl
 
 	if closeioKey != "" {
 		closeioClient = closeio.New(closeioKey)
@@ -51,4 +69,29 @@ func createLead(lead *closeio.Lead) {
 			log.Printf("created closeio lead: %s", resp.Url)
 		}
 	}
+}
+
+func notifySlack(name string, vars map[string]interface{}) {
+	log.Info("requested slack notification")
+
+	if slackEndpoint == "" {
+		log.Warn("not sending slack notification since SLACK_ENDPOINT is not set")
+		return
+	}
+
+	template, ok := slackTemplates[name]
+	if !ok {
+		log.Errorf("not sending slack notification since template %s was not found", name)
+		return
+	}
+
+	body := bytes.NewBufferString(template.Render(vars))
+	resp, err := http.Post(slackEndpoint, "application/json", body)
+	if err != nil {
+		log.WithError(err).Errorf("failed to send slack notification: %s", name)
+		return
+	}
+
+	defer resp.Body.Close()
+	log.WithField("status", resp.StatusCode).Info("sent slack request")
 }

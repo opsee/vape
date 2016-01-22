@@ -2,6 +2,12 @@
 	"version": 0,
 	"dependencies": [
 		{
+			"importpath": "github.com/Sirupsen/logrus",
+			"repository": "https://github.com/Sirupsen/logrus",
+			"revision": "f7f79f729e0fbe2fcc061db48a9ba0263f588252",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/braintree/manners",
 			"repository": "https://github.com/braintree/manners",
 			"revision": "9e2a2714de21eb092ead2ef56d8c7a60d7928819",
@@ -38,6 +44,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/hoisie/mustache",
+			"repository": "https://github.com/hoisie/mustache",
+			"revision": "af524a16a1b1bd467c342969bf37db23433466c4",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/jmoiron/sqlx",
 			"repository": "https://github.com/jmoiron/sqlx",
 			"revision": "ae682dc5c71d087ef97d506ec543320fdd7b0ff1",
@@ -62,6 +74,13 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/opsee/notification-templates/dist/go/slack",
+			"repository": "https://github.com/opsee/notification-templates",
+			"revision": "74aa5a2e9309332fd1a77c82b059dafde132f9ff",
+			"branch": "master",
+			"path": "/dist/go/slack"
+		},
+		{
 			"importpath": "github.com/opsee/vaper",
 			"repository": "ssh://github.com/opsee/vaper",
 			"revision": "14fea3b4439014c4429adf260e17ccd9ef5b6dae",
@@ -73,6 +92,12 @@
 			"revision": "8c899cd8208a366b6899d397e4bc3ced7ab073e3",
 			"branch": "master",
 			"path": "/prometheus"
+		},
+		{
+			"importpath": "github.com/sirupsen/logrus",
+			"repository": "https://github.com/sirupsen/logrus",
+			"revision": "f7f79f729e0fbe2fcc061db48a9ba0263f588252",
+			"branch": "master"
 		},
 		{
 			"importpath": "github.com/snorecone/closeio-go",
@@ -102,10 +127,22 @@
 			"path": "/blowfish"
 		},
 		{
+			"importpath": "gopkg.in/airbrake/gobrake.v2",
+			"repository": "https://gopkg.in/airbrake/gobrake.v2",
+			"revision": "c9d51adc624b5cc4c1bf8de730a09af4878ffe2d",
+			"branch": "master"
+		},
+		{
 			"importpath": "gopkg.in/check.v1",
 			"repository": "https://gopkg.in/check.v1",
 			"revision": "11d3bc7aa68e238947792f30573146a3231fc0f1",
 			"branch": "v1"
+		},
+		{
+			"importpath": "gopkg.in/gemnasium/logrus-airbrake-hook.v2",
+			"repository": "https://gopkg.in/gemnasium/logrus-airbrake-hook.v2",
+			"revision": "31e6fd4bd5a98d8ee7673d24bc54ec73c31810dd",
+			"branch": "master"
 		}
 	]
 }
