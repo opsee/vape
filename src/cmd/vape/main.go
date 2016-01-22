@@ -67,7 +67,12 @@ func main() {
 		log.Fatal("Must set the OPSEE_HOST environment variable.")
 	}
 
-	servicer.Init(host, mandrillClient, intercomKey, closeioKey)
+	slackUrl := os.Getenv("SLACK_ENDPOINT")
+	if slackUrl == "" {
+		log.Println("WARN: SLACK_ENDPOINT not set, we won't post notifications.")
+	}
+
+	servicer.Init(host, mandrillClient, intercomKey, closeioKey, slackUrl)
 
 	api.ListenAndServe(os.Getenv("VAPE_PUBLIC_HOST"), os.Getenv("VAPE_PRIVATE_HOST"))
 }
