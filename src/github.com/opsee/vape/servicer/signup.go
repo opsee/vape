@@ -22,6 +22,19 @@ func GetSignup(id int) (*model.Signup, error) {
 	return signup, nil
 }
 
+func DeleteSignup(id int) error {
+	_, err := store.Exec("delete-signup-by-id", id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil
+		}
+
+		return err
+	}
+
+	return nil
+}
+
 func CreateSignup(email, name string) (*model.Signup, error) {
 	existingSignup := new(model.Signup)
 	err := store.Get(existingSignup, "signup-by-email", email)
