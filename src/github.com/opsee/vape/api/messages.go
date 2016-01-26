@@ -23,6 +23,7 @@ type messages struct {
 	SignupNotFound             string
 	UserNotFound               string
 	UserDeleted                string
+	SignupDeleted              string
 }
 
 var Messages = &messages{
@@ -48,4 +49,5 @@ var Messages = &messages{
 	SignupNotFound:             "signup not found",
 	UserNotFound:               "user not found",
 	UserDeleted:                "user has been deleted",
+	SignupDeleted:              "signup has been deleted",
 }

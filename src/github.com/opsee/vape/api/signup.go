@@ -22,6 +22,7 @@ func init() {
 	signupRouter.Post("/", (*SignupContext).CreateSignup)
 	signupRouter.Get("/", (*SignupContext).ListSignups)
 	signupRouter.Get("/:id", (*SignupContext).GetSignup)
+	signupRouter.Delete("/:id", (*SignupContext).DeleteSignup)
 	signupRouter.Post("/:id/claim", (*SignupContext).ClaimSignup)
 	signupRouter.Put("/:id/activate", (*SignupContext).ActivateSignup)
 }
@@ -176,6 +177,35 @@ func (c *SignupContext) GetSignup(rw web.ResponseWriter, r *web.Request) {
 	}
 
 	c.ResponseJson(signup)
+}
+
+// @Title deleteSignup
+// @Description Delete a single signup.
+// @Accept  json
+// @Param   Authorization   header   string  true        "The Bearer token - an admin user token is required"
+// @Param   id              path     int     true       "The signup id"
+// @Success 200 {object}    MessageResponse              ""
+// @Failure 401 {object}    MessageResponse           	 ""
+// @Router /signups/{id} [get]
+func (c *SignupContext) DeleteSignup(rw web.ResponseWriter, r *web.Request) {
+	if c.CurrentUser == nil || c.CurrentUser.Admin != true {
+		c.Unauthorized(Messages.AdminRequired)
+		return
+	}
+
+	id, err := strconv.Atoi(r.PathParams["id"])
+	if err != nil {
+		c.BadRequest(Messages.IdRequired)
+		return
+	}
+
+	err = servicer.DeleteSignup(id)
+	if err != nil {
+		c.InternalServerError(Messages.InternalServerError, err)
+		return
+	}
+
+	c.ResponseJson(&MessageResponse{Message: Messages.SignupDeleted})
 }
 
 // @Title claimSignup
