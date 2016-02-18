@@ -20,5 +20,6 @@ deployment:
     branch: master
     owner: opsee
     commands:
+      - docker tag quay.io/opsee/vape quay.io/opsee/vape:$CIRCLE_SHA1
       - docker push quay.io/opsee/vape:${CIRCLE_SHA1}
       - docker tag -f quay.io/opsee/vape:${CIRCLE_SHA1} quay.io/opsee/vape:latest
