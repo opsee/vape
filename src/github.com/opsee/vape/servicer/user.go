@@ -61,6 +61,20 @@ func GetUser(id int) (*model.User, error) {
 	return user, nil
 }
 
+func GetUserCustID(id string) (*model.User, error) {
+	user := new(model.User)
+	err := store.Get(user, "user-by-cust-id", id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, UserNotFound
+		}
+
+		return nil, err
+	}
+
+	return user, nil
+}
+
 func GetUserEmail(email string) (*model.User, error) {
 	user := new(model.User)
 	err := store.Get(user, "user-by-email", email)
