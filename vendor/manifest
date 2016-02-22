@@ -8,6 +8,83 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/aws/aws-sdk-go/aws",
+			"repository": "https://github.com/aws/aws-sdk-go",
+			"revision": "d17da62685915c25ab5b429b1d1e5b67faa98ac2",
+			"branch": "master",
+			"path": "/aws"
+		},
+		{
+			"importpath": "github.com/aws/aws-sdk-go/aws/awserr",
+			"repository": "https://github.com/aws/aws-sdk-go",
+			"revision": "d17da62685915c25ab5b429b1d1e5b67faa98ac2",
+			"branch": "master",
+			"path": "/aws/awserr"
+		},
+		{
+			"importpath": "github.com/aws/aws-sdk-go/aws/credentials",
+			"repository": "https://github.com/aws/aws-sdk-go",
+			"revision": "d17da62685915c25ab5b429b1d1e5b67faa98ac2",
+			"branch": "master",
+			"path": "/aws/credentials"
+		},
+		{
+			"importpath": "github.com/aws/aws-sdk-go/private/endpoints",
+			"repository": "https://github.com/aws/aws-sdk-go",
+			"revision": "d17da62685915c25ab5b429b1d1e5b67faa98ac2",
+			"branch": "master",
+			"path": "/private/endpoints"
+		},
+		{
+			"importpath": "github.com/aws/aws-sdk-go/private/protocol",
+			"repository": "https://github.com/aws/aws-sdk-go",
+			"revision": "d17da62685915c25ab5b429b1d1e5b67faa98ac2",
+			"branch": "master",
+			"path": "/private/protocol"
+		},
+		{
+			"importpath": "github.com/aws/aws-sdk-go/private/signer/v4",
+			"repository": "https://github.com/aws/aws-sdk-go",
+			"revision": "d17da62685915c25ab5b429b1d1e5b67faa98ac2",
+			"branch": "master",
+			"path": "/private/signer/v4"
+		},
+		{
+			"importpath": "github.com/aws/aws-sdk-go/private/waiter",
+			"repository": "https://github.com/aws/aws-sdk-go",
+			"revision": "d17da62685915c25ab5b429b1d1e5b67faa98ac2",
+			"branch": "master",
+			"path": "/private/waiter"
+		},
+		{
+			"importpath": "github.com/aws/aws-sdk-go/service/autoscaling",
+			"repository": "https://github.com/aws/aws-sdk-go",
+			"revision": "d17da62685915c25ab5b429b1d1e5b67faa98ac2",
+			"branch": "master",
+			"path": "/service/autoscaling"
+		},
+		{
+			"importpath": "github.com/aws/aws-sdk-go/service/ec2",
+			"repository": "https://github.com/aws/aws-sdk-go",
+			"revision": "d17da62685915c25ab5b429b1d1e5b67faa98ac2",
+			"branch": "master",
+			"path": "/service/ec2"
+		},
+		{
+			"importpath": "github.com/aws/aws-sdk-go/service/elb",
+			"repository": "https://github.com/aws/aws-sdk-go",
+			"revision": "d17da62685915c25ab5b429b1d1e5b67faa98ac2",
+			"branch": "master",
+			"path": "/service/elb"
+		},
+		{
+			"importpath": "github.com/aws/aws-sdk-go/service/rds",
+			"repository": "https://github.com/aws/aws-sdk-go",
+			"revision": "d17da62685915c25ab5b429b1d1e5b67faa98ac2",
+			"branch": "master",
+			"path": "/service/rds"
+		},
+		{
 			"importpath": "github.com/braintree/manners",
 			"repository": "https://github.com/braintree/manners",
 			"revision": "9e2a2714de21eb092ead2ef56d8c7a60d7928819",
@@ -26,9 +103,21 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/dedis/protobuf",
+			"repository": "https://github.com/dedis/protobuf",
+			"revision": "6948fbd96a0f1e4e96582003261cf647dc66c831",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/dvsekhvalnov/jose2go",
 			"repository": "https://github.com/dvsekhvalnov/jose2go",
 			"revision": "6387d3c1f5abd8443b223577d5a7e0f4e0e5731f",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/go-ini/ini",
+			"repository": "https://github.com/go-ini/ini",
+			"revision": "f461e7678980ec9ced7d37b2b18abf8a7da393da",
 			"branch": "master"
 		},
 		{
@@ -44,15 +133,61 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/gogo/protobuf/gogoproto",
+			"repository": "https://github.com/gogo/protobuf",
+			"revision": "82d16f734d6d871204a3feb1a73cb220cc92574c",
+			"branch": "master",
+			"path": "/gogoproto"
+		},
+		{
+			"importpath": "github.com/gogo/protobuf/proto",
+			"repository": "https://github.com/gogo/protobuf",
+			"revision": "82d16f734d6d871204a3feb1a73cb220cc92574c",
+			"branch": "master",
+			"path": "/proto"
+		},
+		{
+			"importpath": "github.com/gogo/protobuf/protoc-gen-gogo/descriptor",
+			"repository": "https://github.com/gogo/protobuf",
+			"revision": "82d16f734d6d871204a3feb1a73cb220cc92574c",
+			"branch": "master",
+			"path": "/protoc-gen-gogo/descriptor"
+		},
+		{
+			"importpath": "github.com/golang/protobuf/proto",
+			"repository": "https://github.com/golang/protobuf",
+			"revision": "3c84672111d91bb5ac31719e112f9f7126a0e26e",
+			"branch": "master",
+			"path": "/proto"
+		},
+		{
+			"importpath": "github.com/graphql-go/graphql",
+			"repository": "https://github.com/graphql-go/graphql",
+			"revision": "26c58bd73a3cf9177fb534f57c9698a7bc6277a2",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/hoisie/mustache",
 			"repository": "https://github.com/hoisie/mustache",
 			"revision": "af524a16a1b1bd467c342969bf37db23433466c4",
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/jmespath/go-jmespath",
+			"repository": "https://github.com/jmespath/go-jmespath",
+			"revision": "0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/jmoiron/sqlx",
 			"repository": "https://github.com/jmoiron/sqlx",
 			"revision": "ae682dc5c71d087ef97d506ec543320fdd7b0ff1",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/julienschmidt/httprouter",
+			"repository": "https://github.com/julienschmidt/httprouter",
+			"revision": "77366a47451a56bb3ba682481eed85b64fea14e8",
 			"branch": "master"
 		},
 		{
@@ -74,11 +209,31 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/opsee/basic",
+			"repository": "https://github.com/opsee/basic",
+			"revision": "d15bb95819ce89b6222d2f3a0036b5df859027b1",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/opsee/notification-templates/dist/go/slack",
 			"repository": "https://github.com/opsee/notification-templates",
 			"revision": "74aa5a2e9309332fd1a77c82b059dafde132f9ff",
 			"branch": "master",
 			"path": "/dist/go/slack"
+		},
+		{
+			"importpath": "github.com/opsee/protobuf/opseeproto",
+			"repository": "https://github.com/opsee/protobuf",
+			"revision": "c54e5215f1a45512fba78eeaddd1fcc19095afd5",
+			"branch": "master",
+			"path": "/opseeproto"
+		},
+		{
+			"importpath": "github.com/opsee/protobuf/proto/google/protobuf",
+			"repository": "https://github.com/opsee/protobuf",
+			"revision": "c54e5215f1a45512fba78eeaddd1fcc19095afd5",
+			"branch": "master",
+			"path": "/proto/google/protobuf"
 		},
 		{
 			"importpath": "github.com/opsee/vaper",
@@ -125,6 +280,40 @@
 			"revision": "81bf7719a6b7ce9b665598222362b50122dfc13b",
 			"branch": "master",
 			"path": "/blowfish"
+		},
+		{
+			"importpath": "golang.org/x/net/context",
+			"repository": "https://go.googlesource.com/net",
+			"revision": "b6d7b1396ec874c3b00f6c84cd4301a17c56c8ed",
+			"branch": "master",
+			"path": "/context"
+		},
+		{
+			"importpath": "golang.org/x/net/http2",
+			"repository": "https://go.googlesource.com/net",
+			"revision": "b6d7b1396ec874c3b00f6c84cd4301a17c56c8ed",
+			"branch": "master",
+			"path": "/http2"
+		},
+		{
+			"importpath": "golang.org/x/net/internal/timeseries",
+			"repository": "https://go.googlesource.com/net",
+			"revision": "b6d7b1396ec874c3b00f6c84cd4301a17c56c8ed",
+			"branch": "master",
+			"path": "/internal/timeseries"
+		},
+		{
+			"importpath": "golang.org/x/net/trace",
+			"repository": "https://go.googlesource.com/net",
+			"revision": "b6d7b1396ec874c3b00f6c84cd4301a17c56c8ed",
+			"branch": "master",
+			"path": "/trace"
+		},
+		{
+			"importpath": "google.golang.org/grpc",
+			"repository": "https://github.com/grpc/grpc-go",
+			"revision": "178b68e2819d3ed711040301c12f3f97b6c270ce",
+			"branch": "master"
 		},
 		{
 			"importpath": "gopkg.in/airbrake/gobrake.v2",
