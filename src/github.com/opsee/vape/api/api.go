@@ -1,14 +1,18 @@
 package api
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/gocraft/health"
 	"github.com/gocraft/web"
 	"github.com/nu7hatch/gouuid"
+	"github.com/opsee/basic/grpcutil"
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/vaper"
+	"golang.org/x/net/http2"
+	"google.golang.org/grpc"
 	"io"
 	"net/http"
 	"regexp"
@@ -71,10 +75,21 @@ func InjectLogger(sink io.Writer) {
 	}
 }
 
-func ListenAndServe(publicAddr string, privateAddr string) {
+func ListenAndServe(publicAddr, privateAddr, certfile, certkeyfile string, grpcServer *grpc.Server) {
 	stream.EventKv("api.listen-and-serve", map[string]string{"public_host": publicAddr, "private_host": privateAddr})
 	go http.ListenAndServe(publicAddr, publicRouter)
-	http.ListenAndServe(privateAddr, privateRouter)
+
+	s := &http.Server{
+		Addr:      privateAddr,
+		Handler:   grpcutil.GRPCHandlerFunc(grpcServer, privateRouter),
+		TLSConfig: &tls.Config{},
+	}
+
+	if err := http2.ConfigureServer(s, nil); err != nil {
+		panic(err)
+	}
+
+	s.ListenAndServeTLS(certfile, certkeyfile)
 }
 
 //

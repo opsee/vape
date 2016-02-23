@@ -94,7 +94,7 @@ func (c *UserContext) ListUsers(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	c.ResponseJson(users)
+	c.ResponseJson(users.Users)
 }
 
 // @Title getUser
