@@ -1,4 +1,5 @@
 package slack
+
 var NewSignup = `{
   "text": ":moneybag: :rollin: NEW SIGNUP :pepe-trump: :moneybag:",
   "username": "CustomerBot",

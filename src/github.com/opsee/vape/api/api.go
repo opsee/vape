@@ -7,7 +7,7 @@ import (
 	"github.com/gocraft/health"
 	"github.com/gocraft/web"
 	"github.com/nu7hatch/gouuid"
-	"github.com/opsee/vape/model"
+	"github.com/opsee/basic/schema"
 	"github.com/opsee/vaper"
 	"io"
 	"net/http"
@@ -19,7 +19,7 @@ import (
 type Context struct {
 	Job                 *health.Job
 	Panic               bool
-	CurrentUser         *model.User
+	CurrentUser         *schema.User
 	RequestJson         func(interface{}) error
 	ResponseJson        func(interface{})
 	BadRequest          func(string, ...interface{})
@@ -129,7 +129,7 @@ func (c *Context) UserSession(rw web.ResponseWriter, r *web.Request, next web.Ne
 				break
 			}
 
-			user := &model.User{}
+			user := &schema.User{}
 			err = decodedToken.Reify(user)
 			if err != nil {
 				c.Job.EventErr("user_session.token_reify", err)

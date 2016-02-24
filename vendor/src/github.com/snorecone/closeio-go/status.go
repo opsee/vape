@@ -5,13 +5,14 @@ import (
 )
 
 type Statuses struct {
-	HasMore bool  `json:"has_more"`
-	Data []Status `json:"data"`
+	HasMore bool     `json:"has_more"`
+	Data    []Status `json:"data"`
 }
 type Status struct {
-	Id string `json:"id"`
+	Id    string `json:"id"`
 	Label string `json:"label"`
 }
+
 func (c *Closeio) Statuses() (*Statuses, error) {
 	resp, err := request("status/lead/", "GET", c.Token, nil)
 	if err != nil {

@@ -56,7 +56,7 @@ var swaggerJson = `
           "200": {
             "description": "Description was not specified",
             "schema": {
-              "$ref": "#/definitions/github.com.opsee.vape.model.User",
+              "$ref": "#/definitions/github.com.opsee.vape.schema.User",
               "items": {}
             }
           },
@@ -362,7 +362,7 @@ var swaggerJson = `
           "200": {
             "description": "Description was not specified",
             "schema": {
-              "$ref": "#/definitions/github.com.opsee.vape.model.User",
+              "$ref": "#/definitions/github.com.opsee.vape.schema.User",
               "items": {}
             }
           }
@@ -649,12 +649,12 @@ var swaggerJson = `
           "items": {}
         },
         "user": {
-          "$ref": "#/definitions/github.com.opsee.vape.model.User",
+          "$ref": "#/definitions/github.com.opsee.vape.schema.User",
           "items": {}
         }
       }
     },
-    "github.com.opsee.vape.model.User": {
+    "github.com.opsee.vape.schema.User": {
       "properties": {
         "active": {
           "$ref": "#/definitions/bool",

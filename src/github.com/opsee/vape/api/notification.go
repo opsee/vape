@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/gocraft/web"
-	"github.com/opsee/vape/model"
+	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/servicer"
 )
 
@@ -24,7 +24,7 @@ func init() {
 }
 
 type SendEmalResponse struct {
-	User *model.User `json:"user"`
+	User *schema.User `json:"user"`
 }
 
 func (c *NotificationContext) SendEmail(rw web.ResponseWriter, r *web.Request) {

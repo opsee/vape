@@ -3,7 +3,7 @@ package api
 import (
 	"bytes"
 	"github.com/gocraft/web"
-	"github.com/opsee/vape/model"
+	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/servicer"
 	"strconv"
 	"time"
@@ -12,7 +12,7 @@ import (
 type UserContext struct {
 	*Context
 	Id   int
-	User *model.User
+	User *schema.User
 }
 
 var userRouter *web.Router
@@ -45,7 +45,7 @@ func (c *UserContext) Authorized(rw web.ResponseWriter, r *web.Request, next web
 		c.Id = id
 	}
 
-	if (c.Id != 0 && c.CurrentUser.Id == c.Id) || c.CurrentUser.Admin {
+	if (c.Id != 0 && int(c.CurrentUser.Id) == c.Id) || c.CurrentUser.Admin {
 		next(rw, r)
 	} else {
 		c.Unauthorized(Messages.UserOrAdminRequired)
@@ -102,7 +102,7 @@ func (c *UserContext) ListUsers(rw web.ResponseWriter, r *web.Request) {
 // @Accept  json
 // @Param   Authorization    header string  true        "The Bearer token - an admin user token or a token with matching id is required"
 // @Param   id               path   int     true        "The user id"
-// @Success 200 {object}     model.User                 ""
+// @Success 200 {object}     schema.User                 ""
 // @Failure 401 {object}     MessageResponse           	""
 // @Router /users/{id} [get]
 func (c *UserContext) GetUser(rw web.ResponseWriter, r *web.Request) {

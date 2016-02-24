@@ -1,10 +1,10 @@
 package servicer
 
 import (
-	"github.com/opsee/vape/model"
+	"github.com/opsee/basic/schema"
 )
 
-func SendTemplatedEmail(userId int, template string, vars map[string]interface{}) (*model.User, error) {
+func SendTemplatedEmail(userId int, template string, vars map[string]interface{}) (*schema.User, error) {
 	user, err := GetUser(userId)
 	if err != nil {
 		return nil, err

@@ -9,6 +9,7 @@ It is generated from these files:
 	aws_data.proto
 	checker.proto
 	checks.proto
+	user.proto
 
 It has these top-level messages:
 	Group
@@ -24,10 +25,12 @@ It has these top-level messages:
 	CheckResourceResponse
 	ResourceResponse
 	CheckResourceRequest
+	ResultsResource
 	TestCheckRequest
 	TestCheckResponse
 	CheckResponse
 	CheckResult
+	User
 */
 package schema
 
@@ -39,9 +42,9 @@ import github_com_gogo_protobuf_jsonpb "github.com/gogo/protobuf/jsonpb"
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import _ "github.com/opsee/protobuf/proto/google/protobuf"
 import _ "github.com/gogo/protobuf/gogoproto"
 import _ "github.com/opsee/protobuf/opseeproto"
+import _ "github.com/opsee/protobuf/opseeproto/types"
 import _ "github.com/opsee/basic/schema/aws/autoscaling"
 import _ "github.com/opsee/basic/schema/aws/ec2"
 import _ "github.com/opsee/basic/schema/aws/elb"

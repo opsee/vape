@@ -6,13 +6,51 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"fmt"
-	"github.com/opsee/vape/model"
+	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vaper"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
-func ListUsers(perPage int, page int) ([]*model.User, error) {
+func NewUser(name, email, password string) (*schema.User, error) {
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+	if err != nil {
+		return nil, err
+	}
+
+	return &schema.User{
+		Email:        email,
+		Name:         name,
+		PasswordHash: string(passwordHash),
+	}, nil
+}
+
+func AuthenticateUser(user *schema.User, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
+}
+
+func MergeUser(user *schema.User, email, name, password string) error {
+	if email != "" {
+		user.Email = email
+	}
+
+	if name != "" {
+		user.Name = name
+	}
+
+	if password != "" {
+		passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+		if err != nil {
+			return err
+		}
+		user.PasswordHash = string(passwordHash)
+	}
+
+	return nil
+}
+
+func ListUsers(perPage int, page int) ([]*schema.User, error) {
 	if perPage < 1 {
 		perPage = 20
 	}
@@ -24,7 +62,7 @@ func ListUsers(perPage int, page int) ([]*model.User, error) {
 	limit := perPage
 	offset := (perPage * page) - perPage
 
-	users := []*model.User{}
+	users := []*schema.User{}
 	err := store.Select(&users, "list-users", limit, offset)
 	if err != nil {
 		return nil, err
@@ -33,7 +71,7 @@ func ListUsers(perPage int, page int) ([]*model.User, error) {
 	return users, nil
 }
 
-func HMACIntercomUser(user *model.User) (string, error) {
+func HMACIntercomUser(user *schema.User) (string, error) {
 	if intercomKey == nil {
 		return "", nil
 	}
@@ -47,8 +85,8 @@ func HMACIntercomUser(user *model.User) (string, error) {
 	return hex.EncodeToString(hashWriter.Sum(nil)), nil
 }
 
-func GetUser(id int) (*model.User, error) {
-	user := new(model.User)
+func GetUser(id int) (*schema.User, error) {
+	user := new(schema.User)
 	err := store.Get(user, "user-by-id", id)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -61,8 +99,8 @@ func GetUser(id int) (*model.User, error) {
 	return user, nil
 }
 
-func GetUserCustID(id string) (*model.User, error) {
-	user := new(model.User)
+func GetUserCustID(id string) (*schema.User, error) {
+	user := new(schema.User)
 	err := store.Get(user, "user-by-cust-id", id)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -75,8 +113,8 @@ func GetUserCustID(id string) (*model.User, error) {
 	return user, nil
 }
 
-func GetUserEmail(email string) (*model.User, error) {
-	user := new(model.User)
+func GetUserEmail(email string) (*schema.User, error) {
+	user := new(schema.User)
 	err := store.Get(user, "user-by-email", email)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -89,8 +127,8 @@ func GetUserEmail(email string) (*model.User, error) {
 	return user, nil
 }
 
-func UpdateUser(user *model.User, email, name, password string, duration time.Duration) (string, error) {
-	err := user.Merge(email, name, password)
+func UpdateUser(user *schema.User, email, name, password string, duration time.Duration) (string, error) {
+	err := MergeUser(user, email, name, password)
 	if err != nil {
 		return "", err
 	}
@@ -108,12 +146,12 @@ func DeleteUser(id int) error {
 	return err
 }
 
-func TokenUser(user *model.User, duration time.Duration) (string, error) {
+func TokenUser(user *schema.User, duration time.Duration) (string, error) {
 	token := vaper.New(user, user.Email, time.Now(), time.Now().Add(duration))
 	return token.Marshal()
 }
 
-func EmailTokenUser(user *model.User, duration time.Duration, referer string) error {
+func EmailTokenUser(user *schema.User, duration time.Duration, referer string) error {
 	tokenString, err := TokenUser(user, duration)
 	if err != nil {
 		return err

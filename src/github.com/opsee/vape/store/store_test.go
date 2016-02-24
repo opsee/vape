@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com/opsee/vape/model"
+	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/testutil"
 	. "gopkg.in/check.v1"
 	"os"
@@ -22,7 +22,7 @@ func (s *StoreSuite) SetUpTest(c *C) {
 }
 
 func (s *StoreSuite) TestGetUser(c *C) {
-	user := new(model.User)
+	user := new(schema.User)
 	err := Get(user, "user-by-email-and-active", "mark@opsee.co", true)
 	c.Assert(err, IsNil)
 	c.Assert(user.Name, Equals, "mark")

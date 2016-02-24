@@ -1,9 +1,9 @@
 package closeio
 
 import (
-	"testing"
 	"log"
 	"os"
+	"testing"
 )
 
 func TestStatusList(t *testing.T) {
