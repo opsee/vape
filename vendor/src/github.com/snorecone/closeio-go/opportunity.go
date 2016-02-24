@@ -17,7 +17,7 @@ type OpportunityResp struct {
 	StatusLabel    string `json:"status_label"`
 	StatusType     string `json:"status_type"`
 	DateWon        string `json:"date_won"`
-	Confidence     int `json:"confidence"`
+	Confidence     int    `json:"confidence"`
 	Userid         string `json:"user_id"`
 	ContactId      string `json:"contact_id"`
 	UpdatedBy      string `json:"updated_by"`
@@ -25,7 +25,7 @@ type OpportunityResp struct {
 	CreatedBy      string `json:"created_by"`
 	LeadId         string `json:"lead_id"`
 	Note           string `json:"note"`
-	Value          int `json:"value"`
+	Value          int    `json:"value"`
 	DateCreated    string `json:"date_created"`
 	OrganizationId string `json:"organization_id"`
 	LeadName       string `json:"lead_name"`

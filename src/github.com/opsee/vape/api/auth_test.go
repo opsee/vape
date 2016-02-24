@@ -2,22 +2,22 @@ package api
 
 import (
 	"bytes"
-	"github.com/opsee/vape/model"
+	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/servicer"
 	. "gopkg.in/check.v1"
 	"time"
 )
 
 func (s *ApiSuite) TestUserSessionEcho(c *C) {
-	rec, err := testAuthedReq(&model.User{Id: 1, Email: "cliff@leaninto.it", Admin: true}, "GET",
+	rec, err := testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true}, "GET",
 		"https://vape/authenticate/echo", nil, nil)
 	if err != nil {
 		c.Fatal(err)
 	}
 
-	user := &model.User{}
+	user := &schema.User{}
 	err = loadResponse(user, rec.Body)
-	c.Assert(user.Id, DeepEquals, 1)
+	c.Assert(user.Id, DeepEquals, int32(1))
 	c.Assert(user.Admin, DeepEquals, true)
 }
 
@@ -63,7 +63,7 @@ func (s *ApiSuite) TestCreateAuthPassword(c *C) {
 	response = &UserTokenResponse{}
 	loadResponse(response, rec.Body)
 	c.Assert(response.User.Email, DeepEquals, "dan@opsee.co")
-	c.Assert(response.User.AdminId, DeepEquals, 1)
+	c.Assert(response.User.AdminId, DeepEquals, int32(1))
 
 	// non-admin shouldn't be able to log in as someone else
 	rec, err = testReq(publicRouter, "POST", "https://vape/authenticate/password", bytes.NewBuffer([]byte(`{"email": "dan@opsee.co", "password": "eatshit", "as": 1}`)), nil)
@@ -75,7 +75,7 @@ func (s *ApiSuite) TestCreateAuthPassword(c *C) {
 	response = &UserTokenResponse{}
 	loadResponse(response, rec.Body)
 	c.Assert(response.User.Email, DeepEquals, "dan@opsee.co")
-	c.Assert(response.User.AdminId, DeepEquals, 0)
+	c.Assert(response.User.AdminId, DeepEquals, int32(0))
 }
 
 func (s *ApiSuite) TestCreateAuthToken(c *C) {

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/gocraft/web"
 	"github.com/keighl/mandrill"
-	"github.com/opsee/vape/model"
+	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vape/testutil"
 	"github.com/opsee/vaper"
@@ -32,6 +32,7 @@ func (s *ApiSuite) SetUpTest(c *C) {
 	vaper.Init(testVapeKey)
 	store.Init(os.Getenv("POSTGRES_CONN"))
 	testutil.SetupFixtures(store.DB, c)
+	// InjectLogger(os.Stdout)
 }
 
 type testMailer struct {
@@ -88,7 +89,7 @@ func testReq(router *web.Router, method, url string, body io.Reader, headers map
 	return rec, nil
 }
 
-func testAuthedReq(u *model.User, method, url string, body io.Reader, headers map[string]string) (*httptest.ResponseRecorder, error) {
+func testAuthedReq(u *schema.User, method, url string, body io.Reader, headers map[string]string) (*httptest.ResponseRecorder, error) {
 	if headers == nil {
 		headers = make(map[string]string)
 	}

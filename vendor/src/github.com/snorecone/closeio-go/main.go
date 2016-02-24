@@ -1,8 +1,8 @@
 package closeio
 
 import (
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -16,8 +16,8 @@ type Closeio struct {
 }
 
 type Contact struct {
-	Name   string  `json:"name"`
-	Title  string  `json:"title"`
+	Name   string   `json:"name"`
+	Title  string   `json:"title"`
 	Emails []*Email `json:"emails"`
 	Phones []*Phone `json:"phones"`
 }
@@ -57,7 +57,7 @@ type Address struct {
 	Address2 string `json:"address_2"`
 	City     string `json:"city"`
 	State    string `json:"state"`
-	Zipcode  string    `json:"zipcode"`
+	Zipcode  string `json:"zipcode"`
 	Country  string `json:"country"`
 }
 
@@ -71,9 +71,9 @@ func marshal(data interface{}) (jsonD []byte, err error) {
 	}
 	return jsonData, nil
 }
-func request(urlPart string,  reqType string, key string, data []byte) (resp *http.Response, err error) {
+func request(urlPart string, reqType string, key string, data []byte) (resp *http.Response, err error) {
 	client := &http.Client{}
-	url := baseURL + "/"+version + "/"+ urlPart
+	url := baseURL + "/" + version + "/" + urlPart
 	body := bytes.NewBuffer(data)
 	req, err := http.NewRequest(reqType, url, body)
 	req.SetBasicAuth(key, "")

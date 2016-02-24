@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gogo/protobuf/proto"
-	"github.com/opsee/basic/com"
 	"github.com/opsee/basic/schema"
 	"io"
 	"io/ioutil"
@@ -14,7 +13,7 @@ import (
 )
 
 type Client interface {
-	ListChecks(user *com.User) ([]*schema.Check, error)
+	ListChecks(user *schema.User) ([]*schema.Check, error)
 }
 
 type client struct {
@@ -31,7 +30,7 @@ func New(endpoint string) Client {
 }
 
 // ListChecks lists the checks + assertions for a user's customer account, without the results
-func (c *client) ListChecks(user *com.User) ([]*schema.Check, error) {
+func (c *client) ListChecks(user *schema.User) ([]*schema.Check, error) {
 	body, err := c.do(user, "GET", "/gql/checks", nil)
 	if err != nil {
 		return nil, err
@@ -46,7 +45,7 @@ func (c *client) ListChecks(user *com.User) ([]*schema.Check, error) {
 	return checks.Checks, nil
 }
 
-func (c *client) do(user *com.User, method, path string, body io.Reader) ([]byte, error) {
+func (c *client) do(user *schema.User, method, path string, body io.Reader) ([]byte, error) {
 	req, err := http.NewRequest(method, c.endpoint+path, body)
 	if err != nil {
 		return nil, err

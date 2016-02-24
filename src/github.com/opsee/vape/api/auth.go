@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/gocraft/web"
-	"github.com/opsee/vape/model"
+	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
 	"time"
@@ -24,9 +24,9 @@ func init() {
 }
 
 type UserTokenResponse struct {
-	Token        string      `json:"token"`
-	User         *model.User `json:"user"`
-	IntercomHMAC string      `json:"intercom_hmac"`
+	Token        string       `json:"token"`
+	User         *schema.User `json:"user"`
+	IntercomHMAC string       `json:"intercom_hmac"`
 }
 
 // @Title authenticateFromPassword
@@ -62,14 +62,14 @@ func (c *AuthContext) CreateAuthPassword(rw web.ResponseWriter, r *web.Request) 
 		return
 	}
 
-	user := new(model.User)
+	user := new(schema.User)
 	err = store.Get(user, "user-by-email-and-active", request.Email, true)
 	if err != nil {
 		c.Unauthorized(Messages.CredentialsMismatch, err)
 		return
 	}
 
-	err = user.Authenticate(request.Password)
+	err = servicer.AuthenticateUser(user, request.Password)
 	if err != nil {
 		c.Unauthorized(Messages.CredentialsMismatch, err)
 		return
@@ -136,7 +136,7 @@ func (c *AuthContext) CreateAuthToken(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	user := new(model.User)
+	user := new(schema.User)
 	err = store.Get(user, "user-by-email-and-active", request.Email, true)
 	if err != nil {
 		c.Unauthorized(Messages.UserNotFound)
@@ -157,7 +157,7 @@ func (c *AuthContext) CreateAuthToken(rw web.ResponseWriter, r *web.Request) {
 // @Description Echos a user session given an authentication token.
 // @Accept  json
 // @Param   Authorization   header   string  true         "The Bearer token"
-// @Success 200 {object}    model.User
+// @Success 200 {object}    schema.User
 // @Router /authenticate/echo [get]
 func (c *AuthContext) Echo(rw web.ResponseWriter, r *web.Request) {
 	if c.CurrentUser == nil {

@@ -211,7 +211,7 @@
 		{
 			"importpath": "github.com/opsee/basic",
 			"repository": "https://github.com/opsee/basic",
-			"revision": "d15bb95819ce89b6222d2f3a0036b5df859027b1",
+			"revision": "9624ef933aced4390a0776c7b277943d6d7cc8fe",
 			"branch": "master"
 		},
 		{
@@ -229,6 +229,20 @@
 			"path": "/opseeproto"
 		},
 		{
+			"importpath": "github.com/opsee/protobuf/opseeproto/types",
+			"repository": "https://github.com/opsee/protobuf",
+			"revision": "90c72c25c41b2f8b1e1a210994a90e8ad36ad6db",
+			"branch": "master",
+			"path": "/opseeproto/types"
+		},
+		{
+			"importpath": "github.com/opsee/protobuf/plugin/graphql/scalars",
+			"repository": "https://github.com/opsee/protobuf",
+			"revision": "90c72c25c41b2f8b1e1a210994a90e8ad36ad6db",
+			"branch": "master",
+			"path": "/plugin/graphql/scalars"
+		},
+		{
 			"importpath": "github.com/opsee/protobuf/proto/google/protobuf",
 			"repository": "https://github.com/opsee/protobuf",
 			"revision": "c54e5215f1a45512fba78eeaddd1fcc19095afd5",
@@ -237,8 +251,8 @@
 		},
 		{
 			"importpath": "github.com/opsee/vaper",
-			"repository": "ssh://github.com/opsee/vaper",
-			"revision": "14fea3b4439014c4429adf260e17ccd9ef5b6dae",
+			"repository": "https://github.com/opsee/vaper",
+			"revision": "7a6308e9d536835f8697064d57f6502d172369d1",
 			"branch": "master"
 		},
 		{

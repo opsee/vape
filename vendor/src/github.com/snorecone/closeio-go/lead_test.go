@@ -1,9 +1,9 @@
 package closeio
 
 import (
-	"testing"
 	"log"
 	"os"
+	"testing"
 )
 
 func TestLeadList(t *testing.T) {
@@ -31,7 +31,6 @@ func TestLeadQuery(t *testing.T) {
 	log.Println(leads.Data[0])
 
 }
-
 
 //func TestLeadCreate(t *testing.T) {
 //	key := os.Getenv("CLOSEIO_KEY")

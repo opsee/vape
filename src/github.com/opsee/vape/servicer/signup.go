@@ -3,6 +3,7 @@ package servicer
 import (
 	"database/sql"
 	"fmt"
+	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	"github.com/snorecone/closeio-go"
@@ -129,7 +130,7 @@ func ListSignups(perPage int, page int) ([]*model.Signup, error) {
 	return signups, nil
 }
 
-func ClaimSignup(id int, token, password string) (*model.User, error) {
+func ClaimSignup(id int, token, password string) (*schema.User, error) {
 	signup, err := GetSignup(id)
 	if err != nil {
 		return nil, err
@@ -145,7 +146,7 @@ func ClaimSignup(id int, token, password string) (*model.User, error) {
 	}
 
 	// ok, pop that stuff in the user, and make sure they're verified
-	user, err := model.NewUser(signup.Name, signup.Email, password)
+	user, err := NewUser(signup.Name, signup.Email, password)
 	if err != nil {
 		return nil, err
 	}
