@@ -21,8 +21,8 @@ It has these top-level messages:
 	PutRoleResponse
 	GetCredentialsRequest
 	GetCredentialsResponse
-	TokenRequest
-	TokenResponse
+	GetUserRequest
+	GetUserResponse
 	ListUsersRequest
 	ListUsersResponse
 */

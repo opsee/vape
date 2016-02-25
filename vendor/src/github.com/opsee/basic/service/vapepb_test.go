@@ -20,15 +20,15 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-func TestTokenRequestProto(t *testing.T) {
+func TestGetUserRequestProto(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
-	p := NewPopulatedTokenRequest(popr, false)
+	p := NewPopulatedGetUserRequest(popr, false)
 	data, err := github_com_gogo_protobuf_proto.Marshal(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
-	msg := &TokenRequest{}
+	msg := &GetUserRequest{}
 	if err := github_com_gogo_protobuf_proto.Unmarshal(data, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -51,15 +51,15 @@ func TestTokenRequestProto(t *testing.T) {
 	}
 }
 
-func TestTokenResponseProto(t *testing.T) {
+func TestGetUserResponseProto(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
-	p := NewPopulatedTokenResponse(popr, false)
+	p := NewPopulatedGetUserResponse(popr, false)
 	data, err := github_com_gogo_protobuf_proto.Marshal(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
-	msg := &TokenResponse{}
+	msg := &GetUserResponse{}
 	if err := github_com_gogo_protobuf_proto.Unmarshal(data, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -144,16 +144,16 @@ func TestListUsersResponseProto(t *testing.T) {
 	}
 }
 
-func TestTokenRequestJSON(t *testing.T) {
+func TestGetUserRequestJSON(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
-	p := NewPopulatedTokenRequest(popr, true)
+	p := NewPopulatedGetUserRequest(popr, true)
 	marshaler := github_com_gogo_protobuf_jsonpb.Marshaler{}
 	jsondata, err := marshaler.MarshalToString(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
-	msg := &TokenRequest{}
+	msg := &GetUserRequest{}
 	err = github_com_gogo_protobuf_jsonpb.UnmarshalString(jsondata, msg)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
@@ -162,16 +162,16 @@ func TestTokenRequestJSON(t *testing.T) {
 		t.Fatalf("seed = %d, %#v !Json Equal %#v", seed, msg, p)
 	}
 }
-func TestTokenResponseJSON(t *testing.T) {
+func TestGetUserResponseJSON(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
-	p := NewPopulatedTokenResponse(popr, true)
+	p := NewPopulatedGetUserResponse(popr, true)
 	marshaler := github_com_gogo_protobuf_jsonpb.Marshaler{}
 	jsondata, err := marshaler.MarshalToString(p)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
-	msg := &TokenResponse{}
+	msg := &GetUserResponse{}
 	err = github_com_gogo_protobuf_jsonpb.UnmarshalString(jsondata, msg)
 	if err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
@@ -216,12 +216,12 @@ func TestListUsersResponseJSON(t *testing.T) {
 		t.Fatalf("seed = %d, %#v !Json Equal %#v", seed, msg, p)
 	}
 }
-func TestTokenRequestProtoText(t *testing.T) {
+func TestGetUserRequestProtoText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
-	p := NewPopulatedTokenRequest(popr, true)
+	p := NewPopulatedGetUserRequest(popr, true)
 	data := github_com_gogo_protobuf_proto.MarshalTextString(p)
-	msg := &TokenRequest{}
+	msg := &GetUserRequest{}
 	if err := github_com_gogo_protobuf_proto.UnmarshalText(data, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -230,12 +230,12 @@ func TestTokenRequestProtoText(t *testing.T) {
 	}
 }
 
-func TestTokenRequestProtoCompactText(t *testing.T) {
+func TestGetUserRequestProtoCompactText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
-	p := NewPopulatedTokenRequest(popr, true)
+	p := NewPopulatedGetUserRequest(popr, true)
 	data := github_com_gogo_protobuf_proto.CompactTextString(p)
-	msg := &TokenRequest{}
+	msg := &GetUserRequest{}
 	if err := github_com_gogo_protobuf_proto.UnmarshalText(data, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -244,12 +244,12 @@ func TestTokenRequestProtoCompactText(t *testing.T) {
 	}
 }
 
-func TestTokenResponseProtoText(t *testing.T) {
+func TestGetUserResponseProtoText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
-	p := NewPopulatedTokenResponse(popr, true)
+	p := NewPopulatedGetUserResponse(popr, true)
 	data := github_com_gogo_protobuf_proto.MarshalTextString(p)
-	msg := &TokenResponse{}
+	msg := &GetUserResponse{}
 	if err := github_com_gogo_protobuf_proto.UnmarshalText(data, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}
@@ -258,12 +258,12 @@ func TestTokenResponseProtoText(t *testing.T) {
 	}
 }
 
-func TestTokenResponseProtoCompactText(t *testing.T) {
+func TestGetUserResponseProtoCompactText(t *testing.T) {
 	seed := time.Now().UnixNano()
 	popr := math_rand.New(math_rand.NewSource(seed))
-	p := NewPopulatedTokenResponse(popr, true)
+	p := NewPopulatedGetUserResponse(popr, true)
 	data := github_com_gogo_protobuf_proto.CompactTextString(p)
-	msg := &TokenResponse{}
+	msg := &GetUserResponse{}
 	if err := github_com_gogo_protobuf_proto.UnmarshalText(data, msg); err != nil {
 		t.Fatalf("seed = %d, err = %v", seed, err)
 	}

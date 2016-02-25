@@ -20,21 +20,31 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-type TokenRequest struct {
+type GetUserRequest struct {
 	CustomerId string `protobuf:"bytes,1,opt,name=customer_id,proto3" json:"customer_id,omitempty"`
+	Id         int32  `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
+	Email      string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
 }
 
-func (m *TokenRequest) Reset()         { *m = TokenRequest{} }
-func (m *TokenRequest) String() string { return proto.CompactTextString(m) }
-func (*TokenRequest) ProtoMessage()    {}
+func (m *GetUserRequest) Reset()         { *m = GetUserRequest{} }
+func (m *GetUserRequest) String() string { return proto.CompactTextString(m) }
+func (*GetUserRequest) ProtoMessage()    {}
 
-type TokenResponse struct {
-	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+type GetUserResponse struct {
+	User       *opsee1.User `protobuf:"bytes,1,opt,name=user" json:"user,omitempty"`
+	BasicToken string       `protobuf:"bytes,2,opt,name=basic_token,proto3" json:"basic_token,omitempty"`
 }
 
-func (m *TokenResponse) Reset()         { *m = TokenResponse{} }
-func (m *TokenResponse) String() string { return proto.CompactTextString(m) }
-func (*TokenResponse) ProtoMessage()    {}
+func (m *GetUserResponse) Reset()         { *m = GetUserResponse{} }
+func (m *GetUserResponse) String() string { return proto.CompactTextString(m) }
+func (*GetUserResponse) ProtoMessage()    {}
+
+func (m *GetUserResponse) GetUser() *opsee1.User {
+	if m != nil {
+		return m.User
+	}
+	return nil
+}
 
 type ListUsersRequest struct {
 	Page    int32 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
@@ -64,12 +74,12 @@ func (m *ListUsersResponse) GetUsers() []*opsee1.User {
 }
 
 func init() {
-	proto.RegisterType((*TokenRequest)(nil), "opsee.TokenRequest")
-	proto.RegisterType((*TokenResponse)(nil), "opsee.TokenResponse")
+	proto.RegisterType((*GetUserRequest)(nil), "opsee.GetUserRequest")
+	proto.RegisterType((*GetUserResponse)(nil), "opsee.GetUserResponse")
 	proto.RegisterType((*ListUsersRequest)(nil), "opsee.ListUsersRequest")
 	proto.RegisterType((*ListUsersResponse)(nil), "opsee.ListUsersResponse")
 }
-func (this *TokenRequest) Equal(that interface{}) bool {
+func (this *GetUserRequest) Equal(that interface{}) bool {
 	if that == nil {
 		if this == nil {
 			return true
@@ -77,9 +87,9 @@ func (this *TokenRequest) Equal(that interface{}) bool {
 		return false
 	}
 
-	that1, ok := that.(*TokenRequest)
+	that1, ok := that.(*GetUserRequest)
 	if !ok {
-		that2, ok := that.(TokenRequest)
+		that2, ok := that.(GetUserRequest)
 		if ok {
 			that1 = &that2
 		} else {
@@ -97,9 +107,15 @@ func (this *TokenRequest) Equal(that interface{}) bool {
 	if this.CustomerId != that1.CustomerId {
 		return false
 	}
+	if this.Id != that1.Id {
+		return false
+	}
+	if this.Email != that1.Email {
+		return false
+	}
 	return true
 }
-func (this *TokenResponse) Equal(that interface{}) bool {
+func (this *GetUserResponse) Equal(that interface{}) bool {
 	if that == nil {
 		if this == nil {
 			return true
@@ -107,9 +123,9 @@ func (this *TokenResponse) Equal(that interface{}) bool {
 		return false
 	}
 
-	that1, ok := that.(*TokenResponse)
+	that1, ok := that.(*GetUserResponse)
 	if !ok {
-		that2, ok := that.(TokenResponse)
+		that2, ok := that.(GetUserResponse)
 		if ok {
 			that1 = &that2
 		} else {
@@ -124,7 +140,10 @@ func (this *TokenResponse) Equal(that interface{}) bool {
 	} else if this == nil {
 		return false
 	}
-	if this.Token != that1.Token {
+	if !this.User.Equal(that1.User) {
+		return false
+	}
+	if this.BasicToken != that1.BasicToken {
 		return false
 	}
 	return true
@@ -214,7 +233,7 @@ var _ grpc.ClientConn
 // Client API for Vape service
 
 type VapeClient interface {
-	GetBasicToken(ctx context.Context, in *TokenRequest, opts ...grpc.CallOption) (*TokenResponse, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 }
 
@@ -226,9 +245,9 @@ func NewVapeClient(cc *grpc.ClientConn) VapeClient {
 	return &vapeClient{cc}
 }
 
-func (c *vapeClient) GetBasicToken(ctx context.Context, in *TokenRequest, opts ...grpc.CallOption) (*TokenResponse, error) {
-	out := new(TokenResponse)
-	err := grpc.Invoke(ctx, "/opsee.Vape/GetBasicToken", in, out, c.cc, opts...)
+func (c *vapeClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
+	out := new(GetUserResponse)
+	err := grpc.Invoke(ctx, "/opsee.Vape/GetUser", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -247,7 +266,7 @@ func (c *vapeClient) ListUsers(ctx context.Context, in *ListUsersRequest, opts .
 // Server API for Vape service
 
 type VapeServer interface {
-	GetBasicToken(context.Context, *TokenRequest) (*TokenResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 }
 
@@ -255,12 +274,12 @@ func RegisterVapeServer(s *grpc.Server, srv VapeServer) {
 	s.RegisterService(&_Vape_serviceDesc, srv)
 }
 
-func _Vape_GetBasicToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
-	in := new(TokenRequest)
+func _Vape_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
+	in := new(GetUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
-	out, err := srv.(VapeServer).GetBasicToken(ctx, in)
+	out, err := srv.(VapeServer).GetUser(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -284,8 +303,8 @@ var _Vape_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*VapeServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetBasicToken",
-			Handler:    _Vape_GetBasicToken_Handler,
+			MethodName: "GetUser",
+			Handler:    _Vape_GetUser_Handler,
 		},
 		{
 			MethodName: "ListUsers",
@@ -295,17 +314,25 @@ var _Vape_serviceDesc = grpc.ServiceDesc{
 	Streams: []grpc.StreamDesc{},
 }
 
-func NewPopulatedTokenRequest(r randyVape, easy bool) *TokenRequest {
-	this := &TokenRequest{}
+func NewPopulatedGetUserRequest(r randyVape, easy bool) *GetUserRequest {
+	this := &GetUserRequest{}
 	this.CustomerId = randStringVape(r)
+	this.Id = int32(r.Int31())
+	if r.Intn(2) == 0 {
+		this.Id *= -1
+	}
+	this.Email = randStringVape(r)
 	if !easy && r.Intn(10) != 0 {
 	}
 	return this
 }
 
-func NewPopulatedTokenResponse(r randyVape, easy bool) *TokenResponse {
-	this := &TokenResponse{}
-	this.Token = randStringVape(r)
+func NewPopulatedGetUserResponse(r randyVape, easy bool) *GetUserResponse {
+	this := &GetUserResponse{}
+	if r.Intn(10) != 0 {
+		this.User = opsee1.NewPopulatedUser(r, easy)
+	}
+	this.BasicToken = randStringVape(r)
 	if !easy && r.Intn(10) != 0 {
 	}
 	return this
