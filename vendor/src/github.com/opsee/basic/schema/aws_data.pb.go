@@ -7,7 +7,6 @@ Package schema is a generated protocol buffer package.
 
 It is generated from these files:
 	aws_data.proto
-	checker.proto
 	checks.proto
 	user.proto
 
@@ -22,12 +21,6 @@ It has these top-level messages:
 	CloudWatchCheck
 	Metric
 	HttpResponse
-	CheckResourceResponse
-	ResourceResponse
-	CheckResourceRequest
-	ResultsResource
-	TestCheckRequest
-	TestCheckResponse
 	CheckResponse
 	CheckResult
 	User
@@ -963,6 +956,23 @@ func init() {
 			}
 		}),
 	})
+	GraphQLInstanceResourceUnion = github_com_graphql_go_graphql.NewUnion(github_com_graphql_go_graphql.UnionConfig{
+		Name:        "InstanceResource",
+		Description: "The raw AWS resource data.",
+		Types: []*github_com_graphql_go_graphql.Object{
+			opsee_aws_ec2.GraphQLInstanceType,
+			opsee_aws_rds.GraphQLDBInstanceType,
+		},
+		ResolveType: func(value interface{}, info github_com_graphql_go_graphql.ResolveInfo) *github_com_graphql_go_graphql.Object {
+			switch value.(type) {
+			case *Instance_Instance:
+				return opsee_aws_ec2.GraphQLInstanceType
+			case *Instance_DbInstance:
+				return opsee_aws_rds.GraphQLDBInstanceType
+			}
+			return nil
+		},
+	})
 	GraphQLGroupResourceUnion = github_com_graphql_go_graphql.NewUnion(github_com_graphql_go_graphql.UnionConfig{
 		Name:        "GroupResource",
 		Description: "The raw AWS resource data.",
@@ -979,23 +989,6 @@ func init() {
 				return opsee_aws_elb.GraphQLLoadBalancerDescriptionType
 			case *Group_AutoscalingGroup:
 				return opsee_aws_autoscaling.GraphQLGroupType
-			}
-			return nil
-		},
-	})
-	GraphQLInstanceResourceUnion = github_com_graphql_go_graphql.NewUnion(github_com_graphql_go_graphql.UnionConfig{
-		Name:        "InstanceResource",
-		Description: "The raw AWS resource data.",
-		Types: []*github_com_graphql_go_graphql.Object{
-			opsee_aws_ec2.GraphQLInstanceType,
-			opsee_aws_rds.GraphQLDBInstanceType,
-		},
-		ResolveType: func(value interface{}, info github_com_graphql_go_graphql.ResolveInfo) *github_com_graphql_go_graphql.Object {
-			switch value.(type) {
-			case *Instance_Instance:
-				return opsee_aws_ec2.GraphQLInstanceType
-			case *Instance_DbInstance:
-				return opsee_aws_rds.GraphQLDBInstanceType
 			}
 			return nil
 		},

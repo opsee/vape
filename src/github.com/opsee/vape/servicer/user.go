@@ -50,7 +50,14 @@ func MergeUser(user *schema.User, email, name, password string) error {
 	return nil
 }
 
-func ListUsers(perPage int, page int) ([]*schema.User, error) {
+type PaginatedUsers struct {
+	Page    int
+	PerPage int
+	Total   int
+	Users   []*schema.User
+}
+
+func ListUsers(perPage int, page int) (*PaginatedUsers, error) {
 	if perPage < 1 {
 		perPage = 20
 	}
@@ -64,11 +71,33 @@ func ListUsers(perPage int, page int) ([]*schema.User, error) {
 
 	users := []*schema.User{}
 	err := store.Select(&users, "list-users", limit, offset)
+	var total int
+
+	tx, err := store.Beginx()
 	if err != nil {
 		return nil, err
 	}
 
-	return users, nil
+	defer tx.Commit()
+
+	err = tx.Select(&users, "list-users", limit, offset)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	err = tx.Get(&total, "total-users")
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	return &PaginatedUsers{
+		Page:    page,
+		PerPage: perPage,
+		Total:   total,
+		Users:   users,
+	}, nil
 }
 
 func HMACIntercomUser(user *schema.User) (string, error) {

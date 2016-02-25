@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/keighl/mandrill"
 	"github.com/opsee/vape/api"
+	"github.com/opsee/vape/service"
 	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vaper"
@@ -74,5 +75,13 @@ func main() {
 
 	servicer.Init(host, mandrillClient, intercomKey, closeioKey, slackUrl)
 
-	api.ListenAndServe(os.Getenv("VAPE_PUBLIC_HOST"), os.Getenv("VAPE_PRIVATE_HOST"))
+	certfile := os.Getenv("VAPE_CERT")
+	certkeyfile := os.Getenv("VAPE_CERT_KEY")
+	if certfile == "" || certkeyfile == "" {
+		log.Fatal("VAPE_CERT and VAPE_CERT_KEY must be set, and you must have a certificate and key")
+	}
+
+	service := service.New()
+
+	api.ListenAndServe(os.Getenv("VAPE_PUBLIC_HOST"), os.Getenv("VAPE_PRIVATE_HOST"), certfile, certkeyfile, service.Server)
 }

@@ -3,8 +3,8 @@ FROM quay.io/opsee/vinz:latest
 ENV VAPE_PUBLIC_HOST=":8081"
 ENV VAPE_PRIVATE_HOST=":9091"
 ENV VAPE_KEYFILE="/vape.test.key"
-ENV VAPE_CERT=""
-ENV VAPE_CERT_KEY=""
+ENV VAPE_CERT="cert.pem"
+ENV VAPE_CERT_KEY="key.pem"
 ENV POSTGRES_CONN="postgres://postgres@postgresql/vape_test?sslmode=disable"
 ENV MANDRILL_API_KEY=""
 ENV INTERCOM_KEY=""
@@ -28,6 +28,8 @@ COPY run.sh /
 COPY target/linux/amd64/bin/* /
 COPY vape.test.key /
 COPY migrations /migrations
+COPY cert.pem /
+COPY key.pem /
 
 EXPOSE 8081 9091
 CMD ["/vape"]
