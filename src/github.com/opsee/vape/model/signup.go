@@ -16,15 +16,9 @@ type Signup struct {
 	Name      string    `json:"name"`
 	Claimed   bool      `json:"claimed"`
 	Activated bool      `json:"activated"`
+	Referrer  string    `json:"referrer"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
-}
-
-func NewSignup(email, name string) *Signup {
-	return &Signup{
-		Email: email,
-		Name:  name,
-	}
 }
 
 func (s *Signup) Token() string {
