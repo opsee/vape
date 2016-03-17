@@ -2,6 +2,7 @@ package servicer
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/hoisie/mustache"
 	"github.com/keighl/mandrill"
 	slacktmpl "github.com/opsee/notification-templates/dist/go/slack"
@@ -74,19 +75,21 @@ func createLead(lead *closeio.Lead) {
 func notifySlack(name string, vars map[string]interface{}) {
 	log.Info("requested slack notification")
 
-	if slackEndpoint == "" {
-		log.Warn("not sending slack notification since SLACK_ENDPOINT is not set")
-		return
-	}
-
 	template, ok := slackTemplates[name]
 	if !ok {
 		log.Errorf("not sending slack notification since template %s was not found", name)
 		return
 	}
 
-	body := bytes.NewBufferString(template.Render(vars))
-	resp, err := http.Post(slackEndpoint, "application/json", body)
+	body := template.Render(vars)
+
+	if slackEndpoint == "" {
+		log.Warn("not sending slack notification since SLACK_ENDPOINT is not set")
+		fmt.Println(body)
+		return
+	}
+
+	resp, err := http.Post(slackEndpoint, "application/json", bytes.NewBufferString(body))
 	if err != nil {
 		log.WithError(err).Errorf("failed to send slack notification: %s", name)
 		return

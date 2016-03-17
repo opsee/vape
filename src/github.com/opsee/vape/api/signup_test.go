@@ -47,6 +47,20 @@ func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 	loadResponse(userTokenResponse, rec.Body)
 	c.Assert(userTokenResponse.User.Id, Not(DeepEquals), 0)
 	c.Assert(userTokenResponse.User.Name, DeepEquals, "sack o donuts")
+
+	// test creating already activated signup - doesn't activate a non referral code
+	rec, _ = testReq(publicRouter, "POST", "https://vape/signups/new", bytes.NewBuffer([]byte(`{"email": "sackogarfs@hotmail.com", "name": "sack o garfs", "referrer": "lol"}`)), nil)
+	signup = &model.Signup{}
+	loadResponse(signup, rec.Body)
+	c.Assert(signup.Id, Not(DeepEquals), 0)
+	c.Assert(signup.Activated, DeepEquals, false)
+
+	// test creating already activated signup - works for producthunt
+	rec, _ = testReq(publicRouter, "POST", "https://vape/signups/new", bytes.NewBuffer([]byte(`{"email": "sackobanane@hotmail.com", "name": "sack o banane", "referrer": "producthunt"}`)), nil)
+	signup = &model.Signup{}
+	loadResponse(signup, rec.Body)
+	c.Assert(signup.Id, Not(DeepEquals), 0)
+	c.Assert(signup.Activated, DeepEquals, true)
 }
 
 func (s *ApiSuite) TestGetListSignups(c *C) {

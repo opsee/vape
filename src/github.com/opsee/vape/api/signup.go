@@ -20,6 +20,7 @@ var signupRouter *web.Router
 func init() {
 	signupRouter = publicRouter.Subrouter(SignupContext{}, "/signups")
 	signupRouter.Post("/", (*SignupContext).CreateSignup)
+	signupRouter.Post("/new", (*SignupContext).CreateActiveSignup)
 	signupRouter.Get("/", (*SignupContext).ListSignups)
 	signupRouter.Get("/:id", (*SignupContext).GetSignup)
 	signupRouter.Delete("/:id", (*SignupContext).DeleteSignup)
@@ -106,6 +107,52 @@ func (c *SignupContext) CreateSignup(rw web.ResponseWriter, r *web.Request) {
 	c.ResponseJson(signup)
 }
 
+func (c *SignupContext) CreateActiveSignup(rw web.ResponseWriter, r *web.Request) {
+	var (
+		request struct {
+			Name     string `json:"name"`
+			Email    string `json:"email"`
+			Referrer string `json:"referrer"`
+		}
+		signup *model.Signup
+	)
+
+	err := c.RequestJson(&request)
+	if err != nil {
+		c.BadRequest(Messages.BadRequest, err)
+		return
+	}
+
+	if request.Name == "" {
+		c.BadRequest(Messages.NameRequired)
+		return
+	}
+
+	if request.Email == "" {
+		c.BadRequest(Messages.EmailRequired)
+		return
+	}
+
+	// temporarily only allow producthunt
+	if request.Referrer == "producthunt" {
+		signup, err = servicer.CreateActiveSignup(request.Email, request.Name, request.Referrer)
+	} else {
+		signup, err = servicer.CreateSignup(request.Email, request.Name)
+	}
+
+	if err != nil {
+		if err == servicer.SignupExists {
+			c.Conflict(Messages.EmailConflict)
+			return
+		}
+
+		c.InternalServerError(Messages.InternalServerError, err)
+		return
+	}
+
+	c.ResponseJson(signup)
+}
+
 type SignupActivationResponse struct {
 	Token string `json:"token"`
 }
@@ -129,9 +176,7 @@ func (c *SignupContext) ActivateSignup(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	// sending referer should be temporary for developing email templates
-	referer := r.Header.Get("Origin")
-	signup, err := servicer.ActivateSignup(id, referer)
+	signup, err := servicer.ActivateSignup(id)
 	if err != nil {
 		if err == servicer.SignupNotFound {
 			c.NotFound(Messages.SignupNotFound)
