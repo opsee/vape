@@ -51,10 +51,10 @@ func CreateSignup(email, name string) (*model.Signup, error) {
 
 		createLead(
 			&closeio.Lead{
-				Name: signup.Name,
+				Name: signup.Email,
 				Contacts: []*closeio.Contact{
 					{
-						Name: signup.Name,
+						Name: signup.Email,
 						Emails: []*closeio.Email{
 							{
 								Type:  "work",
@@ -88,10 +88,10 @@ func CreateActiveSignup(email, name, referrer string) (*model.Signup, error) {
 		mailTemplatedMessage(signup.Email, signup.Name, "instant-approval", mergeVars)
 
 		lead := &closeio.Lead{
-			Name: signup.Name,
+			Name: signup.Email,
 			Contacts: []*closeio.Contact{
 				{
-					Name: signup.Name,
+					Name: signup.Email,
 					Emails: []*closeio.Email{
 						{
 							Type:  "work",
