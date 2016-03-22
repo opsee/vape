@@ -195,7 +195,7 @@ func ListSignups(perPage int, page int) ([]*model.Signup, error) {
 	return signups, nil
 }
 
-func ClaimSignup(id int, token, password string) (*schema.User, error) {
+func ClaimSignup(id int, token, name, password string, invite bool) (*schema.User, error) {
 	signup, err := GetSignup(id)
 	if err != nil {
 		return nil, err
@@ -211,7 +211,7 @@ func ClaimSignup(id int, token, password string) (*schema.User, error) {
 	}
 
 	// ok, pop that stuff in the user, and make sure they're verified
-	user, err := NewUser(signup.Name, signup.Email, password)
+	user, err := NewUser(name, signup.Email, password)
 	if err != nil {
 		return nil, err
 	}
@@ -244,6 +244,10 @@ func ClaimSignup(id int, token, password string) (*schema.User, error) {
 
 	if err = tx.Commit(); err != nil {
 		return nil, err
+	}
+
+	if invite {
+		go inviteSlack(user.Name, user.Email)
 	}
 
 	return user, nil
