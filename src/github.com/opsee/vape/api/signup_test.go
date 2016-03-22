@@ -12,7 +12,7 @@ import (
 
 func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 	mailer := &testMailer{}
-	servicer.Init("test.opsy.go", mailer, "fffff--fffffffffffffffffffffffffffffffff", "", "")
+	servicer.Init("test.opsy.go", mailer, "fffff--fffffffffffffffffffffffffffffffff", "", "", "", "")
 
 	badReqs := map[string]string{
 		`{"email": "sackodonuts@hotmail.com"}`: Messages.NameRequired,
@@ -42,7 +42,7 @@ func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 	c.Assert(mailer.Template, DeepEquals, "beta-approval")
 
 	// claim the signup, turning it into a user
-	rec, _ = testReq(publicRouter, "POST", "https://vape/signups/"+fmt.Sprint(signup.Id)+"/claim", bytes.NewBuffer([]byte(`{"token": "`+activationResponse.Token+`", "password": "sackodonuts"}`)), nil)
+	rec, _ = testReq(publicRouter, "POST", "https://vape/signups/"+fmt.Sprint(signup.Id)+"/claim", bytes.NewBuffer([]byte(`{"token": "`+activationResponse.Token+`", "password": "sackodonuts", "name": "sack o donuts", "invite": true}`)), nil)
 	userTokenResponse := &UserTokenResponse{}
 	loadResponse(userTokenResponse, rec.Body)
 	c.Assert(userTokenResponse.User.Id, Not(DeepEquals), 0)

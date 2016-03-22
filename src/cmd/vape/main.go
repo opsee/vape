@@ -73,7 +73,17 @@ func main() {
 		log.Println("WARN: SLACK_ENDPOINT not set, we won't post notifications.")
 	}
 
-	servicer.Init(host, mandrillClient, intercomKey, closeioKey, slackUrl)
+	slackDomain := os.Getenv("VAPE_SLACK_DOMAIN")
+	if slackUrl == "" {
+		log.Println("WARN: VAPE_SLACK_DOMAIN not set, we won't invite users.")
+	}
+
+	slackToken := os.Getenv("VAPE_SLACK_ADMIN_TOKEN")
+	if slackUrl == "" {
+		log.Println("WARN: VAPE_SLACK_ADMIN_TOKEN not set, we won't invite users.")
+	}
+
+	servicer.Init(host, mandrillClient, intercomKey, closeioKey, slackUrl, slackDomain, slackToken)
 
 	certfile := os.Getenv("VAPE_CERT")
 	certkeyfile := os.Getenv("VAPE_CERT_KEY")

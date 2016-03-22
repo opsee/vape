@@ -267,6 +267,8 @@ func (c *SignupContext) ClaimSignup(rw web.ResponseWriter, r *web.Request) {
 	var request struct {
 		Token    string `json:"token"`
 		Password string `json:"password"`
+		Name     string `json:"name"`
+		Invite   bool   `json:"invite"`
 	}
 
 	err := c.RequestJson(&request)
@@ -285,13 +287,18 @@ func (c *SignupContext) ClaimSignup(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
+	if request.Invite && request.Name == "" {
+		c.BadRequest(Messages.NameRequired)
+		return
+	}
+
 	id, err := strconv.Atoi(r.PathParams["id"])
 	if err != nil {
 		c.BadRequest(Messages.IdRequired)
 		return
 	}
 
-	user, err := servicer.ClaimSignup(id, request.Token, request.Password)
+	user, err := servicer.ClaimSignup(id, request.Token, request.Name, request.Password, request.Invite)
 	if err != nil {
 		switch err {
 		case servicer.SignupAlreadyClaimed:
