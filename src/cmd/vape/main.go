@@ -74,12 +74,12 @@ func main() {
 	}
 
 	slackDomain := os.Getenv("VAPE_SLACK_DOMAIN")
-	if slackUrl == "" {
+	if slackDomain == "" {
 		log.Println("WARN: VAPE_SLACK_DOMAIN not set, we won't invite users.")
 	}
 
 	slackToken := os.Getenv("VAPE_SLACK_ADMIN_TOKEN")
-	if slackUrl == "" {
+	if slackToken == "" {
 		log.Println("WARN: VAPE_SLACK_ADMIN_TOKEN not set, we won't invite users.")
 	}
 
