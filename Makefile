@@ -1,5 +1,5 @@
 docfile = src/github.com/opsee/vape/api/docs.go
-APPENV := testenv
+APPENV ?= testenv
 PROJECT := vape
 REV ?= latest
 

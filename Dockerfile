@@ -20,6 +20,7 @@ ENV INTERCOM_KEY=""
 ENV CLOSEIO_KEY=""
 ENV SLACK_ENDPOINT=""
 ENV OPSEE_HOST="staging.opsy.co"
+ENV GODEBUG="netdns=cgo"
 ENV APPENV=""
 
 COPY run.sh /
