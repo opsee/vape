@@ -16,6 +16,7 @@ migrate:
 
 deps:
 	docker-compose up -d
+	docker run --link $(PROJECT)_postgres_1:postgres aanand/wait
 
 swagger:
 	@mkdir -p swagger
