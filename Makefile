@@ -1,9 +1,9 @@
 docfile = src/github.com/opsee/vape/api/docs.go
+APPENV := testenv
+PROJECT := vape
+REV ?= latest
 
 all: fmt build
-
-build:
-	gb build
 
 clean:
 	rm -fr target bin pkg
@@ -15,10 +15,7 @@ migrate:
 	migrate -url $(POSTGRES_CONN) -path ./migrations up
 
 deps:
-	docker pull sameersbn/postgresql:9.4-3
-	@docker rm -f postgresql || true
-	@docker run --name postgresql -d -e PSQL_TRUST_LOCALNET=true -e DB_USER=postgres -e DB_PASS= -e DB_NAME=vape_test sameersbn/postgresql:9.4-3
-	@echo "started postgresql"
+	docker-compose up -d
 
 swagger:
 	@mkdir -p swagger
@@ -31,20 +28,26 @@ swagger:
 	@echo "\`" >> $(docfile)
 	@rm -fr swagger
 
-docker: fmt
-	docker run -e POSTGRES_CONN="postgres://postgres@postgresql/vape_test?sslmode=disable" \
-		--link postgresql:postgresql \
+build: deps $(APPENV)
+	docker run \
+		--link $(PROJECT)_postgres_1:postgres \
+		--env-file ./$(APPENV) \
 		-e "TARGETS=linux/amd64" \
-		-v `pwd`:/build quay.io/opsee/build-go \
-		&& docker build -t quay.io/opsee/vape .
+		-e PROJECT=github.com/opsee/$(PROJECT) \
+		-v `pwd`:/gopath/src/github.com/opsee/$(PROJECT) \
+		quay.io/opsee/build-go:16
+	docker build -t quay.io/opsee/$(PROJECT):$(REV) .
 
-run: docker
-	docker run -e POSTGRES_CONN="postgres://postgres@postgresql/vape_test?sslmode=disable" \
-		--link postgresql:postgresql \
-		-e MANDRILL_API_KEY=$(MANDRILL_API_KEY) \
+run: deps $(APPENV)
+	docker run \
+		--link $(PROJECT)_postgres_1:postgres \
+		--env-file ./$(APPENV) \
+		-e AWS_DEFAULT_REGION \
+		-e AWS_ACCESS_KEY_ID \
+		-e AWS_SECRET_ACCESS_KEY \
 		-p 8081:8081 \
 		-p 9091:9091 \
 		--rm \
-		quay.io/opsee/vape
+		quay.io/opsee/$(PROJECT):$(REV)
 
 .PHONY: migrate clean all swagger docker run
