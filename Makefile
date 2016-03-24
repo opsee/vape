@@ -3,7 +3,7 @@ APPENV := testenv
 PROJECT := vape
 REV ?= latest
 
-all: fmt build
+all: build
 
 clean:
 	rm -fr target bin pkg

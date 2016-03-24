@@ -6,21 +6,14 @@ machine:
 dependencies:
   cache_directories: []
   override:
-    - docker info
     - docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD quay.io
-    - go version
-    - docker pull quay.io/opsee/build-go
-    - docker pull sameersbn/postgresql:9.4-3
-    - docker run --name postgresql -d -e PSQL_TRUST_LOCALNET=true -e DB_USER=postgres -e DB_PASS= -e DB_NAME=vape_test sameersbn/postgresql:9.4-3 && sleep 10
+    - docker pull quay.io/opsee/build-go:16
 test:
   override:
-    - make docker
+    - REV=${CIRCLE_SHA1} make
 deployment:
   ami:
     branch: master
     owner: opsee
     commands:
-      - docker tag quay.io/opsee/vape quay.io/opsee/vape:$CIRCLE_SHA1
       - docker push quay.io/opsee/vape:${CIRCLE_SHA1}
-      - docker tag -f quay.io/opsee/vape:${CIRCLE_SHA1} quay.io/opsee/vape:latest
-      - docker push quay.io/opsee/vape:latest
