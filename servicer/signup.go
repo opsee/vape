@@ -36,42 +36,6 @@ func DeleteSignup(id int) error {
 	return nil
 }
 
-func CreateSignup(email, name string) (*model.Signup, error) {
-	signup, err := createSignup(email, name, "", false)
-	if err != nil {
-		return nil, err
-	}
-
-	// send an email, create a lead and notify slack here!
-	go func() {
-		mergeVars := map[string]interface{}{
-			"name": signup.Name,
-		}
-		mailTemplatedMessage(signup.Email, signup.Name, "signup-confirmation", mergeVars)
-
-		createLead(
-			&closeio.Lead{
-				Name: signup.Email,
-				Contacts: []*closeio.Contact{
-					{
-						Name: signup.Email,
-						Emails: []*closeio.Email{
-							{
-								Type:  "work",
-								Email: signup.Email,
-							},
-						},
-					},
-				},
-			},
-		)
-
-		notifySlack("new-signup", map[string]interface{}{"user_name": signup.Name, "user_email": signup.Email})
-	}()
-
-	return signup, err
-}
-
 func CreateActiveSignup(email, name, referrer string) (*model.Signup, error) {
 	signup, err := createSignup(email, name, referrer, true)
 	if err != nil {
@@ -133,6 +97,10 @@ func createSignup(email, name, referrer string, activated bool) (*model.Signup, 
 		return nil, SignupExists
 	} else if err != sql.ErrNoRows {
 		return nil, err
+	}
+
+	if name == "" {
+		name = "default"
 	}
 
 	signup := &model.Signup{
