@@ -78,11 +78,6 @@ func (c *SignupContext) CreateActiveSignup(rw web.ResponseWriter, r *web.Request
 		return
 	}
 
-	if request.Name == "" {
-		c.BadRequest(Messages.NameRequired)
-		return
-	}
-
 	if request.Email == "" {
 		c.BadRequest(Messages.EmailRequired)
 		return

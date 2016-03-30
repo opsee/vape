@@ -99,6 +99,10 @@ func createSignup(email, name, referrer string, activated bool) (*model.Signup, 
 		return nil, err
 	}
 
+	if name == "" {
+		name = "default"
+	}
+
 	signup := &model.Signup{
 		Email:     email,
 		Name:      name,
