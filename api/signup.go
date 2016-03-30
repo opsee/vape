@@ -19,7 +19,7 @@ var signupRouter *web.Router
 // @SubApi Signup API [/signups]
 func init() {
 	signupRouter = publicRouter.Subrouter(SignupContext{}, "/signups")
-	signupRouter.Post("/", (*SignupContext).CreateSignup)
+	signupRouter.Post("/", (*SignupContext).CreateActiveSignup)
 	signupRouter.Post("/new", (*SignupContext).CreateActiveSignup)
 	signupRouter.Get("/", (*SignupContext).ListSignups)
 	signupRouter.Get("/:id", (*SignupContext).GetSignup)
@@ -62,51 +62,6 @@ func (c *SignupContext) ListSignups(rw web.ResponseWriter, r *web.Request) {
 	c.ResponseJson(signups)
 }
 
-// @Title createSignup
-// @Description Create a new signup.
-// @Accept  json
-// @Param   name             body   string  true       "The user's name"
-// @Param   email            body   string  true       "The user's email"
-// @Success 200 {object}     model.Signup              ""
-// @Failure 409 {object}     MessageResponse           "Email was already used to sign up"
-// @Router /signups [post]
-func (c *SignupContext) CreateSignup(rw web.ResponseWriter, r *web.Request) {
-	var request struct {
-		Name  string `json:"name"`
-		Email string `json:"email"`
-	}
-
-	err := c.RequestJson(&request)
-	if err != nil {
-		c.BadRequest(Messages.BadRequest, err)
-		return
-	}
-
-	if request.Name == "" {
-		c.BadRequest(Messages.NameRequired)
-		return
-	}
-
-	if request.Email == "" {
-		c.BadRequest(Messages.EmailRequired)
-		return
-	}
-
-	// anyone is authorized for this
-	signup, err := servicer.CreateSignup(request.Email, request.Name)
-	if err != nil {
-		if err == servicer.SignupExists {
-			c.Conflict(Messages.EmailConflict)
-			return
-		}
-
-		c.InternalServerError(Messages.InternalServerError, err)
-		return
-	}
-
-	c.ResponseJson(signup)
-}
-
 func (c *SignupContext) CreateActiveSignup(rw web.ResponseWriter, r *web.Request) {
 	var (
 		request struct {
@@ -133,12 +88,7 @@ func (c *SignupContext) CreateActiveSignup(rw web.ResponseWriter, r *web.Request
 		return
 	}
 
-	// temporarily only allow producthunt
-	if request.Referrer == "producthunt" {
-		signup, err = servicer.CreateActiveSignup(request.Email, request.Name, request.Referrer)
-	} else {
-		signup, err = servicer.CreateSignup(request.Email, request.Name)
-	}
+	signup, err = servicer.CreateActiveSignup(request.Email, request.Name, request.Referrer)
 
 	if err != nil {
 		if err == servicer.SignupExists {
