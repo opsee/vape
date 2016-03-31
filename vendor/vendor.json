@@ -245,8 +245,8 @@
 		{
 			"checksumSHA1": "Qk5VaNR5dJHzN+LeuRWUdfp7xIE=",
 			"path": "github.com/opsee/notification-templates/dist/go/slack",
-			"revision": "2a7fd1874cbcb56a2ebabed67a1e653c8af2a173",
-			"revisionTime": "2016-03-16T10:15:20-07:00"
+			"revision": "11cec5d21a8cdd8fea4db25d787b15577c539c61",
+			"revisionTime": "2016-03-31T16:47:51-07:00"
 		},
 		{
 			"checksumSHA1": "NGwjroMEC6PlYnxhLWtnQ1LxUpE=",
