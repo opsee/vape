@@ -15,8 +15,7 @@ func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 	servicer.Init("test.opsy.go", mailer, "fffff--fffffffffffffffffffffffffffffffff", "", "", "", "")
 
 	badReqs := map[string]string{
-		`{"email": "sackodonuts@hotmail.com"}`: Messages.NameRequired,
-		`{"name": "sack o donuts"}`:            Messages.EmailRequired,
+		`{"name": "sack o donuts"}`: Messages.EmailRequired,
 	}
 
 	// testin bad requests
@@ -31,7 +30,7 @@ func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 	loadResponse(signup, rec.Body)
 	c.Assert(signup.Id, Not(DeepEquals), 0)
 	time.Sleep(5 * time.Millisecond) // wait for the goroutine to finish emailing, easier than passing a channel around somehow
-	c.Assert(mailer.Template, DeepEquals, "signup-confirmation")
+	c.Assert(mailer.Template, DeepEquals, "instant-approval")
 
 	// activate the signup by sending the user an email/token
 	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true}, "PUT", "https://vape/signups/"+fmt.Sprint(signup.Id)+"/activate", nil, nil)
@@ -47,13 +46,6 @@ func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 	loadResponse(userTokenResponse, rec.Body)
 	c.Assert(userTokenResponse.User.Id, Not(DeepEquals), 0)
 	c.Assert(userTokenResponse.User.Name, DeepEquals, "sack o donuts")
-
-	// test creating already activated signup - doesn't activate a non referral code
-	rec, _ = testReq(publicRouter, "POST", "https://vape/signups/new", bytes.NewBuffer([]byte(`{"email": "sackogarfs@hotmail.com", "name": "sack o garfs", "referrer": "lol"}`)), nil)
-	signup = &model.Signup{}
-	loadResponse(signup, rec.Body)
-	c.Assert(signup.Id, Not(DeepEquals), 0)
-	c.Assert(signup.Activated, DeepEquals, false)
 
 	// test creating already activated signup - works for producthunt
 	rec, _ = testReq(publicRouter, "POST", "https://vape/signups/new", bytes.NewBuffer([]byte(`{"email": "sackobanane@hotmail.com", "name": "sack o banane", "referrer": "producthunt"}`)), nil)
