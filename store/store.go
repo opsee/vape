@@ -16,8 +16,8 @@ var queries = map[string]string{
 	// users
 	"list-users":               "select * from users limit $1 offset $2",
 	"total-users":              "select count(id) from users",
-	"user-by-email":            "select * from users where email = $1",
-	"user-by-email-and-active": "select * from users where email = $1 and active = $2",
+	"user-by-email":            "select * from users where lower(email) = lower($1)",
+	"user-by-email-and-active": "select * from users where lower(email) = lower($1) and active = $2",
 	"user-by-id":               "select * from users where id = $1",
 	"user-by-cust-id":          "select * from users where customer_id = $1",
 	"delete-user-by-id":        "delete from users where id = $1",
@@ -31,7 +31,7 @@ var queries = map[string]string{
 	// signups
 	"signup-by-id":        "select * from signups where id = $1",
 	"delete-signup-by-id": "delete from signups where id = $1",
-	"signup-by-email":     "select * from signups where email = $1",
+	"signup-by-email":     "select * from signups where lower(email) = lower($1)",
 	"insert-signup":       "insert into signups (email, name, referrer, activated) values (:email, :name, :referrer, :activated) returning *",
 	"list-signups":        "select * from signups limit $1 offset $2",
 	"activate-signup":     "update signups set activated = true where id = $1",

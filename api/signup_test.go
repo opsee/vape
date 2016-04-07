@@ -32,6 +32,10 @@ func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 	time.Sleep(5 * time.Millisecond) // wait for the goroutine to finish emailing, easier than passing a channel around somehow
 	c.Assert(mailer.Template, DeepEquals, "instant-approval")
 
+	// try to create a signup by altering the email case errors
+	rec, _ = testReq(publicRouter, "POST", "https://vape/signups", bytes.NewBuffer([]byte(`{"email": "sackodonuTS@hotmail.com", "name": "sack o donuts"}`)), nil)
+	c.Assert(rec.Code, DeepEquals, 409)
+
 	// activate the signup by sending the user an email/token
 	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true}, "PUT", "https://vape/signups/"+fmt.Sprint(signup.Id)+"/activate", nil, nil)
 	activationResponse := &SignupActivationResponse{}

@@ -53,6 +53,13 @@ func (s *ApiSuite) TestCreateAuthPassword(c *C) {
 	c.Assert(response.IntercomHMAC, DeepEquals, "6b30a7417724ab8aaa918f4a66cc6be8f1ff278ab9d9ee3bcafcdd46326f1605")
 	c.Assert(response.User.Email, DeepEquals, "mark@opsee.co")
 
+	// case insensitive email
+	rec, err = testReq(publicRouter, "POST", "https://vape/authenticate/password", bytes.NewBuffer([]byte(`{"email": "MARK@OPSEE.CO", "password": "eatshit"}`)), nil)
+	if err != nil {
+		c.Fatal(err)
+	}
+	c.Assert(rec.Code, DeepEquals, 200)
+
 	// admin login as user id 3
 	rec, err = testReq(publicRouter, "POST", "https://vape/authenticate/password", bytes.NewBuffer([]byte(`{"email": "mark@opsee.co", "password": "eatshit", "as": 3}`)), nil)
 	if err != nil {
