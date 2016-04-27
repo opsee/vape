@@ -83,7 +83,12 @@ func main() {
 		log.Println("WARN: VAPE_SLACK_ADMIN_TOKEN not set, we won't invite users.")
 	}
 
-	servicer.Init(host, mandrillClient, intercomKey, closeioKey, slackUrl, slackDomain, slackToken)
+	spanxHost := os.Getenv("VAPE_SPANX_HOST")
+	if spanxHost == "" {
+		log.Fatal("Must set the VAPE_SPANX_HOST environment variable.")
+	}
+
+	servicer.Init(host, mandrillClient, intercomKey, closeioKey, slackUrl, slackDomain, slackToken, spanxHost)
 
 	certfile := os.Getenv("VAPE_CERT")
 	certkeyfile := os.Getenv("VAPE_CERT_KEY")
