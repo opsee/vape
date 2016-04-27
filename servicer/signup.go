@@ -105,8 +105,8 @@ func createSignup(email, name, referrer string, activated bool) (*model.Signup, 
 
 	signup := &model.Signup{
 		Email:     email,
-		Name:      name,
-		Referrer:  referrer,
+		Name:      name[:254],
+		Referrer:  referrer[:254],
 		Activated: activated,
 	}
 

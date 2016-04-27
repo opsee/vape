@@ -52,7 +52,7 @@ func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 	c.Assert(userTokenResponse.User.Name, DeepEquals, "sack o donuts")
 
 	// test creating already activated signup - works for producthunt
-	rec, _ = testReq(publicRouter, "POST", "https://vape/signups/new", bytes.NewBuffer([]byte(`{"email": "sackobanane@hotmail.com", "name": "sack o banane", "referrer": "producthunt"}`)), nil)
+	rec, _ = testReq(publicRouter, "POST", "https://vape/signups/new", bytes.NewBuffer([]byte(`{"email": "sackobanane@hotmail.com", "name": "sack o banane", "referrer": "producthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthuntproducthunt"}`)), nil)
 	signup = &model.Signup{}
 	loadResponse(signup, rec.Body)
 	c.Assert(signup.Id, Not(DeepEquals), 0)
