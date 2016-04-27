@@ -21,6 +21,7 @@ ENV CLOSEIO_KEY=""
 ENV SLACK_ENDPOINT=""
 ENV OPSEE_HOST="staging.opsy.co"
 ENV GODEBUG="netdns=cgo"
+ENV VAPE_SPANX_HOST ""
 ENV APPENV=""
 
 COPY run.sh /
