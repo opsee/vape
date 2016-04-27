@@ -4,9 +4,12 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/opsee/basic/schema"
+	opsee "github.com/opsee/basic/service"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
+	log "github.com/sirupsen/logrus"
 	"github.com/snorecone/closeio-go"
+	"golang.org/x/net/context"
 )
 
 func GetSignup(id int) (*model.Signup, error) {
@@ -223,6 +226,26 @@ func ClaimSignup(id int, token, name, password string, invite bool) (*schema.Use
 
 	if invite {
 		go inviteSlack(user.Name, user.Email)
+	}
+
+	if spanxClient != nil {
+		go func() {
+			spanxResp, err := spanxClient.EnhancedCombatMode(context.Background(), &opsee.EnhancedCombatModeRequest{
+				User: user,
+			})
+
+			logger := log.WithFields(log.Fields{
+				"email":       user.Email,
+				"name":        user.Name,
+				"customer_id": user.CustomerId,
+			})
+
+			if err != nil {
+				logger.WithError(err).Error("error saving new role stack template")
+			}
+
+			logger.Infof("saved new role stack template: %s", spanxResp.StackUrl)
+		}()
 	}
 
 	return user, nil

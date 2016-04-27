@@ -2,12 +2,16 @@ package servicer
 
 import (
 	"bytes"
+	"crypto/tls"
 	"fmt"
 	"github.com/hoisie/mustache"
 	"github.com/keighl/mandrill"
+	opsee "github.com/opsee/basic/service"
 	slacktmpl "github.com/opsee/notification-templates/dist/go/slack"
 	log "github.com/sirupsen/logrus"
 	"github.com/snorecone/closeio-go"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"net/http"
 	"net/url"
 )
@@ -25,6 +29,7 @@ var (
 	slackTemplates  map[string]*mustache.Template
 	slackDomain     string
 	slackAdminToken string
+	spanxClient     opsee.SpanxClient
 )
 
 func init() {
@@ -38,7 +43,7 @@ func init() {
 	slackTemplates["new-signup"] = tmpl
 }
 
-func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, inviteSlackDomain, inviteSlackAdminToken string) {
+func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, inviteSlackDomain, inviteSlackAdminToken, spanxHost string) error {
 	opseeHost = host
 	mailClient = mailer
 	intercomKey = []byte(intercom)
@@ -49,6 +54,15 @@ func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, in
 	if closeioKey != "" {
 		closeioClient = closeio.New(closeioKey)
 	}
+
+	conn, err := grpc.Dial(spanxHost, grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})))
+	if err != nil {
+		return err
+	}
+
+	spanxClient = opsee.NewSpanxClient(conn)
+
+	return nil
 }
 
 func mailTemplatedMessage(toEmail, toName, templateName string, mergeVars map[string]interface{}) ([]*mandrill.Response, error) {
