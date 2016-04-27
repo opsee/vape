@@ -105,9 +105,16 @@ func createSignup(email, name, referrer string, activated bool) (*model.Signup, 
 
 	signup := &model.Signup{
 		Email:     email,
-		Name:      name[:254],
-		Referrer:  referrer[:254],
+		Name:      name,
+		Referrer:  referrer,
 		Activated: activated,
+	}
+
+	if len(signup.Name) > 254 {
+		signup.Name = signup.Name[:254]
+	}
+	if len(signup.Referrer) > 254 {
+		signup.Referrer = signup.Referrer[:254]
 	}
 
 	err = store.NamedInsert("insert-signup", signup)
