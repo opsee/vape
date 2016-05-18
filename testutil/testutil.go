@@ -2,6 +2,7 @@ package testutil
 
 import (
 	"database/sql"
+
 	"github.com/jmoiron/sqlx"
 	"gopkg.in/check.v1"
 )
@@ -45,9 +46,9 @@ func SetupFixtures(db DB, c *check.C) {
 	}
 	_, err = tx.Exec(
 		"insert into users (id, email, password_hash, admin, active, verified, "+
-			"customer_id, name) values (1, 'mark@opsee.co', "+
+			"customer_id, name, status, perms) values (1, 'mark@opsee.co', "+
 			"'$2a$10$QcgjlXDKnRys50Oc30duFuNcZW6Rmqd7pcIJX9GWheIXJExUooZ7W', true, true, true, "+
-			"$1, 'mark')", id)
+			"$1, 'mark', 'active', 1)", id)
 	if err != nil {
 		c.Fatal(err)
 	}
@@ -59,9 +60,9 @@ func SetupFixtures(db DB, c *check.C) {
 	}
 	_, err = tx.Exec(
 		"insert into users (id, email, password_hash, admin, active, verified, "+
-			"customer_id, name) values (3, 'dan@opsee.co', "+
+			"customer_id, name, status, perms) values (3, 'dan@opsee.co', "+
 			"'$2a$10$QcgjlXDKnRys50Oc30duFuNcZW6Rmqd7pcIJX9GWheIXJExUooZ7W', false, true, true, "+
-			"$1, 'dan')", id)
+			"$1, 'dan', 'active', 3)", id)
 	if err != nil {
 		c.Fatal(err)
 	}

@@ -5,3 +5,5 @@ postgres:
     DB_USER: postgres
     DB_PASS: ""
     DB_NAME: vape_test
+  ports:
+    - 5434:5432

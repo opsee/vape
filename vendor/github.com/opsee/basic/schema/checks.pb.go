@@ -2,6 +2,43 @@
 // source: checks.proto
 // DO NOT EDIT!
 
+/*
+	Package schema is a generated protocol buffer package.
+
+	It is generated from these files:
+		checks.proto
+		region.proto
+		stack.proto
+		user.proto
+
+	It has these top-level messages:
+		Target
+		Check
+		Notification
+		Assertion
+		Header
+		HttpCheck
+		CloudWatchCheck
+		CloudWatchMetric
+		CloudWatchResponse
+		Tag
+		Metric
+		HttpResponse
+		CheckResponse
+		CheckResult
+		Region
+		Vpc
+		Subnet
+		BastionState
+		Stack
+		RoleStack
+		User
+		Customer
+		Team
+		Invoice
+		CreditCardInfo
+		Invite
+*/
 package schema
 
 import proto "github.com/gogo/protobuf/proto"
@@ -22,6 +59,10 @@ import io "io"
 var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+const _ = proto.GoGoProtoPackageIsVersion1
 
 type Target struct {
 	Name    string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -1419,17 +1460,17 @@ type CheckResultGetter interface {
 
 var GraphQLCheckResultType *github_com_graphql_go_graphql.Object
 
-func (g *CheckResponse_HttpResponse) GetHttpResponse() *HttpResponse {
-	return g.HttpResponse
-}
-func (g *CheckResponse_CloudwatchResponse) GetCloudWatchResponse() *CloudWatchResponse {
-	return g.CloudwatchResponse
-}
 func (g *Check_HttpCheck) GetHttpCheck() *HttpCheck {
 	return g.HttpCheck
 }
 func (g *Check_CloudwatchCheck) GetCloudWatchCheck() *CloudWatchCheck {
 	return g.CloudwatchCheck
+}
+func (g *CheckResponse_HttpResponse) GetHttpResponse() *HttpResponse {
+	return g.HttpResponse
+}
+func (g *CheckResponse_CloudwatchResponse) GetCloudWatchResponse() *CloudWatchResponse {
+	return g.CloudwatchResponse
 }
 
 func init() {
