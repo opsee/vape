@@ -12,11 +12,6 @@ import (
 )
 
 func (s *service) GetUser(ctx context.Context, req *opsee.GetUserRequest) (*opsee.GetUserResponse, error) {
-	// Only an OpseeAdmin can perform this action
-	if err := schema.CheckOpseeAdmin(req.Requestor); err != nil {
-		return nil, err
-	}
-
 	var (
 		user *schema.User
 		err  error
@@ -53,11 +48,6 @@ func (s *service) GetUser(ctx context.Context, req *opsee.GetUserRequest) (*opse
 }
 
 func (s *service) ListUsers(ctx context.Context, req *opsee.ListUsersRequest) (*opsee.ListUsersResponse, error) {
-	// Only an OpseeAdmin can perform this action
-	if err := schema.CheckOpseeAdmin(req.Requestor); err != nil {
-		return nil, err
-	}
-
 	users, err := servicer.ListUsers(int(req.PerPage), int(req.Page))
 	if err != nil {
 		return nil, err
@@ -74,11 +64,6 @@ func (s *service) ListUsers(ctx context.Context, req *opsee.ListUsersRequest) (*
 // Delete a user
 // TODO(dan) This also needs to delete the users subscription.
 func (s *service) DeleteUser(ctx context.Context, req *opsee.DeleteUserRequest) (*opsee.DeleteUserResponse, error) {
-	// Only an OpseeAdmin, TeamAdmin, or the target user can perform this action
-	if err := schema.CheckModify(req.Requestor, req.User); err != nil {
-		return nil, err
-	}
-
 	err := servicer.DeleteUser(int(req.User.Id))
 	if err != nil {
 		return nil, err
@@ -91,11 +76,6 @@ func (s *service) DeleteUser(ctx context.Context, req *opsee.DeleteUserRequest) 
 
 // Delete a user
 func (s *service) UpdateUserPerms(ctx context.Context, req *opsee.UpdateUserPermsRequest) (*opsee.UserTokenResponse, error) {
-	// Only an OpseeAdmin, or TeamAdmin can perform this action
-	if err := schema.CheckModify(req.Requestor, req.User, "admin"); err != nil {
-		return nil, err
-	}
-
 	token, err := servicer.UpdateUserPerms(req.User, req.Perms, time.Hour*24)
 	if err != nil {
 		return nil, err
@@ -109,11 +89,6 @@ func (s *service) UpdateUserPerms(ctx context.Context, req *opsee.UpdateUserPerm
 
 // Update a user's email, name, or password
 func (s *service) UpdateUser(ctx context.Context, req *opsee.UpdateUserRequest) (*opsee.UserTokenResponse, error) {
-	// Only an OpseeAdmin, TeamAdmin, or the target user can perform this action
-	if err := schema.CheckModify(req.Requestor, req.User); err != nil {
-		return nil, err
-	}
-
 	var (
 		err error
 	)
