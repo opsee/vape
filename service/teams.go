@@ -9,11 +9,6 @@ import (
 
 // Fetches team, including users
 func (s *service) GetTeam(ctx context.Context, req *opsee.GetTeamRequest) (*opsee.GetTeamResponse, error) {
-	// OpseeAdmins, users with "admin", users in same team
-	if err := schema.CheckRead(req.Requestor, req.Team); err != nil {
-		return nil, err
-	}
-
 	var (
 		team *schema.Team
 		err  error
@@ -31,10 +26,6 @@ func (s *service) GetTeam(ctx context.Context, req *opsee.GetTeamRequest) (*opse
 
 // Updates team name or subscription
 func (s *service) UpdateTeam(ctx context.Context, req *opsee.UpdateTeamRequest) (*opsee.UpdateTeamResponse, error) {
-	// OpseeAdmins, users with "admin"
-	if err := schema.CheckModify(req.Requestor, req.Team, "admin"); err != nil {
-		return nil, err
-	}
 	var (
 		team *schema.Team
 		err  error
@@ -52,10 +43,6 @@ func (s *service) UpdateTeam(ctx context.Context, req *opsee.UpdateTeamRequest) 
 
 // Sets team to inactive
 func (s *service) DeleteTeam(ctx context.Context, req *opsee.DeleteTeamRequest) (*opsee.DeleteTeamResponse, error) {
-	// OpseeAdmins, users with "admin"
-	if err := schema.CheckModify(req.Requestor, req.Team, "admin"); err != nil {
-		return nil, err
-	}
 	var (
 		err error
 	)
