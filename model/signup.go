@@ -24,8 +24,8 @@ type Signup struct {
 	Referrer   string                  `json:"referrer"`
 	CreatedAt  time.Time               `json:"created_at" db:"created_at"`
 	UpdatedAt  time.Time               `json:"updated_at" db:"updated_at"`
-	CustomerId string                  `json:"customer_id" db:"customer_id"`
-	Perms      *opsee_types.Permission `json:"perms" db:"perms"`
+	CustomerId string                  `json:"-" db:"customer_id"`
+	Perms      *opsee_types.Permission `json:"-" db:"perms"`
 }
 
 func (s *Signup) Token() string {
