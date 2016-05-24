@@ -2,6 +2,7 @@ package store
 
 import (
 	"database/sql"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
@@ -21,8 +22,9 @@ var queries = map[string]string{
 	"user-by-id":               "select * from users where id = $1",
 	"user-by-cust-id":          "select * from users where customer_id = $1",
 	"delete-user-by-id":        "delete from users where id = $1",
-	"update-user":              "update users set name = :name, email = :email, password_hash = :password_hash where id = :id",
-	"insert-user":              "insert into users (customer_id, email, name, verified, active, password_hash) values (:customer_id, :email, :name, :verified, :active, :password_hash) returning *",
+	"update-user":              "update users set name = :name, email = :email, password_hash = :password_hash, status = :status where id = :id",
+	"update-user-perms":        "update users set perms = :perms where id = :id",
+	"insert-user":              "insert into users (customer_id, email, name, verified, active, password_hash, status, perms) values (:customer_id, :email, :name, :verified, :active, :password_hash, :status, :perms) returning *",
 
 	// userdata
 	"userdata-by-id": "select data from userdata where user_id = $1",
@@ -32,14 +34,20 @@ var queries = map[string]string{
 	"signup-by-id":        "select * from signups where id = $1",
 	"delete-signup-by-id": "delete from signups where id = $1",
 	"signup-by-email":     "select * from signups where lower(email) = lower($1)",
-	"insert-signup":       "insert into signups (email, name, referrer, activated) values (:email, :name, :referrer, :activated) returning *",
+	"insert-signup":       "insert into signups (email, name, referrer, activated, customer_id, perms) values (:email, :name, :referrer, :activated, :customer_id, :perms) returning *",
 	"list-signups":        "select * from signups limit $1 offset $2",
 	"activate-signup":     "update signups set activated = true where id = $1",
 	"claim-signup":        "update signups set claimed = true where id = $1",
 
 	// customers
 	"customer-by-id-and-active": "select * from customers where id = $1 and active = $2",
+	"customer-by-id":            "select * from customers where id = $1",
 	"insert-new-customer":       "insert into customers (name, active) values (NULL, true) returning id",
+
+	// teams (a subset of customer fields and actions accessible to team admins)
+	"update-team":       "update customers set name = :name, subscription = :subscription, where id = :id and active = true",
+	"team-by-id":        "select * from customers where id = $1 and active = true",
+	"delete-team-by-id": "update customers set active = false, where id = $1",
 
 	// bastions
 	"insert-bastion":                         "insert into bastions (password_hash, customer_id, active) values (:password_hash, :customer_id, :active) returning *",

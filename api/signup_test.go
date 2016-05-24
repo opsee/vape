@@ -3,11 +3,12 @@ package api
 import (
 	"bytes"
 	"fmt"
+	"time"
+
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
 	. "gopkg.in/check.v1"
-	"time"
 )
 
 func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {

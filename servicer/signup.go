@@ -3,8 +3,10 @@ package servicer
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/opsee/basic/schema"
 	opsee "github.com/opsee/basic/service"
+	opsee_types "github.com/opsee/protobuf/opseeproto/types"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	log "github.com/sirupsen/logrus"
@@ -40,7 +42,7 @@ func DeleteSignup(id int) error {
 }
 
 func CreateActiveSignup(email, name, referrer string) (*model.Signup, error) {
-	signup, err := createSignup(email, name, referrer, true)
+	signup, err := createSignup("", email, name, referrer, true, &opsee_types.Permission{Perm: model.AllUserPerms})
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +95,7 @@ func CreateActiveSignup(email, name, referrer string) (*model.Signup, error) {
 	return signup, err
 }
 
-func createSignup(email, name, referrer string, activated bool) (*model.Signup, error) {
+func createSignup(customerId, email, name, referrer string, activated bool, perms *opsee_types.Permission) (*model.Signup, error) {
 	existingSignup := new(model.Signup)
 	err := store.Get(existingSignup, "signup-by-email", email)
 	if err == nil {
@@ -107,10 +109,12 @@ func createSignup(email, name, referrer string, activated bool) (*model.Signup, 
 	}
 
 	signup := &model.Signup{
-		Email:     email,
-		Name:      name,
-		Referrer:  referrer,
-		Activated: activated,
+		Email:      email,
+		Name:       name,
+		Referrer:   referrer,
+		Activated:  activated,
+		CustomerId: customerId,
+		Perms:      perms,
 	}
 
 	if len(signup.Name) > 254 {
@@ -195,20 +199,25 @@ func ClaimSignup(id int, token, name, password string, invite bool) (*schema.Use
 	}
 	user.Verified = true
 	user.Active = true
+	user.Perms = signup.Perms
+	user.Status = "active"
 
 	tx, err := store.Beginx()
 	if err != nil {
 		return nil, err
 	}
 
-	// need an customer id for the user
-	var customerId string
-	if err = tx.Get(&customerId, "insert-new-customer"); err != nil {
-		tx.Rollback()
-		return nil, err
+	customerId := signup.CustomerId
+	if signup.CustomerId == "" {
+		// signup is a new signup -- not user invite. must generate customer
+		if err = tx.Get(&customerId, "insert-new-customer"); err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+		// ensure that user has admin privs (0111b)
+		user.Perms = &opsee_types.Permission{Perm: model.AllUserPerms, Name: "user"}
 	}
 	user.CustomerId = customerId
-
 	if _, err := tx.Exec("claim-signup", signup.Id); err != nil {
 		tx.Rollback()
 		return nil, err

@@ -1,11 +1,12 @@
 package api
 
 import (
+	"strconv"
+	"time"
+
 	"github.com/gocraft/web"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
-	"strconv"
-	"time"
 )
 
 type SignupContext struct {
@@ -83,6 +84,7 @@ func (c *SignupContext) CreateActiveSignup(rw web.ResponseWriter, r *web.Request
 		return
 	}
 
+	// Create a signup for new user.  No customer_id.  All permissions.
 	signup, err = servicer.CreateActiveSignup(request.Email, request.Name, request.Referrer)
 
 	if err != nil {

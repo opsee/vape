@@ -6,11 +6,13 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"fmt"
+	"time"
+
 	"github.com/opsee/basic/schema"
+	opsee_types "github.com/opsee/protobuf/opseeproto/types"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vaper"
 	"golang.org/x/crypto/bcrypt"
-	"time"
 )
 
 func NewUser(name, email, password string) (*schema.User, error) {
@@ -156,6 +158,16 @@ func GetUserEmail(email string) (*schema.User, error) {
 	return user, nil
 }
 
+func UpdateUserPerms(user *schema.User, perms *opsee_types.Permission, duration time.Duration) (string, error) {
+	user.Perms = perms
+	_, err := store.NamedExec("update-user-perms", user)
+	if err != nil {
+		return "", err
+	}
+
+	return TokenUser(user, duration)
+}
+
 func UpdateUser(user *schema.User, email, name, password string, duration time.Duration) (string, error) {
 	err := MergeUser(user, email, name, password)
 	if err != nil {
@@ -178,6 +190,25 @@ func DeleteUser(id int) error {
 func TokenUser(user *schema.User, duration time.Duration) (string, error) {
 	token := vaper.New(user, user.Email, time.Now(), time.Now().Add(duration))
 	return token.Marshal()
+}
+
+func InviteTokenUser(user *schema.User, duration time.Duration) error {
+	tokenString, err := TokenUser(user, duration)
+	if err != nil {
+		return err
+	}
+
+	// TODO(dan) Change password-reset email to invite-user email
+	go func() {
+		mergeVars := map[string]interface{}{
+			"user_id":     fmt.Sprint(user.Id),
+			"user_token":  tokenString,
+			"permissions": user.Perms.Permissions(),
+			"name":        user.Name,
+		}
+		mailTemplatedMessage(user.Email, user.Name, "user-invite", mergeVars)
+	}()
+	return nil
 }
 
 func EmailTokenUser(user *schema.User, duration time.Duration, referer string) error {
