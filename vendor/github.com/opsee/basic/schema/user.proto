@@ -43,6 +43,8 @@ message Team {
 	CreditCardInfo creditCardInfo = 4;
 	repeated Invoice invoices = 5;
 	repeated User users = 6;
+	opsee.types.Timestamp created_at = 7 [(gogoproto.moretags) = "db:\"created_at\""];
+	opsee.types.Timestamp updated_at = 8 [(gogoproto.moretags) = "db:\"updated_at\""];
 }
 
 message Invoice {
