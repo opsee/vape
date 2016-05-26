@@ -30,6 +30,15 @@ func GetTeam(id string) (*schema.Team, error) {
 
 		return nil, err
 	}
+	users := []*schema.User{}
+	err = store.Get(team, "team-users-by-id", id)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return nil, err
+
+		}
+	}
+	team.Users = users
 
 	return team, nil
 }
