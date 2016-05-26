@@ -25,7 +25,7 @@ func MergeTeam(team *schema.Team, name, subscription string) error {
 // Gets subset of fields of a customer accessible to team admin
 func GetTeamUsers(id string) ([]*schema.User, error) {
 	users := []*schema.User{}
-	err := store.Get(&users, "team-users-by-id", id)
+	err := store.Select(&users, "team-users-by-id", id)
 	if err != nil && err != sql.ErrNoRows {
 		log.WithError(err).Error("couldnt fetch team users")
 		return nil, err
