@@ -11,9 +11,11 @@ dependencies:
 test:
   override:
     - REV=${CIRCLE_SHA1} make
+    - docker push quay.io/opsee/vape:$CIRCLE_SHA1
 deployment:
   ami:
     branch: master
     owner: opsee
     commands:
-      - docker push quay.io/opsee/vape:${CIRCLE_SHA1}
+      - docker tag -f quay.io/opsee/vape:$CIRCLE_SHA1 quay.io/opsee/vape:latest
+      - docker push quay.io/opsee/vape:latest
