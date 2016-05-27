@@ -1,6 +1,8 @@
 package servicer
 
 import (
+	"fmt"
+
 	"github.com/opsee/basic/schema"
 	opsee_types "github.com/opsee/protobuf/opseeproto/types"
 )
@@ -19,6 +21,15 @@ func CreateActiveInvite(customerId, email, name string, perms *opsee_types.Permi
 		Name:       signup.Name,
 		Perms:      signup.Perms,
 	}
+	// send an email, create a lead and notify slack here!
+	go func() {
+		mergeVars := map[string]interface{}{
+			"signup_id":    fmt.Sprint(signup.Id),
+			"signup_token": signup.Token(),
+			"name":         signup.Name,
+		}
+		mailTemplatedMessage(signup.Email, signup.Name, "instant-approval", mergeVars)
+	}()
 
 	return invite, nil
 }
