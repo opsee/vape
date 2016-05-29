@@ -1,18 +1,12 @@
 package service
 
 import (
-	"github.com/opsee/basic/schema"
 	opsee "github.com/opsee/basic/service"
 	"github.com/opsee/vape/servicer"
 	"golang.org/x/net/context"
 )
 
 func (s *service) InviteUser(ctx context.Context, req *opsee.InviteUserRequest) (*opsee.InviteUserResponse, error) {
-	// Only team admins or an OpseeAdmin can perform this action
-	if err := schema.CheckPermission(req.Requestor, "admin"); err != nil {
-		return nil, err
-	}
-
 	var (
 		err error
 	)
