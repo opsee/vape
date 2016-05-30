@@ -210,6 +210,12 @@ func GetUser(id int) (*schema.User, error) {
 		return nil, err
 	}
 
+	// XXX Populate Name field in Perms
+	// Perhaps store as json blob or in high nibble (or gogo generated)
+	if user != nil && user.Perms != nil {
+		user.Perms.Name = "user"
+	}
+
 	return user, nil
 }
 
@@ -224,6 +230,12 @@ func GetUserCustID(id string) (*schema.User, error) {
 		return nil, err
 	}
 
+	// XXX Populate Name field in Perms
+	// Perhaps store as json blob or in high nibble (or gogo generated)
+	if user != nil && user.Perms != nil {
+		user.Perms.Name = "user"
+	}
+
 	return user, nil
 }
 
@@ -236,6 +248,12 @@ func GetUserEmail(email string) (*schema.User, error) {
 		}
 
 		return nil, err
+	}
+
+	// XXX Populate Name field in Perms
+	// Perhaps store as json blob or in high nibble (or gogo generated)
+	if user != nil && user.Perms != nil {
+		user.Perms.Name = "user"
 	}
 
 	return user, nil
