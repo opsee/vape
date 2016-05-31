@@ -21,7 +21,7 @@ func CreateActiveUser(name, email, referrer string) (*schema.User, error) {
 		return nil, err
 	}
 
-	return ClaimSignup(signup.Id, signup.Token(), name, "", true)
+	return ClaimSignup(signup.Id, signup.Token(), name, "", false)
 }
 
 func NewUser(name, email, password string) (*schema.User, error) {

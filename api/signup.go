@@ -300,7 +300,7 @@ func (c *SignupContext) ClaimSignup(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	user, err := servicer.ClaimSignup(id, request.Token, request.Name, request.Password, request.Invite)
+	user, err := servicer.ClaimSignup(id, request.Token, request.Name, request.Password, true)
 	if err != nil {
 		switch err {
 		case servicer.SignupAlreadyClaimed:
