@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gocraft/web"
+	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
 )
@@ -22,6 +23,7 @@ func init() {
 	signupRouter = publicRouter.Subrouter(SignupContext{}, "/signups")
 	signupRouter.Post("/", (*SignupContext).CreateActiveSignup)
 	signupRouter.Post("/new", (*SignupContext).CreateActiveSignup)
+	signupRouter.Post("/activate", (*SignupContext).CreateActiveUser)
 	signupRouter.Get("/", (*SignupContext).ListSignups)
 	signupRouter.Get("/:id", (*SignupContext).GetSignup)
 	signupRouter.Delete("/:id", (*SignupContext).DeleteSignup)
@@ -98,6 +100,59 @@ func (c *SignupContext) CreateActiveSignup(rw web.ResponseWriter, r *web.Request
 	}
 
 	c.ResponseJson(signup)
+}
+
+func (c *SignupContext) CreateActiveUser(rw web.ResponseWriter, r *web.Request) {
+	var (
+		request struct {
+			Name     string `json:"name"`
+			Email    string `json:"email"`
+			Referrer string `json:"referrer"`
+		}
+		user *schema.User
+	)
+
+	err := c.RequestJson(&request)
+	if err != nil {
+		c.BadRequest(Messages.BadRequest, err)
+		return
+	}
+
+	if request.Email == "" {
+		c.BadRequest(Messages.EmailRequired)
+		return
+	}
+
+	// Create a new active user and team.  All permissions.
+	user, err = servicer.CreateActiveUser(request.Email, request.Name, request.Referrer)
+
+	if err != nil {
+		if err == servicer.SignupExists {
+			c.Conflict(Messages.EmailConflict)
+			return
+		}
+
+		c.InternalServerError(Messages.InternalServerError, err)
+		return
+	}
+
+	token, err := servicer.TokenUser(user, time.Minute*60)
+	if err != nil {
+		c.InternalServerError(Messages.InternalServerError, err)
+		return
+	}
+
+	hmac, err := servicer.HMACIntercomUser(user)
+	if err != nil {
+		c.InternalServerError(Messages.InternalServerError, err)
+		return
+	}
+
+	c.ResponseJson(map[string]interface{}{
+		"user":          user,
+		"token":         token,
+		"intercom_hmac": hmac,
+	})
 }
 
 type SignupActivationResponse struct {
