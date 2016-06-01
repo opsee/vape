@@ -38,7 +38,7 @@ var (
 	publicRouter  = web.New(Context{})
 	privateRouter = web.New(Context{})
 	origins       = []*regexp.Regexp{
-		regexp.MustCompile(`https?://localhost:8080`),
+		regexp.MustCompile(`https?://localhost:\d+`),
 		regexp.MustCompile(`https?://(.+)?(opsy\.co|opsee\.co|opsee\.com)`),
 		regexp.MustCompile(`https?://coreys-mbp-8:\d+`),
 	}
