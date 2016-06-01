@@ -177,7 +177,7 @@ func ListSignups(perPage int, page int) ([]*model.Signup, error) {
 	return signups, nil
 }
 
-func ClaimSignup(id int, token, name, password string, invite bool) (*schema.User, error) {
+func ClaimSignup(id int, token, name, password string, verified bool) (*schema.User, error) {
 	signup, err := GetSignup(id)
 	if err != nil {
 		return nil, err
@@ -197,7 +197,7 @@ func ClaimSignup(id int, token, name, password string, invite bool) (*schema.Use
 	if err != nil {
 		return nil, err
 	}
-	user.Verified = true
+	user.Verified = verified
 	user.Active = true
 	user.Perms = signup.Perms
 	user.Status = "active"
@@ -233,9 +233,7 @@ func ClaimSignup(id int, token, name, password string, invite bool) (*schema.Use
 		return nil, err
 	}
 
-	if invite {
-		go inviteSlack(user.Name, user.Email)
-	}
+	go inviteSlack(user.Name, user.Email)
 
 	if spanxClient != nil {
 		go func() {

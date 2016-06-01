@@ -15,6 +15,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func CreateActiveUser(name, email, referrer string) (*schema.User, error) {
+	signup, err := CreateActiveSignup(name, email, referrer)
+	if err != nil {
+		return nil, err
+	}
+
+	return ClaimSignup(signup.Id, signup.Token(), name, "", false)
+}
+
 func NewUser(name, email, password string) (*schema.User, error) {
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
 	if err != nil {
