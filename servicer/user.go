@@ -8,15 +8,20 @@ import (
 	"fmt"
 	"time"
 
+	ld "github.com/launchdarkly/go-client"
 	"github.com/opsee/basic/schema"
 	opsee_types "github.com/opsee/protobuf/opseeproto/types"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vaper"
+	log "github.com/sirupsen/logrus"
 	"github.com/snorecone/closeio-go"
 	"golang.org/x/crypto/bcrypt"
 )
 
+func init() {
+	log.SetLevel(log.DebugLevel)
+}
 func VerifyUser(user *schema.User, token string) (bool, error) {
 	if !VerifyToken(fmt.Sprint(user.Id), token) {
 		return false, nil
@@ -209,6 +214,7 @@ func GetUser(id int) (*schema.User, error) {
 
 		return nil, err
 	}
+	user.Perms.Name = "user"
 
 	return user, nil
 }
@@ -223,6 +229,7 @@ func GetUserCustID(id string) (*schema.User, error) {
 
 		return nil, err
 	}
+	user.Perms.Name = "user"
 
 	return user, nil
 }
@@ -237,6 +244,7 @@ func GetUserEmail(email string) (*schema.User, error) {
 
 		return nil, err
 	}
+	user.Perms.Name = "user"
 
 	return user, nil
 }
@@ -261,6 +269,7 @@ func UpdateUser(user *schema.User, email, name, password string, duration time.D
 	if err != nil {
 		return "", err
 	}
+	user.Perms.Name = "user"
 
 	if !user.Verified {
 		SendVerification(user)
@@ -275,6 +284,9 @@ func DeleteUser(id int) error {
 }
 
 func TokenUser(user *schema.User, duration time.Duration) (string, error) {
+	UpdateLDFlags(user)
+	user.Perms.Name = "user"
+
 	token := vaper.New(user, user.Email, time.Now(), time.Now().Add(duration))
 	return token.Marshal()
 }
@@ -285,7 +297,6 @@ func InviteTokenUser(user *schema.User, duration time.Duration) error {
 		return err
 	}
 
-	// TODO(dan) Change password-reset email to invite-user email
 	go func() {
 		mergeVars := map[string]interface{}{
 			"user_id":     fmt.Sprint(user.Id),
@@ -350,4 +361,72 @@ func SendVerification(user *schema.User) {
 		}
 		mailTemplatedMessage(user.Email, "", "resend-verification", mergeVars)
 	}()
+}
+
+// returns a launch darkly user from a user
+func LDUser(user *schema.User) ld.User {
+	idstr := fmt.Sprintf("%d", user.Id)
+	custom := map[string]interface{}{"Admin": user.Admin}
+	name := user.Name
+	email := user.Email
+	return ld.User{
+		Key:    &idstr,
+		Name:   &name,
+		Email:  &email,
+		Custom: &custom,
+	}
+}
+
+// sets launchdarkly flags for a user
+// TODO(dan) diff flags prior to setting them
+func SetLDFlags(user *schema.User) error {
+	if ldClient == nil {
+		return fmt.Errorf("launch darkly client not initialized")
+	}
+	lduser := LDUser(user)
+	if user.TeamFlags != nil {
+		for _, flag := range user.TeamFlags.Permissions() {
+			log.Debug("setting flag %s for user: %d", flag, user.Id)
+			show_feature, err := ldClient.Toggle(flag, lduser, true)
+			if err != nil {
+				return nil
+			}
+			log.Debug("ld flag %s: %t", flag, show_feature)
+		}
+	}
+	return nil
+}
+
+// Update launch darkly flags
+func UpdateLDFlags(user *schema.User) error {
+	lduser := LDUser(user)
+	if ldClient == nil {
+		return fmt.Errorf("launch darkly client not initialized")
+	}
+	m, err := ldClient.AllFlags(lduser)
+	if err != nil {
+		log.WithError(err).Debug("launch darkly client return error")
+		return err
+	}
+	if err == nil && m == nil {
+		return fmt.Errorf("launch darkly client offline")
+	}
+
+	log.Debug("fetching launchdarkly flags for user.Id %d", user.Id)
+	if m != nil {
+		var flags []string
+		for k, _ := range m {
+			log.Debugf("Flag %s", k)
+			flags = append(flags, k)
+		}
+		teamFlags, err := opsee_types.NewPermissions("team_flags", flags...)
+		log.Debug("got launch darkly flags %v for user.Id %d", flags, user.Id)
+		if err != nil {
+			return err
+		}
+		user.TeamFlags = teamFlags
+		return nil
+	}
+
+	return err
 }

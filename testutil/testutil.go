@@ -13,6 +13,8 @@ type DB interface {
 	Beginx() (*sqlx.Tx, error)
 }
 
+const LDTestToken = "sdk-7156768a-24c8-4ff1-8a93-281c760e41ef"
+
 func SetupFixtures(db DB, c *check.C) {
 	tx, err := db.Beginx()
 	if err != nil {

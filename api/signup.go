@@ -1,14 +1,15 @@
 package api
 
 import (
+	"fmt"
 	"strconv"
 	"time"
-	"fmt"
 
 	"github.com/gocraft/web"
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/servicer"
+	log "github.com/sirupsen/logrus"
 )
 
 type SignupContext struct {
@@ -99,6 +100,7 @@ func (c *SignupContext) CreateActiveSignup(rw web.ResponseWriter, r *web.Request
 		c.InternalServerError(Messages.InternalServerError, err)
 		return
 	}
+	log.Debugf("created signup: %v", signup)
 
 	c.ResponseJson(signup)
 }

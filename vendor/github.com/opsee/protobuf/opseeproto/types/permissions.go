@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"sync"
-
-	log "github.com/sirupsen/logrus"
 )
 
 // the permission which corresponds to opsee administrator
@@ -138,7 +136,6 @@ func (p *Permission) Permissions() []string {
 func (p *Permission) SetPermission(perm string) bool {
 	reg, rok := PermissionsRegistry.Get(p.Name)
 	if !rok {
-		log.Error("Can't get perms registry")
 		return false
 	}
 	if i, ok := reg.Bit(perm); ok {
@@ -162,7 +159,6 @@ func (p *Permission) SetPermissions(perms ...string) (failed []string) {
 func (p *Permission) ClearPermission(perm string) bool {
 	reg, rok := PermissionsRegistry.Get(p.Name)
 	if !rok {
-		log.Error("Can't get perms registry")
 		return false
 	}
 	if i, ok := reg.Bit(perm); ok {
@@ -213,9 +209,49 @@ func (p *Permission) CheckPermissions(pnames ...string) map[string]error {
 	return permErrs
 }
 
-// Override MarshalJson to return a list of permissions
+// TODO(dan) The base type of permissions should be struct{Name:"key", Perms:[]string{"permission..."}}
+// When marshaled: {"name":"key", "perms":7} (permissions becomes an int)
+// In postgres, just use the longest bit integer, set the Name based on the context (or perhaps struct tag?)
+// When unmarshalled, convert the int to []string{...} via the key and the Permissions Registry
 func (p *Permission) MarshalJSON() ([]byte, error) {
-	return json.Marshal(p.Permissions())
+	s := map[string]interface{}{
+		"name":  p.Name,
+		"perms": p.Permissions(), // TODO(dan) fix this. see above.  This should be number
+	}
+	return json.Marshal(s)
+}
+
+// Override MarshalJson to return a list of permissions
+func (p *Permission) UnmarshalJSON(b []byte) error {
+	var mp map[string]interface{}
+	err := json.Unmarshal(b, &mp)
+	if err != nil {
+		return err
+	}
+
+	name, ok := mp["name"].(string)
+	if !ok {
+		return fmt.Errorf("expect field name to be of type string")
+	}
+	mperms, ok := mp["perms"].([]interface{})
+	if !ok {
+		return fmt.Errorf("expect field perms to be of type []string")
+	}
+
+	var perms []string
+	for _, perm := range mperms {
+		if perm, ok := perm.(string); ok {
+			perms = append(perms, perm)
+		}
+	}
+
+	newP, err := NewPermissions(name, perms...)
+	if err != nil {
+		return err
+	}
+	p.Perm = newP.Perm
+	p.Name = newP.Name
+	return nil
 }
 
 func (p *Permission) Scan(src interface{}) error {

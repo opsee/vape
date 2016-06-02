@@ -1,2 +1,3 @@
 POSTGRES_CONN=postgres://postgres@postgres/vape_test?sslmode=disable
 OPSEE_HOST="https://app.opsee.local"
+VAPE_LAUNCH_DARKLY_TOKEN="sdk-7156768a-24c8-4ff1-8a93-281c760e41ef"

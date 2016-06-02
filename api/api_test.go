@@ -33,7 +33,7 @@ func (s *ApiSuite) SetUpTest(c *C) {
 	vaper.Init(testVapeKey)
 	store.Init(os.Getenv("POSTGRES_CONN"))
 	testutil.SetupFixtures(store.DB, c)
-	// InjectLogger(os.Stdout)
+	InjectLogger(os.Stdout)
 }
 
 type testMailer struct {

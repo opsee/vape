@@ -2,14 +2,20 @@ package api
 
 import (
 	"bytes"
-	"github.com/opsee/basic/schema"
-	"github.com/opsee/vape/servicer"
-	. "gopkg.in/check.v1"
 	"time"
+
+	"github.com/opsee/basic/schema"
+	opsee_types "github.com/opsee/protobuf/opseeproto/types"
+	"github.com/opsee/vape/servicer"
+	"github.com/opsee/vape/testutil"
+	. "gopkg.in/check.v1"
 )
 
 func (s *ApiSuite) TestUserSessionEcho(c *C) {
-	rec, err := testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true}, "GET",
+	adminPerms, _ := opsee_types.NewPermissions("user", "admin", "edit", "billing")
+	teamFlags, _ := opsee_types.NewPermissions("team_flags", "check-type-external_host")
+
+	rec, err := testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: adminPerms, TeamFlags: teamFlags}, "GET",
 		"https://vape/authenticate/echo", nil, nil)
 	if err != nil {
 		c.Fatal(err)
@@ -22,7 +28,7 @@ func (s *ApiSuite) TestUserSessionEcho(c *C) {
 }
 
 func (s *ApiSuite) TestCreateAuthPassword(c *C) {
-	servicer.Init("test.opsy.co", nil, "fffff--fffffffffffffffffffffffffffffffff", "", "", "", "", "")
+	servicer.Init("test.opsy.co", nil, "fffff--fffffffffffffffffffffffffffffffff", "", "", "", "", "", testutil.LDTestToken)
 	rec, err := testReq(publicRouter, "POST", "https://vape/authenticate/password", nil, nil)
 	if err != nil {
 		c.Fatal(err)
@@ -87,7 +93,7 @@ func (s *ApiSuite) TestCreateAuthPassword(c *C) {
 
 func (s *ApiSuite) TestCreateAuthToken(c *C) {
 	mailer := &testMailer{}
-	servicer.Init("test.opsy.co", mailer, "fffff--fffffffffffffffffffffffffffffffff", "", "", "", "", "")
+	servicer.Init("test.opsy.co", mailer, "fffff--fffffffffffffffffffffffffffffffff", "", "", "", "", "", testutil.LDTestToken)
 
 	// test a non-existent email
 	rec, _ := testReq(publicRouter, "POST", "https://vape/authenticate/token", bytes.NewBuffer([]byte(`{"email": "what@rudoing.com"}`)), nil)

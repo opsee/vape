@@ -1,11 +1,12 @@
 package api
 
 import (
+	"time"
+
 	"github.com/gocraft/web"
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
-	"time"
 )
 
 type AuthContext struct {
@@ -180,6 +181,9 @@ func (c *AuthContext) Refresh(rw web.ResponseWriter, r *web.Request) {
 		c.Unauthorized(Messages.TokenRequired)
 		return
 	}
+
+	// Update LaunchDarkly flags
+	servicer.UpdateLDFlags(c.CurrentUser)
 
 	token, err := servicer.TokenUser(c.CurrentUser, time.Hour*12)
 	if err != nil {

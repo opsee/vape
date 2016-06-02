@@ -5,19 +5,21 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"net/http"
+	"regexp"
+	"runtime"
+	"strings"
+
 	"github.com/gocraft/health"
 	"github.com/gocraft/web"
 	"github.com/nu7hatch/gouuid"
 	"github.com/opsee/basic/grpcutil"
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/vaper"
+	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/http2"
 	"google.golang.org/grpc"
-	"io"
-	"net/http"
-	"regexp"
-	"runtime"
-	"strings"
 )
 
 type Context struct {
@@ -67,6 +69,7 @@ func init() {
 		router.Get("/health", (*Context).Health)
 		router.Get("/swagger.json", (*Context).Docs)
 	}
+	log.SetLevel(log.DebugLevel)
 }
 
 func InjectLogger(sink io.Writer) {
@@ -139,10 +142,12 @@ func (c *Context) UserSession(rw web.ResponseWriter, r *web.Request, next web.Ne
 		case "Bearer":
 			tokenString := authslice[1]
 			decodedToken, err := vaper.Unmarshal(tokenString)
+
 			if err != nil {
 				c.Job.EventErr("user_session.token_unmarshal", err)
 				break
 			}
+			log.Debugf("decoded token: %v", decodedToken)
 
 			user := &schema.User{}
 			err = decodedToken.Reify(user)
@@ -150,6 +155,7 @@ func (c *Context) UserSession(rw web.ResponseWriter, r *web.Request, next web.Ne
 				c.Job.EventErr("user_session.token_reify", err)
 				break
 			}
+			log.Debugf("reified user: %v", user)
 
 			c.CurrentUser = user
 		}

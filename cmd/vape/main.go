@@ -1,15 +1,16 @@
 package main
 
 import (
+	"io/ioutil"
+	"log"
+	"os"
+
 	"github.com/keighl/mandrill"
 	"github.com/opsee/vape/api"
 	"github.com/opsee/vape/service"
 	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vaper"
-	"io/ioutil"
-	"log"
-	"os"
 )
 
 func main() {
@@ -88,7 +89,13 @@ func main() {
 		log.Fatal("Must set the VAPE_SPANX_HOST environment variable.")
 	}
 
-	servicer.Init(host, mandrillClient, intercomKey, closeioKey, slackUrl, slackDomain, slackToken, spanxHost)
+	// launch darkley shiz
+	ldToken := os.Getenv("VAPE_LAUNCH_DARKLY_TOKEN")
+	if ldToken == "" {
+		log.Fatal("Must set the VAPE_LAUNCH_DARKLY_TOKEN environment variable.")
+	}
+
+	servicer.Init(host, mandrillClient, intercomKey, closeioKey, slackUrl, slackDomain, slackToken, spanxHost, ldToken)
 
 	certfile := os.Getenv("VAPE_CERT")
 	certkeyfile := os.Getenv("VAPE_CERT_KEY")
@@ -97,6 +104,5 @@ func main() {
 	}
 
 	service := service.New()
-
 	api.ListenAndServe(os.Getenv("VAPE_PUBLIC_HOST"), os.Getenv("VAPE_PRIVATE_HOST"), certfile, certkeyfile, service.Server)
 }

@@ -4,16 +4,19 @@ import (
 	"bytes"
 	"crypto/tls"
 	"fmt"
+	"net/http"
+	"net/url"
+	"time"
+
 	"github.com/hoisie/mustache"
 	"github.com/keighl/mandrill"
+	ld "github.com/launchdarkly/go-client"
 	opsee "github.com/opsee/basic/service"
 	slacktmpl "github.com/opsee/notification-templates/dist/go/slack"
 	log "github.com/sirupsen/logrus"
 	"github.com/snorecone/closeio-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"net/http"
-	"net/url"
 )
 
 type MandrillMailer interface {
@@ -30,6 +33,7 @@ var (
 	slackDomain     string
 	slackAdminToken string
 	spanxClient     opsee.SpanxClient
+	ldClient        *ld.LDClient
 )
 
 func init() {
@@ -43,7 +47,7 @@ func init() {
 	slackTemplates["new-signup"] = tmpl
 }
 
-func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, inviteSlackDomain, inviteSlackAdminToken, spanxHost string) error {
+func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, inviteSlackDomain, inviteSlackAdminToken, spanxHost, ldToken string) error {
 	opseeHost = host
 	mailClient = mailer
 	intercomKey = []byte(intercom)
@@ -61,6 +65,12 @@ func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, in
 	}
 
 	spanxClient = opsee.NewSpanxClient(conn)
+	ldClient, err = ld.MakeClient(ldToken, time.Second)
+	if err != nil {
+		log.WithError(err).Warn("launch darkly client not initialized")
+	} else {
+		log.Info("initialized launch darkly client")
+	}
 
 	return nil
 }

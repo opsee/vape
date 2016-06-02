@@ -4,7 +4,7 @@ import opsee_types "github.com/opsee/protobuf/opseeproto/types"
 
 func init() {
 	opsee_types.PermissionsRegistry.Register("user", opsee_types.NewPermissionsBitmap("admin", "edit", "billing"))
-	opsee_types.PermissionsRegistry.Register("team", opsee_types.NewPermissionsBitmap("multi_user", "multi_bastion", "on_site_support"))
+	opsee_types.PermissionsRegistry.Register("team_flags", opsee_types.NewPermissionsBitmap("multi_user", "multi_bastion", "on_site_support", "check-type-external_host"))
 }
 
 // Wrapper for check if requesting user can modify target
