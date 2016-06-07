@@ -227,9 +227,6 @@ func (c *UserContext) Verify(rw web.ResponseWriter, r *web.Request) {
 }
 
 func (c *UserContext) ResendVerification(rw web.ResponseWriter, r *web.Request) {
-	err := servicer.SendVerification(c.User)
-	if err != nil {
-		c.InternalServerError(Messages.InternalServerError, err)
-		return
-	}
+	servicer.SendVerification(c.User)
+	c.ResponseJson(&MessageResponse{Message: Messages.Ok})
 }

@@ -10,18 +10,75 @@ import (
 
 	"github.com/opsee/basic/schema"
 	opsee_types "github.com/opsee/protobuf/opseeproto/types"
+	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vaper"
+	"github.com/snorecone/closeio-go"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func CreateActiveUser(name, email, referrer string) (*schema.User, error) {
-	signup, err := CreateActiveSignup(name, email, referrer)
+	signup, err := createSignup("", email, name, referrer, true, &opsee_types.Permission{Perm: model.AllUserPerms})
 	if err != nil {
 		return nil, err
 	}
 
-	return ClaimSignup(signup.Id, VerificationToken(fmt.Sprint(signup.Id)), name, "", false)
+	user, err := ClaimSignup(signup.Id, VerificationToken(fmt.Sprint(signup.Id)), name, "", false)
+	if err != nil {
+		return nil, err
+	}
+
+	// send an email, create a lead and notify slack here!
+	go func() {
+		toke, err := TokenUser(user, 24*7*time.Hour)
+		if err != nil {
+			return
+		}
+
+		mergeVars := map[string]interface{}{
+			"user_id":                 fmt.Sprint(user.Id),
+			"user_verification_token": VerificationToken(fmt.Sprint(user.Id)),
+			"user_auth_token":         toke,
+		}
+		mailTemplatedMessage(user.Email, "", "new-user", mergeVars)
+
+		lead := &closeio.Lead{
+			Name: user.Email,
+			Contacts: []*closeio.Contact{
+				{
+					Name: user.Email,
+					Emails: []*closeio.Email{
+						{
+							Type:  "work",
+							Email: user.Email,
+						},
+					},
+				},
+			},
+		}
+
+		if referrer != "" {
+			lead.Custom = map[string]string{
+				"referrer": referrer,
+			}
+		}
+
+		createLead(lead)
+
+		slackMap := map[string]interface{}{
+			"user_name":  user.Name,
+			"user_email": user.Email,
+		}
+
+		// work around template shortcomings
+		if referrer != "" {
+			slackMap["referrer"] = referrer
+		}
+
+		notifySlack("new-signup", slackMap)
+	}()
+
+	return user, nil
 }
 
 func NewUser(name, email, password string) (*schema.User, error) {
@@ -258,6 +315,18 @@ func UpdateUserData(id int, data []byte) ([]byte, error) {
 	return userdata.Data, err
 }
 
-func SendVerification(user *schema.User) error {
-	return nil
+func SendVerification(user *schema.User) {
+	go func() {
+		toke, err := TokenUser(user, 24*7*time.Hour)
+		if err != nil {
+			return
+		}
+
+		mergeVars := map[string]interface{}{
+			"user_id":                 fmt.Sprint(user.Id),
+			"user_verification_token": VerificationToken(fmt.Sprint(user.Id)),
+			"user_auth_token":         toke,
+		}
+		mailTemplatedMessage(user.Email, "", "resend-verification", mergeVars)
+	}()
 }
