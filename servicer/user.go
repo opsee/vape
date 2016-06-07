@@ -31,7 +31,7 @@ func VerifyUser(user *schema.User, token string) (bool, error) {
 	return true, nil
 }
 
-func CreateActiveUser(name, email, referrer string) (*schema.User, error) {
+func CreateActiveUser(email, name, referrer string) (*schema.User, error) {
 	signup, err := createSignup("", email, name, referrer, true, &opsee_types.Permission{Perm: model.AllUserPerms})
 	if err != nil {
 		return nil, err
