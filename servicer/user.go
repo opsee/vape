@@ -114,6 +114,9 @@ func AuthenticateUser(user *schema.User, password string) error {
 
 func MergeUser(user *schema.User, email, name, password string) error {
 	if email != "" {
+		if user.Email != email {
+			user.Verified = false
+		}
 		user.Email = email
 	}
 
@@ -257,6 +260,10 @@ func UpdateUser(user *schema.User, email, name, password string, duration time.D
 	_, err = store.NamedExec("update-user", user)
 	if err != nil {
 		return "", err
+	}
+
+	if !user.Verified {
+		SendVerification(user)
 	}
 
 	return TokenUser(user, duration)
