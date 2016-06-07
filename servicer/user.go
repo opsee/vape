@@ -17,6 +17,20 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func VerifyUser(user *schema.User, token string) (bool, error) {
+	if !VerifyToken(fmt.Sprint(user.Id), token) {
+		return false, nil
+	}
+
+	user.Verified = true
+	_, err := store.NamedExec("update-user", user)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func CreateActiveUser(name, email, referrer string) (*schema.User, error) {
 	signup, err := createSignup("", email, name, referrer, true, &opsee_types.Permission{Perm: model.AllUserPerms})
 	if err != nil {

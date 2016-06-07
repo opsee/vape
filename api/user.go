@@ -2,7 +2,6 @@ package api
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/gocraft/web"
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/servicer"
@@ -219,8 +218,24 @@ func (c *UserContext) Verify(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	if servicer.VerifyToken(fmt.Sprint(c.User.Id), request.Token) {
-		c.ResponseJson(&MessageResponse{Message: Messages.UserVerified})
+	verified, err := servicer.VerifyUser(c.User, request.Token)
+	if err != nil {
+		c.InternalServerError(Messages.InternalServerError, err)
+		return
+	}
+
+	if verified {
+		toke, err := servicer.TokenUser(c.User, 12*time.Hour)
+		if err != nil {
+			c.InternalServerError(Messages.InternalServerError, err)
+			return
+		}
+
+		c.ResponseJson(map[string]interface{}{
+			"user":  c.User,
+			"token": toke,
+		})
+
 	} else {
 		c.Unauthorized(Messages.UserNotAuthorized)
 	}
