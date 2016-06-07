@@ -28,6 +28,8 @@ func init() {
 	userRouter.Delete("/:id", (*UserContext).DeleteUser)
 	userRouter.Get("/:id/data", (*UserContext).GetUserData)
 	userRouter.Put("/:id/data", (*UserContext).UpdateUserData)
+	userRouter.Post("/:id/verify", (*UserContext).Verify)
+	userRouter.Post("/:id/resend-verification", (*UserContext).ResendVerification)
 }
 
 func (c *UserContext) Authorized(rw web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
@@ -174,6 +176,7 @@ func (c *UserContext) GetUserData(rw web.ResponseWriter, r *web.Request) {
 	data, err := servicer.GetUserData(c.Id)
 	if err != nil {
 		c.InternalServerError(Messages.InternalServerError, err)
+		return
 	}
 
 	rw.Write(data)
@@ -198,7 +201,47 @@ func (c *UserContext) UpdateUserData(rw web.ResponseWriter, r *web.Request) {
 	data, err := servicer.UpdateUserData(c.Id, buf.Bytes())
 	if err != nil {
 		c.InternalServerError(Messages.InternalServerError, err)
+		return
 	}
 
 	rw.Write(data)
+}
+
+func (c *UserContext) Verify(rw web.ResponseWriter, r *web.Request) {
+	var request struct {
+		Token string `json:"token"`
+	}
+
+	err := c.RequestJson(&request)
+	if err != nil {
+		c.BadRequest(Messages.BadRequest)
+		return
+	}
+
+	verified, err := servicer.VerifyUser(c.User, request.Token)
+	if err != nil {
+		c.InternalServerError(Messages.InternalServerError, err)
+		return
+	}
+
+	if verified {
+		toke, err := servicer.TokenUser(c.User, 12*time.Hour)
+		if err != nil {
+			c.InternalServerError(Messages.InternalServerError, err)
+			return
+		}
+
+		c.ResponseJson(map[string]interface{}{
+			"user":  c.User,
+			"token": toke,
+		})
+
+	} else {
+		c.Unauthorized(Messages.UserNotAuthorized)
+	}
+}
+
+func (c *UserContext) ResendVerification(rw web.ResponseWriter, r *web.Request) {
+	servicer.SendVerification(c.User)
+	c.ResponseJson(&MessageResponse{Message: Messages.Ok})
 }

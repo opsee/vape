@@ -17,6 +17,7 @@ type messages struct {
 	CredentialsMismatch        string
 	BastionCredentialsMismatch string
 	CustomerNotAuthorized      string
+	UserNotAuthorized          string
 	InvalidToken               string
 	EmailConflict              string
 	UserConflict               string
@@ -24,6 +25,7 @@ type messages struct {
 	UserNotFound               string
 	UserDeleted                string
 	SignupDeleted              string
+	UserVerified               string
 }
 
 var Messages = &messages{
@@ -42,6 +44,7 @@ var Messages = &messages{
 	UserOrAdminRequired:        "an authorized user or administrator is required to access this resource",
 	CredentialsMismatch:        "credentials don't match an active user",
 	BastionCredentialsMismatch: "credentials don't match an active bastion",
+	UserNotAuthorized:          "this user is not authorized",
 	CustomerNotAuthorized:      "this customer is not authorized",
 	InvalidToken:               "token is invalid or expired",
 	EmailConflict:              "that email has already been taken",
@@ -50,4 +53,5 @@ var Messages = &messages{
 	UserNotFound:               "user not found",
 	UserDeleted:                "user has been deleted",
 	SignupDeleted:              "signup has been deleted",
+	UserVerified:               "user has been verified",
 }
