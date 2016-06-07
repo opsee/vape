@@ -3,6 +3,7 @@ package api
 import (
 	"strconv"
 	"time"
+	"fmt"
 
 	"github.com/gocraft/web"
 	"github.com/opsee/basic/schema"
@@ -189,7 +190,7 @@ func (c *SignupContext) ActivateSignup(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
-	c.ResponseJson(&SignupActivationResponse{Token: signup.Token()})
+	c.ResponseJson(&SignupActivationResponse{Token: servicer.VerificationToken(fmt.Sprint(signup.Id))})
 }
 
 // @Title getSignup

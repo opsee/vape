@@ -21,7 +21,7 @@ func CreateActiveUser(name, email, referrer string) (*schema.User, error) {
 		return nil, err
 	}
 
-	return ClaimSignup(signup.Id, signup.Token(), name, "", false)
+	return ClaimSignup(signup.Id, VerificationToken(fmt.Sprint(signup.Id)), name, "", false)
 }
 
 func NewUser(name, email, password string) (*schema.User, error) {
@@ -256,4 +256,8 @@ func UpdateUserData(id int, data []byte) ([]byte, error) {
 
 	err := store.Get(&userdata, "merge-userdata", id, data)
 	return userdata.Data, err
+}
+
+func SendVerification(user *schema.User) error {
+	return nil
 }

@@ -51,7 +51,7 @@ func CreateActiveSignup(email, name, referrer string) (*model.Signup, error) {
 	go func() {
 		mergeVars := map[string]interface{}{
 			"signup_id":    fmt.Sprint(signup.Id),
-			"signup_token": signup.Token(),
+			"signup_token": VerificationToken(fmt.Sprint(signup.Id)),
 			"name":         signup.Name,
 		}
 		mailTemplatedMessage(signup.Email, signup.Name, "instant-approval", mergeVars)
@@ -147,7 +147,7 @@ func ActivateSignup(id int) (*model.Signup, error) {
 	go func() {
 		mergeVars := map[string]interface{}{
 			"signup_id":    fmt.Sprint(signup.Id),
-			"signup_token": signup.Token(),
+			"signup_token": VerificationToken(fmt.Sprint(signup.Id)),
 			"name":         signup.Name,
 		}
 		mailTemplatedMessage(signup.Email, signup.Name, "beta-approval", mergeVars)
@@ -183,7 +183,7 @@ func ClaimSignup(id int, token, name, password string, verified bool) (*schema.U
 		return nil, err
 	}
 
-	if signup.Validate(token) == false {
+	if VerifyToken(fmt.Sprint(signup.Id), token) == false {
 		return nil, SignupInvalidToken
 	}
 

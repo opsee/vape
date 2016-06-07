@@ -25,7 +25,7 @@ func CreateActiveInvite(customerId, email, name string, perms *opsee_types.Permi
 	go func() {
 		mergeVars := map[string]interface{}{
 			"signup_id":    fmt.Sprint(signup.Id),
-			"signup_token": signup.Token(),
+			"signup_token": VerificationToken(fmt.Sprint(signup.Id)),
 			"name":         signup.Name,
 		}
 		mailTemplatedMessage(signup.Email, signup.Name, "instant-approval", mergeVars)
