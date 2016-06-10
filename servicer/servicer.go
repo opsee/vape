@@ -6,11 +6,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"time"
 
 	"github.com/hoisie/mustache"
 	"github.com/keighl/mandrill"
-	ld "github.com/launchdarkly/go-client"
 	opsee "github.com/opsee/basic/service"
 	slacktmpl "github.com/opsee/notification-templates/dist/go/slack"
 	log "github.com/sirupsen/logrus"
@@ -33,7 +31,6 @@ var (
 	slackDomain     string
 	slackAdminToken string
 	spanxClient     opsee.SpanxClient
-	ldClient        *ld.LDClient
 )
 
 func init() {
@@ -65,13 +62,6 @@ func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, in
 	}
 
 	spanxClient = opsee.NewSpanxClient(conn)
-	ldClient, err = ld.MakeClient(ldToken, time.Second)
-	if err != nil {
-		log.WithError(err).Warn("launch darkly client not initialized")
-	} else {
-		log.Info("initialized launch darkly client")
-	}
-
 	return nil
 }
 

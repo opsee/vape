@@ -15,7 +15,6 @@ import (
 
 func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 	adminPerms, _ := opsee_types.NewPermissions("user", "admin", "edit", "billing")
-	teamFlags, _ := opsee_types.NewPermissions("team_flags", "check-type-external_host")
 
 	mailer := &testMailer{}
 	servicer.Init("test.opsy.co", mailer, "fffff--fffffffffffffffffffffffffffffffff", "", "", "", "", "", testutil.LDTestToken)
@@ -43,7 +42,7 @@ func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 	c.Assert(rec.Code, DeepEquals, 409)
 
 	// activate the signup by sending the user an email/token
-	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: adminPerms, TeamFlags: teamFlags}, "PUT", "https://vape/signups/"+fmt.Sprint(signup.Id)+"/activate", nil, nil)
+	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: adminPerms}, "PUT", "https://vape/signups/"+fmt.Sprint(signup.Id)+"/activate", nil, nil)
 	activationResponse := &SignupActivationResponse{}
 	loadResponse(activationResponse, rec.Body)
 	c.Assert(activationResponse.Token, Not(DeepEquals), "")
@@ -68,32 +67,31 @@ func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 func (s *ApiSuite) TestGetListSignups(c *C) {
 	nonAdminPerms, _ := opsee_types.NewPermissions("user", "edit", "billing")
 	adminPerms, _ := opsee_types.NewPermissions("user", "admin", "edit", "billing")
-	teamFlags, _ := opsee_types.NewPermissions("team_flags", "check-type-external_host")
 
 	rec, _ := testReq(publicRouter, "POST", "https://vape/signups", bytes.NewBuffer([]byte(`{"email": "cliff@whitehouse.gov", "name": "president moon"}`)), nil)
 	signup := &model.Signup{}
 	loadResponse(signup, rec.Body)
 
 	// this should fail
-	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: false, Perms: nonAdminPerms, TeamFlags: teamFlags}, "GET", "https://vape/signups/"+fmt.Sprint(signup.Id), nil, nil)
+	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: false, Perms: nonAdminPerms}, "GET", "https://vape/signups/"+fmt.Sprint(signup.Id), nil, nil)
 	messageResponse := &MessageResponse{}
 	loadResponse(messageResponse, rec.Body)
 	c.Assert(messageResponse.Message, DeepEquals, Messages.AdminRequired)
 
 	// get 1
-	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: adminPerms, TeamFlags: teamFlags}, "GET", "https://vape/signups/"+fmt.Sprint(signup.Id), nil, nil)
+	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: adminPerms}, "GET", "https://vape/signups/"+fmt.Sprint(signup.Id), nil, nil)
 	gotSignup := &model.Signup{}
 	loadResponse(gotSignup, rec.Body)
 	c.Assert(gotSignup.Name, DeepEquals, signup.Name)
 
 	// get list, fail
-	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: false, Perms: nonAdminPerms, TeamFlags: teamFlags}, "GET", "https://vape/signups/", nil, nil)
+	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: false, Perms: nonAdminPerms}, "GET", "https://vape/signups/", nil, nil)
 	messageResponse = &MessageResponse{}
 	loadResponse(messageResponse, rec.Body)
 	c.Assert(messageResponse.Message, DeepEquals, Messages.AdminRequired)
 
 	// get list
-	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: adminPerms, TeamFlags: teamFlags}, "GET", "https://vape/signups/", nil, nil)
+	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: adminPerms}, "GET", "https://vape/signups/", nil, nil)
 	gotSignups := make([]*model.Signup, 2)
 	loadResponse(&gotSignups, rec.Body)
 	c.Assert(gotSignups[len(gotSignups)-1].Name, DeepEquals, signup.Name)

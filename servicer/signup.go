@@ -215,13 +215,6 @@ func ClaimSignup(id int, token, name, password string, verified bool) (*schema.U
 			return nil, err
 		}
 		user.Perms = &opsee_types.Permission{Perm: model.AllUserPerms, Name: "user"}
-		// TODO(dan) Set team flags to some default value
-		user.TeamFlags = &opsee_types.Permission{Perm: 0x8, Name: "team_flags"}
-
-		err := SetLDFlags(user)
-		if err != nil {
-			log.WithError(err).Warnf("unable to set launch darkly flags for user.ID: %d", user.Id)
-		}
 	}
 
 	user.CustomerId = customerId

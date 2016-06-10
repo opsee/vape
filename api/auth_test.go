@@ -13,9 +13,8 @@ import (
 
 func (s *ApiSuite) TestUserSessionEcho(c *C) {
 	adminPerms, _ := opsee_types.NewPermissions("user", "admin", "edit", "billing")
-	teamFlags, _ := opsee_types.NewPermissions("team_flags", "check-type-external_host")
 
-	rec, err := testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: adminPerms, TeamFlags: teamFlags}, "GET",
+	rec, err := testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: adminPerms}, "GET",
 		"https://vape/authenticate/echo", nil, nil)
 	if err != nil {
 		c.Fatal(err)
