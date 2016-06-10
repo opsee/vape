@@ -26,7 +26,6 @@ message User {
 	string status = 12 [(gogoproto.moretags) = "token:\"status\" db:\"status\""];
 	opsee.types.Permission perms = 13 [(gogoproto.moretags) = "token:\"perms\" db:\"perms\""];
 	bool has_password = 14 [(gogoproto.jsontag) = "has_password"];
-	opsee.types.Permission team_flags = 15 [(gogoproto.moretags) = "token:\"team_flags\""];
 }
 
 message Customer {
