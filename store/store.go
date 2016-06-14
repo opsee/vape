@@ -48,7 +48,7 @@ var queries = map[string]string{
 	"update-team":       "update customers set name = :name, subscription = :subscription where id = :id and active = true",
 	"team-by-id":        "select id, name, subscription from customers where id = $1 and active = true",
 	"team-by-name":      "select id, name, subscription from customers where name = $1",
-	"team-users-by-id":  "select (id, name, email, status, perms) from users where customer_id = $1",
+	"team-users-by-id":  "select id, name, email, status, perms from users where customer_id = $1",
 	"delete-team-by-id": "update customers set active = false, where id = $1",
 
 	// bastions
