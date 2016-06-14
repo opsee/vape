@@ -7,8 +7,6 @@ import (
 	opsee_types "github.com/opsee/protobuf/opseeproto/types"
 )
 
-// TODO(dan)  This currently piggy-backs on signup.  It should be moved to its own table.
-// TODO(dan) Email templated message for invite
 func CreateActiveInvite(teamName, senderEmail, customerId, email string, perms *opsee_types.Permission) (*schema.Invite, error) {
 	referrer := ""
 	signup, err := createSignup(customerId, email, "", referrer, true, perms)
@@ -17,6 +15,7 @@ func CreateActiveInvite(teamName, senderEmail, customerId, email string, perms *
 	}
 	invite := &schema.Invite{
 		Id:         int32(signup.Id),
+		Email:      signup.Email,
 		CustomerId: signup.CustomerId,
 		Perms:      signup.Perms,
 	}
