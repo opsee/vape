@@ -11,8 +11,15 @@ func (s *service) InviteUser(ctx context.Context, req *opsee.InviteUserRequest) 
 		err error
 	)
 
-	name := ""
-	invite, err := servicer.CreateActiveInvite(req.Requestor.CustomerId, req.Email, name, req.Perms)
+	teamName := ""
+	team, _ := servicer.GetTeam(req.Requestor.CustomerId)
+	if team != nil {
+		teamName = team.Name
+	}
+
+	senderEmail := req.Requestor.Email
+
+	invite, err := servicer.CreateActiveInvite(teamName, senderEmail, req.Requestor.CustomerId, req.Email, req.Perms)
 	if err != nil {
 		return nil, err
 	}
