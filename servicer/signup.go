@@ -129,6 +129,11 @@ func createSignup(customerId, email, name, referrer string, activated bool, perm
 		return nil, err
 	}
 
+	// XXX Populate Name field in Perms
+	if signup.Perms != nil {
+		signup.Perms.Name = "user"
+	}
+
 	return signup, err
 }
 
