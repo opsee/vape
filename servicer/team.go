@@ -30,6 +30,11 @@ func GetTeamUsers(id string) ([]*schema.User, error) {
 		log.WithError(err).Error("couldnt fetch team users")
 		return nil, err
 	}
+	for _, user := range users {
+		if user.Perms != nil {
+			user.Perms.Name = "user"
+		}
+	}
 	return users, nil
 }
 

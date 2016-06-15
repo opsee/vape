@@ -22,7 +22,7 @@ var queries = map[string]string{
 	"user-by-id":               "select * from users where id = $1",
 	"user-by-cust-id":          "select * from users where customer_id = $1",
 	"delete-user-by-id":        "delete from users where id = $1",
-	"update-user":              "update users set name = :name, email = :email, password_hash = :password_hash, status = :status, verified = :verified where id = :id",
+	"update-user":              "update users set name = :name, email = :email, password_hash = :password_hash, status = :status, verified = :verified, perms = :perms where id = :id",
 	"update-user-perms":        "update users set perms = :perms where id = :id",
 	"insert-user":              "insert into users (customer_id, email, name, verified, active, password_hash, status, perms) values (:customer_id, :email, :name, :verified, :active, :password_hash, :status, :perms) returning *",
 
