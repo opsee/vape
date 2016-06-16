@@ -31,13 +31,14 @@ var queries = map[string]string{
 	"merge-userdata": "update userdata set data = json_merge(data, $2::jsonb) where user_id = $1 returning data",
 
 	// signups
-	"signup-by-id":        "select * from signups where id = $1",
-	"delete-signup-by-id": "delete from signups where id = $1",
-	"signup-by-email":     "select * from signups where lower(email) = lower($1)",
-	"insert-signup":       "insert into signups (email, name, referrer, activated, customer_id, perms) values (:email, :name, :referrer, :activated, :customer_id, :perms) returning *",
-	"list-signups":        "select * from signups limit $1 offset $2",
-	"activate-signup":     "update signups set activated = true where id = $1",
-	"claim-signup":        "update signups set claimed = true where id = $1",
+	"signup-by-id":           "select * from signups where id = $1",
+	"signups-by-customer-id": "select * from signups where customer_id = $1",
+	"delete-signup-by-id":    "delete from signups where id = $1",
+	"signup-by-email":        "select * from signups where lower(email) = lower($1)",
+	"insert-signup":          "insert into signups (email, name, referrer, activated, customer_id, perms) values (:email, :name, :referrer, :activated, :customer_id, :perms) returning *",
+	"list-signups":           "select * from signups limit $1 offset $2",
+	"activate-signup":        "update signups set activated = true where id = $1",
+	"claim-signup":           "update signups set claimed = true where id = $1",
 
 	// customers
 	"customer-by-id-and-active": "select * from customers where id = $1 and active = $2",

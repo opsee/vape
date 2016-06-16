@@ -4,6 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/opsee/basic/schema"
+	opsee_types "github.com/opsee/protobuf/opseeproto/types"
 	"github.com/opsee/vape/store"
 	log "github.com/sirupsen/logrus"
 )
@@ -22,12 +23,39 @@ func MergeTeam(team *schema.Team, name, subscription string) error {
 	return nil
 }
 
+func getTeamInvitedUsers(id string) ([]*schema.User, error) {
+	var users []*schema.User
+	signups, err := GetSignupsByCustomerId(id)
+	if err != nil {
+		return nil, err
+	}
+	for _, signup := range signups {
+		if signup.Claimed == false {
+			u := &schema.User{
+				Id:         0, // meh
+				CustomerId: id,
+				Email:      signup.Email,
+				Perms:      signup.Perms,
+				Status:     "invited",
+			}
+
+			if u.Perms != nil {
+				u.Perms.Name = "user"
+			} else {
+				u.Perms = &opsee_types.Permission{Name: "user", Perm: 0}
+			}
+
+			users = append(users, u)
+		}
+	}
+	return users, nil
+}
+
 // Gets subset of fields of a customer accessible to team admin
 func GetTeamUsers(id string) ([]*schema.User, error) {
 	users := []*schema.User{}
 	err := store.Select(&users, "team-users-by-id", id)
 	if err != nil && err != sql.ErrNoRows {
-		log.WithError(err).Error("couldnt fetch team users")
 		return nil, err
 	}
 	for _, user := range users {
@@ -35,6 +63,11 @@ func GetTeamUsers(id string) ([]*schema.User, error) {
 			user.Perms.Name = "user"
 		}
 	}
+	iu, err := getTeamInvitedUsers(id)
+	if err != nil {
+		log.WithError(err).Warn("could not get invited users. continuing")
+	}
+	users = append(users, iu...)
 	return users, nil
 }
 

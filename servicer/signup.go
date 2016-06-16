@@ -14,6 +14,20 @@ import (
 	"golang.org/x/net/context"
 )
 
+func GetSignupsByCustomerId(id string) ([]*model.Signup, error) {
+	var signups []*model.Signup
+	err := store.Select(&signups, "signups-by-customer-id", id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, SignupNotFound
+		}
+
+		return nil, err
+	}
+
+	return signups, nil
+}
+
 func GetSignup(id int) (*model.Signup, error) {
 	signup := new(model.Signup)
 	err := store.Get(signup, "signup-by-id", id)
