@@ -5,19 +5,22 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gocraft/health"
-	"github.com/gocraft/web"
-	"github.com/nu7hatch/gouuid"
-	"github.com/opsee/basic/grpcutil"
-	"github.com/opsee/basic/schema"
-	"github.com/opsee/vaper"
-	"golang.org/x/net/http2"
-	"google.golang.org/grpc"
 	"io"
 	"net/http"
 	"regexp"
 	"runtime"
 	"strings"
+
+	"github.com/gocraft/health"
+	"github.com/gocraft/web"
+	"github.com/nu7hatch/gouuid"
+	"github.com/opsee/basic/grpcutil"
+	"github.com/opsee/basic/schema"
+	_ "github.com/opsee/basic/schema"
+	"github.com/opsee/vaper"
+	log "github.com/sirupsen/logrus"
+	"golang.org/x/net/http2"
+	"google.golang.org/grpc"
 )
 
 type Context struct {
@@ -67,6 +70,7 @@ func init() {
 		router.Get("/health", (*Context).Health)
 		router.Get("/swagger.json", (*Context).Docs)
 	}
+	log.SetLevel(log.DebugLevel)
 }
 
 func InjectLogger(sink io.Writer) {
@@ -147,6 +151,7 @@ func (c *Context) UserSession(rw web.ResponseWriter, r *web.Request, next web.Ne
 			user := &schema.User{}
 			err = decodedToken.Reify(user)
 			if err != nil {
+				log.WithError(err).Error("couldn't reify user")
 				c.Job.EventErr("user_session.token_reify", err)
 				break
 			}

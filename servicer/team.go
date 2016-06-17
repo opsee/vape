@@ -1,10 +1,7 @@
 package servicer
 
 import (
-	"database/sql"
-
 	"github.com/opsee/basic/schema"
-	opsee_types "github.com/opsee/protobuf/opseeproto/types"
 	"github.com/opsee/vape/store"
 	log "github.com/sirupsen/logrus"
 )
@@ -27,7 +24,7 @@ func getTeamInvitedUsers(id string) ([]*schema.User, error) {
 	var users []*schema.User
 	signups, err := GetSignupsByCustomerId(id)
 	if err != nil {
-		return nil, err
+		return users, err
 	}
 	for _, signup := range signups {
 		if signup.Claimed == false {
@@ -39,10 +36,8 @@ func getTeamInvitedUsers(id string) ([]*schema.User, error) {
 				Status:     "invited",
 			}
 
-			if u.Perms != nil {
-				u.Perms.Name = "user"
-			} else {
-				u.Perms = &opsee_types.Permission{Name: "user", Perm: 0}
+			if u.Perms == nil {
+				u.Perms = &schema.UserFlags{Admin: false, Edit: false, Billing: false}
 			}
 
 			users = append(users, u)
@@ -55,13 +50,8 @@ func getTeamInvitedUsers(id string) ([]*schema.User, error) {
 func GetTeamUsers(id string) ([]*schema.User, error) {
 	users := []*schema.User{}
 	err := store.Select(&users, "team-users-by-id", id)
-	if err != nil && err != sql.ErrNoRows {
-		return nil, err
-	}
-	for _, user := range users {
-		if user.Perms != nil {
-			user.Perms.Name = "user"
-		}
+	if err != nil {
+		return users, err
 	}
 	iu, err := getTeamInvitedUsers(id)
 	if err != nil {
@@ -73,16 +63,15 @@ func GetTeamUsers(id string) ([]*schema.User, error) {
 
 // Gets subset of fields of a customer accessible to team admin
 func GetTeam(id string) (*schema.Team, error) {
+	log.Debugf("get team: %s", id)
 	team := new(schema.Team)
 	err := store.Get(team, "team-by-id", id)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, TeamNotFound
-		}
-		return nil, err
+		return team, err
 	}
 
 	team.Users, _ = GetTeamUsers(team.Id)
+	log.Debugf("#team users: %d", len(team.Users))
 
 	return team, nil
 }
