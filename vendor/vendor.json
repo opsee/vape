@@ -199,73 +199,63 @@
 		},
 		{
 			"checksumSHA1": "JLhed1lAnZ3eAvzYte77yd3V1b4=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/grpcutil",
 			"path": "github.com/opsee/basic/grpcutil",
-			"revision": "e4797a95efb7d118e4f2a9ed74f315a8f8d1bcbe",
-			"revisionTime": "2016-06-23T12:55:33-07:00"
+			"revision": "fc0b85be93575f24035940b120d6f9e2bfc1ff5a",
+			"revisionTime": "2016-06-23T22:26:15Z"
 		},
 		{
-			"checksumSHA1": "sq9DQHrD3jbCSmDEK4itHv7WdMY=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema",
+			"checksumSHA1": "dcP7dEHWByYotg6moGqt+uVWGtY=",
 			"path": "github.com/opsee/basic/schema",
-			"revision": "e4797a95efb7d118e4f2a9ed74f315a8f8d1bcbe",
-			"revisionTime": "2016-06-23T12:55:33-07:00"
+			"revision": "fc0b85be93575f24035940b120d6f9e2bfc1ff5a",
+			"revisionTime": "2016-06-23T22:26:15Z"
 		},
 		{
 			"checksumSHA1": "FkjxadUmA3jQE9gNzDheJ5axvyw=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/autoscaling",
 			"path": "github.com/opsee/basic/schema/aws/autoscaling",
-			"revision": "e4797a95efb7d118e4f2a9ed74f315a8f8d1bcbe",
-			"revisionTime": "2016-06-23T12:55:33-07:00"
+			"revision": "fc0b85be93575f24035940b120d6f9e2bfc1ff5a",
+			"revisionTime": "2016-06-23T22:26:15Z"
 		},
 		{
 			"checksumSHA1": "fySg/HSrU9fwCAsXLwt4fsm0imc=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/cloudwatch",
 			"path": "github.com/opsee/basic/schema/aws/cloudwatch",
-			"revision": "e4797a95efb7d118e4f2a9ed74f315a8f8d1bcbe",
-			"revisionTime": "2016-06-23T12:55:33-07:00"
+			"revision": "fc0b85be93575f24035940b120d6f9e2bfc1ff5a",
+			"revisionTime": "2016-06-23T22:26:15Z"
 		},
 		{
 			"checksumSHA1": "+vaNkzRGuv1YFreB47sAf9h1xlA=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/credentials",
 			"path": "github.com/opsee/basic/schema/aws/credentials",
-			"revision": "e4797a95efb7d118e4f2a9ed74f315a8f8d1bcbe",
-			"revisionTime": "2016-06-23T12:55:33-07:00"
+			"revision": "fc0b85be93575f24035940b120d6f9e2bfc1ff5a",
+			"revisionTime": "2016-06-23T22:26:15Z"
 		},
 		{
 			"checksumSHA1": "srjU1ESiQMdYhe8RsQeIaEAF27k=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/ec2",
 			"path": "github.com/opsee/basic/schema/aws/ec2",
-			"revision": "e4797a95efb7d118e4f2a9ed74f315a8f8d1bcbe",
-			"revisionTime": "2016-06-23T12:55:33-07:00"
+			"revision": "fc0b85be93575f24035940b120d6f9e2bfc1ff5a",
+			"revisionTime": "2016-06-23T22:26:15Z"
 		},
 		{
 			"checksumSHA1": "3Vy2baXYVara8ivNlOHj8fpZcXk=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/ecs",
 			"path": "github.com/opsee/basic/schema/aws/ecs",
-			"revision": "e4797a95efb7d118e4f2a9ed74f315a8f8d1bcbe",
-			"revisionTime": "2016-06-23T12:55:33-07:00"
+			"revision": "fc0b85be93575f24035940b120d6f9e2bfc1ff5a",
+			"revisionTime": "2016-06-23T22:26:15Z"
 		},
 		{
 			"checksumSHA1": "9JoTo+10PvSF5YcdZahA35SnCUk=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/elb",
 			"path": "github.com/opsee/basic/schema/aws/elb",
-			"revision": "e4797a95efb7d118e4f2a9ed74f315a8f8d1bcbe",
-			"revisionTime": "2016-06-23T12:55:33-07:00"
+			"revision": "fc0b85be93575f24035940b120d6f9e2bfc1ff5a",
+			"revisionTime": "2016-06-23T22:26:15Z"
 		},
 		{
 			"checksumSHA1": "lfQKxPHPkM/+3PDuhT4NnVGKUgM=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/rds",
 			"path": "github.com/opsee/basic/schema/aws/rds",
-			"revision": "e4797a95efb7d118e4f2a9ed74f315a8f8d1bcbe",
-			"revisionTime": "2016-06-23T12:55:33-07:00"
+			"revision": "fc0b85be93575f24035940b120d6f9e2bfc1ff5a",
+			"revisionTime": "2016-06-23T22:26:15Z"
 		},
 		{
-			"checksumSHA1": "Ckr2QpFzj32o6sHDmitM2MRKQg4=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/service",
+			"checksumSHA1": "ZTtWfqZHFnP7zsdysJHHs7yq5/I=",
 			"path": "github.com/opsee/basic/service",
-			"revision": "e4797a95efb7d118e4f2a9ed74f315a8f8d1bcbe",
-			"revisionTime": "2016-06-23T12:55:33-07:00"
+			"revision": "fc0b85be93575f24035940b120d6f9e2bfc1ff5a",
+			"revisionTime": "2016-06-23T22:26:15Z"
 		},
 		{
 			"checksumSHA1": "Qk5VaNR5dJHzN+LeuRWUdfp7xIE=",
