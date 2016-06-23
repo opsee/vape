@@ -9,8 +9,6 @@ import (
 	"time"
 
 	"github.com/opsee/basic/schema"
-	opsee_types "github.com/opsee/protobuf/opseeproto/types"
-	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vaper"
 	"github.com/snorecone/closeio-go"
@@ -32,7 +30,7 @@ func VerifyUser(user *schema.User, token string) (bool, error) {
 }
 
 func CreateActiveUser(email, name, referrer string) (*schema.User, error) {
-	signup, err := createSignup("", email, name, referrer, true, &opsee_types.Permission{Perm: model.AllUserPerms})
+	signup, err := createSignup("", email, name, referrer, true, &schema.UserFlags{Admin: true, Billing: true, Edit: true})
 	if err != nil {
 		return nil, err
 	}
@@ -210,12 +208,6 @@ func GetUser(id int) (*schema.User, error) {
 		return nil, err
 	}
 
-	// XXX Populate Name field in Perms
-	// Perhaps store as json blob or in high nibble (or gogo generated)
-	if user != nil && user.Perms != nil {
-		user.Perms.Name = "user"
-	}
-
 	return user, nil
 }
 
@@ -228,12 +220,6 @@ func GetUserCustID(id string) (*schema.User, error) {
 		}
 
 		return nil, err
-	}
-
-	// XXX Populate Name field in Perms
-	// Perhaps store as json blob or in high nibble (or gogo generated)
-	if user != nil && user.Perms != nil {
-		user.Perms.Name = "user"
 	}
 
 	return user, nil
@@ -250,16 +236,10 @@ func GetUserEmail(email string) (*schema.User, error) {
 		return nil, err
 	}
 
-	// XXX Populate Name field in Perms
-	// Perhaps store as json blob or in high nibble (or gogo generated)
-	if user != nil && user.Perms != nil {
-		user.Perms.Name = "user"
-	}
-
 	return user, nil
 }
 
-func UpdateUserPerms(user *schema.User, perms *opsee_types.Permission, duration time.Duration) (string, error) {
+func UpdateUserPerms(user *schema.User, perms *schema.UserFlags, duration time.Duration) (string, error) {
 	user.Perms = perms
 	_, err := store.NamedExec("update-user-perms", user)
 	if err != nil {
@@ -308,7 +288,7 @@ func InviteTokenUser(user *schema.User, duration time.Duration) error {
 		mergeVars := map[string]interface{}{
 			"user_id":     fmt.Sprint(user.Id),
 			"user_token":  tokenString,
-			"permissions": user.Perms.Permissions(),
+			"permissions": user.Perms.HighFlags(),
 			"name":        user.Name,
 		}
 		mailTemplatedMessage(user.Email, user.Name, "user-invite", mergeVars)

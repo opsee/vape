@@ -6,7 +6,6 @@ import (
 
 	"github.com/opsee/basic/schema"
 	opsee "github.com/opsee/basic/service"
-	opsee_types "github.com/opsee/protobuf/opseeproto/types"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
 	log "github.com/sirupsen/logrus"
@@ -56,7 +55,7 @@ func DeleteSignup(id int) error {
 }
 
 func CreateActiveSignup(email, name, referrer string) (*model.Signup, error) {
-	signup, err := createSignup("", email, name, referrer, true, &opsee_types.Permission{Perm: model.AllUserPerms})
+	signup, err := createSignup("", email, name, referrer, true, &schema.UserFlags{Admin: true, Billing: true, Edit: true})
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +108,7 @@ func CreateActiveSignup(email, name, referrer string) (*model.Signup, error) {
 	return signup, err
 }
 
-func createSignup(customerId, email, name, referrer string, activated bool, perms *opsee_types.Permission) (*model.Signup, error) {
+func createSignup(customerId, email, name, referrer string, activated bool, perms *schema.UserFlags) (*model.Signup, error) {
 	existingSignup := new(model.Signup)
 	err := store.Get(existingSignup, "signup-by-email", email)
 	if err == nil {
@@ -141,11 +140,6 @@ func createSignup(customerId, email, name, referrer string, activated bool, perm
 	err = store.NamedInsert("insert-signup", signup)
 	if err != nil {
 		return nil, err
-	}
-
-	// XXX Populate Name field in Perms
-	if signup.Perms != nil {
-		signup.Perms.Name = "user"
 	}
 
 	return signup, err
@@ -234,7 +228,7 @@ func ClaimSignup(id int, token, name, password string, verified bool) (*schema.U
 			return nil, err
 		}
 		// ensure that user has admin privs (0111b)
-		user.Perms = &opsee_types.Permission{Perm: model.AllUserPerms, Name: "user"}
+		user.Perms = &schema.UserFlags{Admin: true, Edit: true, Billing: true}
 	}
 	user.CustomerId = customerId
 	if _, err := tx.Exec("claim-signup", signup.Id); err != nil {

@@ -38,7 +38,7 @@ func (s *ApiSuite) TestCreateActivateClaimSignup(c *C) {
 	c.Assert(rec.Code, DeepEquals, 409)
 
 	// activate the signup by sending the user an email/token
-	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true}, "PUT", "https://vape/signups/"+fmt.Sprint(signup.Id)+"/activate", nil, nil)
+	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: AdminUserPerms}, "PUT", "https://vape/signups/"+fmt.Sprint(signup.Id)+"/activate", nil, nil)
 	activationResponse := &SignupActivationResponse{}
 	loadResponse(activationResponse, rec.Body)
 	c.Assert(activationResponse.Token, Not(DeepEquals), "")
@@ -66,25 +66,25 @@ func (s *ApiSuite) TestGetListSignups(c *C) {
 	loadResponse(signup, rec.Body)
 
 	// this should fail
-	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: false}, "GET", "https://vape/signups/"+fmt.Sprint(signup.Id), nil, nil)
+	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: false, Perms: NonAdminUserPerms}, "GET", "https://vape/signups/"+fmt.Sprint(signup.Id), nil, nil)
 	messageResponse := &MessageResponse{}
 	loadResponse(messageResponse, rec.Body)
 	c.Assert(messageResponse.Message, DeepEquals, Messages.AdminRequired)
 
 	// get 1
-	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true}, "GET", "https://vape/signups/"+fmt.Sprint(signup.Id), nil, nil)
+	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: AdminUserPerms}, "GET", "https://vape/signups/"+fmt.Sprint(signup.Id), nil, nil)
 	gotSignup := &model.Signup{}
 	loadResponse(gotSignup, rec.Body)
 	c.Assert(gotSignup.Name, DeepEquals, signup.Name)
 
 	// get list, fail
-	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: false}, "GET", "https://vape/signups/", nil, nil)
+	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: false, Perms: NonAdminUserPerms}, "GET", "https://vape/signups/", nil, nil)
 	messageResponse = &MessageResponse{}
 	loadResponse(messageResponse, rec.Body)
 	c.Assert(messageResponse.Message, DeepEquals, Messages.AdminRequired)
 
 	// get list
-	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true}, "GET", "https://vape/signups/", nil, nil)
+	rec, _ = testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: AdminUserPerms}, "GET", "https://vape/signups/", nil, nil)
 	gotSignups := make([]*model.Signup, 2)
 	loadResponse(&gotSignups, rec.Body)
 	c.Assert(gotSignups[len(gotSignups)-1].Name, DeepEquals, signup.Name)

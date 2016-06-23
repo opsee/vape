@@ -2,14 +2,15 @@ package api
 
 import (
 	"bytes"
+	"time"
+
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/servicer"
 	. "gopkg.in/check.v1"
-	"time"
 )
 
 func (s *ApiSuite) TestUserSessionEcho(c *C) {
-	rec, err := testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true}, "GET",
+	rec, err := testAuthedReq(&schema.User{Id: 1, Email: "cliff@leaninto.it", Admin: true, Perms: AdminUserPerms}, "GET",
 		"https://vape/authenticate/echo", nil, nil)
 	if err != nil {
 		c.Fatal(err)

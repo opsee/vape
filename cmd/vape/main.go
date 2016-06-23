@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+	log.SetLevel(log.DebugLevel)
 	keyPath := os.Getenv("VAPE_KEYFILE")
 	if keyPath == "" {
 		log.Fatal("Must set VAPE_KEYFILE environment variable.")

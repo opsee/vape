@@ -74,19 +74,6 @@ func (s *service) DeleteUser(ctx context.Context, req *opsee.DeleteUserRequest) 
 	}, nil
 }
 
-// Update user permissions
-func (s *service) UpdateUserPerms(ctx context.Context, req *opsee.UpdateUserPermsRequest) (*opsee.UserTokenResponse, error) {
-	token, err := servicer.UpdateUserPerms(req.User, req.Perms, time.Hour*24)
-	if err != nil {
-		return nil, err
-	}
-
-	return &opsee.UserTokenResponse{
-		User:  req.User,
-		Token: token,
-	}, nil
-}
-
 // Update a user's email, name, or password
 func (s *service) UpdateUser(ctx context.Context, req *opsee.UpdateUserRequest) (*opsee.UserTokenResponse, error) {
 	user, err := servicer.GetUser(int(req.User.Id))
