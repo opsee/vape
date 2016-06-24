@@ -27,7 +27,7 @@ func CreateActiveInvite(teamName, senderEmail, customerId, email string, perms *
 		mergeVars := map[string]interface{}{
 			"signup_id":    fmt.Sprint(signup.Id),
 			"signup_token": VerificationToken(fmt.Sprintf("%d", signup.Id)),
-			"team_name":    signup.Name,
+			"team_name":    teamName,
 			"sender_email": senderEmail,
 		}
 		mailTemplatedMessage(signup.Email, signup.Name, "team-invitation", mergeVars)
