@@ -5,12 +5,12 @@ import (
 	"os"
 
 	"github.com/keighl/mandrill"
+	log "github.com/opsee/logrus"
 	"github.com/opsee/vape/api"
 	"github.com/opsee/vape/service"
 	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vaper"
-	log "github.com/sirupsen/logrus"
 )
 
 func main() {

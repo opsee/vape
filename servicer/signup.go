@@ -6,9 +6,9 @@ import (
 
 	"github.com/opsee/basic/schema"
 	opsee "github.com/opsee/basic/service"
+	log "github.com/opsee/logrus"
 	"github.com/opsee/vape/model"
 	"github.com/opsee/vape/store"
-	log "github.com/sirupsen/logrus"
 	"github.com/snorecone/closeio-go"
 	"golang.org/x/net/context"
 )
