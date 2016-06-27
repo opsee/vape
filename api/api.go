@@ -17,8 +17,8 @@ import (
 	"github.com/opsee/basic/grpcutil"
 	"github.com/opsee/basic/schema"
 	_ "github.com/opsee/basic/schema"
+	log "github.com/opsee/logrus"
 	"github.com/opsee/vaper"
-	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/http2"
 	"google.golang.org/grpc"
 )

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/opsee/basic/schema"
-	log "github.com/sirupsen/logrus"
+	log "github.com/opsee/logrus"
 )
 
 func CreateActiveInvite(teamName, senderEmail, customerId, email string, perms *schema.UserFlags) (*schema.Invite, error) {

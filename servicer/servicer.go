@@ -4,16 +4,17 @@ import (
 	"bytes"
 	"crypto/tls"
 	"fmt"
+	"net/http"
+	"net/url"
+
 	"github.com/hoisie/mustache"
 	"github.com/keighl/mandrill"
 	opsee "github.com/opsee/basic/service"
+	log "github.com/opsee/logrus"
 	slacktmpl "github.com/opsee/notification-templates/dist/go/slack"
-	log "github.com/sirupsen/logrus"
 	"github.com/snorecone/closeio-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"net/http"
-	"net/url"
 )
 
 type MandrillMailer interface {
