@@ -246,8 +246,6 @@ func ClaimSignup(id int, token, name, password string, verified bool) (*schema.U
 		return nil, err
 	}
 
-	go inviteSlack(user.Name, user.Email)
-
 	if spanxClient != nil {
 		go func() {
 			spanxResp, err := spanxClient.EnhancedCombatMode(context.Background(), &opsee.EnhancedCombatModeRequest{
