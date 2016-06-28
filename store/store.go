@@ -17,14 +17,14 @@ var queries = map[string]string{
 	// users
 	"list-users":               "select * from users limit $1 offset $2",
 	"total-users":              "select count(id) from users",
-	"user-by-email":            "select * from users where lower(email) = lower($1)",
-	"user-by-email-and-active": "select * from users where lower(email) = lower($1) and active = $2",
-	"user-by-id":               "select * from users where id = $1",
-	"user-by-cust-id":          "select * from users where customer_id = $1",
+	"user-by-email":            "select *, length(password_hash) <> 0 as has_password from users where lower(email) = lower($1)",
+	"user-by-email-and-active": "select *, length(password_hash) <> 0 as has_password from users where lower(email) = lower($1) and active = $2",
+	"user-by-id":               "select *, length(password_hash) <> 0 as has_password from users where id = $1",
+	"user-by-cust-id":          "select *, length(password_hash) <> 0 as has_password from users where customer_id = $1",
 	"delete-user-by-id":        "delete from users where id = $1",
 	"update-user":              "update users set name = :name, email = :email, password_hash = :password_hash, status = :status, verified = :verified, perms = :perms where id = :id",
 	"update-user-perms":        "update users set perms = :perms where id = :id",
-	"insert-user":              "insert into users (customer_id, email, name, verified, active, password_hash, status, perms) values (:customer_id, :email, :name, :verified, :active, :password_hash, :status, :perms) returning *",
+	"insert-user":              "insert into users (customer_id, email, name, verified, active, password_hash, status, perms) values (:customer_id, :email, :name, :verified, :active, :password_hash, :status, :perms) returning *, length(password_hash) <> 0 as has_password",
 
 	// userdata
 	"userdata-by-id": "select data from userdata where user_id = $1",
