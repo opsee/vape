@@ -267,9 +267,9 @@ func UpdateUser(user *schema.User, email, name, password string, duration time.D
 		return "", err
 	}
 
-	if !user.Verified {
-		SendVerification(user)
-	}
+	// if !user.Verified {
+	// 	SendVerification(user)
+	// }
 
 	return TokenUser(user, duration)
 }
