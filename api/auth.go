@@ -181,6 +181,12 @@ func (c *AuthContext) Refresh(rw web.ResponseWriter, r *web.Request) {
 		return
 	}
 
+	err := store.Get(c.CurrentUser, "user-by-email-and-active", c.CurrentUser.Email, true)
+	if c.CurrentUser == nil {
+		c.Unauthorized(Messages.TokenRequired)
+		return
+	}
+
 	token, err := servicer.TokenUser(c.CurrentUser, time.Hour*12)
 	if err != nil {
 		c.InternalServerError(Messages.InternalServerError, err)

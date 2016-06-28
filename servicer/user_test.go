@@ -33,3 +33,4 @@ func (s *UserSuite) TestAuthenticate(c *C) {
 	err = AuthenticateUser(user, "eatshit")
 	c.Assert(err, IsNil)
 }
+
