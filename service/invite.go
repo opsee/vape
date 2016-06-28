@@ -9,13 +9,9 @@ import (
 )
 
 func (s *service) InviteUser(ctx context.Context, req *opsee.InviteUserRequest) (*opsee.InviteUserResponse, error) {
-	var (
-		err error
-	)
-
 	// TODO(dan) this could be used as a side-channel to find valid email addresses maybe
 	user, err := servicer.GetUserEmail(req.Email)
-	if err != nil {
+	if err != nil && err != servicer.UserNotFound {
 		return nil, err
 	}
 	if user != nil {
