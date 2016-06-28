@@ -108,6 +108,7 @@ func (c *SignupContext) CreateActiveUser(rw web.ResponseWriter, r *web.Request) 
 		request struct {
 			Name     string `json:"name"`
 			Email    string `json:"email"`
+			Password string `json:"password"`
 			Referrer string `json:"referrer"`
 		}
 		user *schema.User
@@ -125,7 +126,7 @@ func (c *SignupContext) CreateActiveUser(rw web.ResponseWriter, r *web.Request) 
 	}
 
 	// Create a new active user and team.  All permissions.
-	user, err = servicer.CreateActiveUser(request.Email, request.Name, request.Referrer)
+	user, err = servicer.CreateActiveUser(request.Email, request.Name, request.Password, request.Referrer)
 
 	if err != nil {
 		if err == servicer.SignupExists {

@@ -29,13 +29,13 @@ func VerifyUser(user *schema.User, token string) (bool, error) {
 	return true, nil
 }
 
-func CreateActiveUser(email, name, referrer string) (*schema.User, error) {
+func CreateActiveUser(email, name, password, referrer string) (*schema.User, error) {
 	signup, err := createSignup("", email, name, referrer, true, &schema.UserFlags{Admin: true, Billing: true, Edit: true})
 	if err != nil {
 		return nil, err
 	}
 
-	user, err := ClaimSignup(signup.Id, VerificationToken(fmt.Sprint(signup.Id)), name, "", false)
+	user, err := ClaimSignup(signup.Id, VerificationToken(fmt.Sprint(signup.Id)), name, password, false)
 	if err != nil {
 		return nil, err
 	}
