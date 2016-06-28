@@ -182,7 +182,7 @@ func (c *AuthContext) Refresh(rw web.ResponseWriter, r *web.Request) {
 	}
 
 	err := store.Get(c.CurrentUser, "user-by-email-and-active", c.CurrentUser.Email, true)
-	if c.CurrentUser == nil {
+	if err != nil {
 		c.Unauthorized(Messages.TokenRequired)
 		return
 	}
