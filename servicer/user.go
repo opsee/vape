@@ -94,9 +94,16 @@ func CreateActiveUser(email, name, referrer string) (*schema.User, error) {
 }
 
 func NewUser(name, email, password string) (*schema.User, error) {
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
-	if err != nil {
-		return nil, err
+	var (
+		passwordHash []byte
+		err          error
+	)
+
+	if password != "" {
+		passwordHash, err = bcrypt.GenerateFromPassword([]byte(password), 10)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &schema.User{
