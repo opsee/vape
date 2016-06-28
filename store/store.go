@@ -18,7 +18,7 @@ var queries = map[string]string{
 	"list-users":               "select * from users limit $1 offset $2",
 	"total-users":              "select count(id) from users",
 	"user-by-email":            "select *, length(password_hash) <> 0 as has_password from users where lower(email) = lower($1)",
-	"user-by-email-and-active": "select *, length(password_hash) <> 0 as has_password from users where lower(email) = lower($1) and active = $2",
+	"user-by-email-and-active": "select *, length(password_hash) <> 0 as has_password from users where lower(email) = lower($1) and active = $2 and status = 'active'",
 	"user-by-id":               "select *, length(password_hash) <> 0 as has_password from users where id = $1",
 	"user-by-cust-id":          "select *, length(password_hash) <> 0 as has_password from users where customer_id = $1",
 	"delete-user-by-id":        "delete from users where id = $1",
