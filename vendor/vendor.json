@@ -3,70 +3,81 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "3TujGA+BBh89yCW+88qGNWXxIAU=",
+			"checksumSHA1": "hXwo7KDNvTZ8+Qpm6+ODuBgpGYw=",
+			"origin": "github.com/opsee/vape/vendor/github.com/dvsekhvalnov/jose2go",
 			"path": "github.com/dvsekhvalnov/jose2go",
-			"revision": "6387d3c1f5abd8443b223577d5a7e0f4e0e5731f",
-			"revisionTime": "2015-08-16T23:43:22+03:00"
+			"revision": "e9f1e8769f4716048927cd8f38e867257bd7409c",
+			"revisionTime": "2016-05-06T08:05:44Z"
 		},
 		{
 			"checksumSHA1": "X38qrRzL+rPyO4xZhm16ftyLkXs=",
+			"origin": "github.com/opsee/vape/vendor/github.com/dvsekhvalnov/jose2go/aes",
 			"path": "github.com/dvsekhvalnov/jose2go/aes",
-			"revision": "6387d3c1f5abd8443b223577d5a7e0f4e0e5731f",
-			"revisionTime": "2015-08-16T23:43:22+03:00"
+			"revision": "e9f1e8769f4716048927cd8f38e867257bd7409c",
+			"revisionTime": "2016-05-06T08:05:44Z"
 		},
 		{
 			"checksumSHA1": "RbRzJ9jDZJnCUKbJJy7e2OSTUro=",
+			"origin": "github.com/opsee/vape/vendor/github.com/dvsekhvalnov/jose2go/arrays",
 			"path": "github.com/dvsekhvalnov/jose2go/arrays",
-			"revision": "6387d3c1f5abd8443b223577d5a7e0f4e0e5731f",
-			"revisionTime": "2015-08-16T23:43:22+03:00"
+			"revision": "e9f1e8769f4716048927cd8f38e867257bd7409c",
+			"revisionTime": "2016-05-06T08:05:44Z"
 		},
 		{
 			"checksumSHA1": "uQqU76qm0Q57HnnCEp56r43jGaU=",
+			"origin": "github.com/opsee/vape/vendor/github.com/dvsekhvalnov/jose2go/base64url",
 			"path": "github.com/dvsekhvalnov/jose2go/base64url",
-			"revision": "6387d3c1f5abd8443b223577d5a7e0f4e0e5731f",
-			"revisionTime": "2015-08-16T23:43:22+03:00"
+			"revision": "e9f1e8769f4716048927cd8f38e867257bd7409c",
+			"revisionTime": "2016-05-06T08:05:44Z"
 		},
 		{
 			"checksumSHA1": "h/QQYYL/tuXhe8ELZvyk1wKrZz4=",
+			"origin": "github.com/opsee/vape/vendor/github.com/dvsekhvalnov/jose2go/compact",
 			"path": "github.com/dvsekhvalnov/jose2go/compact",
-			"revision": "6387d3c1f5abd8443b223577d5a7e0f4e0e5731f",
-			"revisionTime": "2015-08-16T23:43:22+03:00"
+			"revision": "e9f1e8769f4716048927cd8f38e867257bd7409c",
+			"revisionTime": "2016-05-06T08:05:44Z"
 		},
 		{
 			"checksumSHA1": "gjXFjcEV/LZG4U/lgm/CVYvvWOg=",
+			"origin": "github.com/opsee/vape/vendor/github.com/dvsekhvalnov/jose2go/kdf",
 			"path": "github.com/dvsekhvalnov/jose2go/kdf",
-			"revision": "6387d3c1f5abd8443b223577d5a7e0f4e0e5731f",
-			"revisionTime": "2015-08-16T23:43:22+03:00"
+			"revision": "e9f1e8769f4716048927cd8f38e867257bd7409c",
+			"revisionTime": "2016-05-06T08:05:44Z"
 		},
 		{
 			"checksumSHA1": "o1OtVBn2DVAG07K6teBpkUNjqkM=",
+			"origin": "github.com/opsee/vape/vendor/github.com/dvsekhvalnov/jose2go/keys/ecc",
 			"path": "github.com/dvsekhvalnov/jose2go/keys/ecc",
-			"revision": "6387d3c1f5abd8443b223577d5a7e0f4e0e5731f",
-			"revisionTime": "2015-08-16T23:43:22+03:00"
+			"revision": "e9f1e8769f4716048927cd8f38e867257bd7409c",
+			"revisionTime": "2016-05-06T08:05:44Z"
 		},
 		{
 			"checksumSHA1": "gAEKTUiQk9JoMonf1G508SXpLw4=",
+			"origin": "github.com/opsee/vape/vendor/github.com/dvsekhvalnov/jose2go/padding",
 			"path": "github.com/dvsekhvalnov/jose2go/padding",
-			"revision": "6387d3c1f5abd8443b223577d5a7e0f4e0e5731f",
-			"revisionTime": "2015-08-16T23:43:22+03:00"
+			"revision": "e9f1e8769f4716048927cd8f38e867257bd7409c",
+			"revisionTime": "2016-05-06T08:05:44Z"
 		},
 		{
 			"checksumSHA1": "l2bhCehZafKe/rCGTOIbWzK4OSg=",
+			"origin": "github.com/opsee/vape/vendor/github.com/gocraft/health",
 			"path": "github.com/gocraft/health",
 			"revision": "4497d93bda869d8c90236bab73a65f00c1650a7b",
-			"revisionTime": "2016-01-15T10:44:35-08:00"
+			"revisionTime": "2016-01-15T18:44:35Z"
 		},
 		{
 			"checksumSHA1": "AGGHyqsM4MN/lfBGXguLtb6xd38=",
+			"origin": "github.com/opsee/vape/vendor/github.com/gocraft/health/stack",
 			"path": "github.com/gocraft/health/stack",
 			"revision": "4497d93bda869d8c90236bab73a65f00c1650a7b",
-			"revisionTime": "2016-01-15T10:44:35-08:00"
+			"revisionTime": "2016-01-15T18:44:35Z"
 		},
 		{
-			"checksumSHA1": "XZ/RQf9rdLpFHKhstEckOpGqsOU=",
+			"checksumSHA1": "YkJAqF0YuAL52s33dYXgrLVSlWQ=",
+			"origin": "github.com/opsee/vape/vendor/github.com/gocraft/web",
 			"path": "github.com/gocraft/web",
-			"revision": "054fd625232f8041af2c88320633047eb0574dc0",
-			"revisionTime": "2015-12-31T11:58:24-08:00"
+			"revision": "12b4630b4fee3e485b334c4d544bd9dd68fb3d4f",
+			"revisionTime": "2016-05-03T19:16:34Z"
 		},
 		{
 			"checksumSHA1": "v9pieYA9Vz3i9vYouWGnl56tmIM=",
@@ -74,6 +85,13 @@
 			"path": "github.com/gogo/protobuf/gogoproto",
 			"revision": "5b7453b208470fdb0141985c2cfdcf1471686693",
 			"revisionTime": "2016-03-29T21:29:56+02:00"
+		},
+		{
+			"checksumSHA1": "DECEQVrAJXa2SxCNLTq40H/2VvI=",
+			"origin": "github.com/opsee/vape/vendor/github.com/gogo/protobuf/jsonpb",
+			"path": "github.com/gogo/protobuf/jsonpb",
+			"revision": "2752d97bbd91927dd1c43296dbf8700e50e2708c",
+			"revisionTime": "2016-06-17T09:13:52Z"
 		},
 		{
 			"checksumSHA1": "xbOAEvmFFVsFGu6BTv1UvKb5VD8=",
@@ -90,112 +108,130 @@
 			"revisionTime": "2016-03-29T21:29:56+02:00"
 		},
 		{
-			"checksumSHA1": "s2E4fYDL3LeDZAnuN4+WNNsQxxk=",
+			"checksumSHA1": "kVJ5YScYaDWw6iotbpZwQJ6xCGM=",
+			"origin": "github.com/opsee/vape/vendor/github.com/golang/protobuf/proto",
 			"path": "github.com/golang/protobuf/proto",
-			"revision": "62e4364d64b32762febb61f2c88c0a29bc49a225",
-			"revisionTime": "2016-03-17T12:31:00+11:00"
+			"revision": "0c1f6d65b5a189c2250d10e71a5506f06f9fa0a0",
+			"revisionTime": "2016-06-14T22:31:40Z"
 		},
 		{
 			"checksumSHA1": "ftnii31JY1Sbvq+qLECUUObVPvM=",
+			"origin": "github.com/opsee/vape/vendor/github.com/graphql-go/graphql",
 			"path": "github.com/graphql-go/graphql",
 			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
-			"revisionTime": "2016-03-18T15:58:50+08:00"
+			"revisionTime": "2016-03-18T07:58:50Z"
 		},
 		{
 			"checksumSHA1": "aX0asXhgyOKzCd9Gqp+h998xFGg=",
+			"origin": "github.com/opsee/vape/vendor/github.com/graphql-go/graphql/gqlerrors",
 			"path": "github.com/graphql-go/graphql/gqlerrors",
 			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
-			"revisionTime": "2016-03-18T15:58:50+08:00"
+			"revisionTime": "2016-03-18T07:58:50Z"
 		},
 		{
 			"checksumSHA1": "aB9vx/Lo7Dws+MVtf85iB9ocMOI=",
+			"origin": "github.com/opsee/vape/vendor/github.com/graphql-go/graphql/language/ast",
 			"path": "github.com/graphql-go/graphql/language/ast",
 			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
-			"revisionTime": "2016-03-18T15:58:50+08:00"
+			"revisionTime": "2016-03-18T07:58:50Z"
 		},
 		{
 			"checksumSHA1": "P+LfyuvYUpoTTeBirloKM7/MeSg=",
+			"origin": "github.com/opsee/vape/vendor/github.com/graphql-go/graphql/language/kinds",
 			"path": "github.com/graphql-go/graphql/language/kinds",
 			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
-			"revisionTime": "2016-03-18T15:58:50+08:00"
+			"revisionTime": "2016-03-18T07:58:50Z"
 		},
 		{
 			"checksumSHA1": "sKKWECBHmhNynFIpOFJR/Q/4Gy8=",
+			"origin": "github.com/opsee/vape/vendor/github.com/graphql-go/graphql/language/lexer",
 			"path": "github.com/graphql-go/graphql/language/lexer",
 			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
-			"revisionTime": "2016-03-18T15:58:50+08:00"
+			"revisionTime": "2016-03-18T07:58:50Z"
 		},
 		{
 			"checksumSHA1": "U7nRNcNjHkeOBs3SmLbSZZIbtOE=",
+			"origin": "github.com/opsee/vape/vendor/github.com/graphql-go/graphql/language/location",
 			"path": "github.com/graphql-go/graphql/language/location",
 			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
-			"revisionTime": "2016-03-18T15:58:50+08:00"
+			"revisionTime": "2016-03-18T07:58:50Z"
 		},
 		{
 			"checksumSHA1": "/RxRi3maF72tV2Bqrcwgv/bsy4k=",
+			"origin": "github.com/opsee/vape/vendor/github.com/graphql-go/graphql/language/parser",
 			"path": "github.com/graphql-go/graphql/language/parser",
 			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
-			"revisionTime": "2016-03-18T15:58:50+08:00"
+			"revisionTime": "2016-03-18T07:58:50Z"
 		},
 		{
 			"checksumSHA1": "jrfGEXCfqz7/ypi1crmhdyC16QQ=",
+			"origin": "github.com/opsee/vape/vendor/github.com/graphql-go/graphql/language/printer",
 			"path": "github.com/graphql-go/graphql/language/printer",
 			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
-			"revisionTime": "2016-03-18T15:58:50+08:00"
+			"revisionTime": "2016-03-18T07:58:50Z"
 		},
 		{
 			"checksumSHA1": "l573EEYY28hrbjM8yJOY1BAKCNE=",
+			"origin": "github.com/opsee/vape/vendor/github.com/graphql-go/graphql/language/source",
 			"path": "github.com/graphql-go/graphql/language/source",
 			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
-			"revisionTime": "2016-03-18T15:58:50+08:00"
+			"revisionTime": "2016-03-18T07:58:50Z"
 		},
 		{
 			"checksumSHA1": "XdbaPA0GmDwkGW6IepvL/pvMrXE=",
+			"origin": "github.com/opsee/vape/vendor/github.com/graphql-go/graphql/language/visitor",
 			"path": "github.com/graphql-go/graphql/language/visitor",
 			"revision": "909ca9f800e7ab67307b4f9f1d56394346acb33c",
-			"revisionTime": "2016-03-18T15:58:50+08:00"
+			"revisionTime": "2016-03-18T07:58:50Z"
 		},
 		{
 			"checksumSHA1": "Vvnym0e1GbilACPB1zoWytszXFs=",
+			"origin": "github.com/opsee/vape/vendor/github.com/hoisie/mustache",
 			"path": "github.com/hoisie/mustache",
 			"revision": "af524a16a1b1bd467c342969bf37db23433466c4",
-			"revisionTime": "2014-11-21T08:23:03-08:00"
+			"revisionTime": "2014-11-21T16:23:03Z"
 		},
 		{
 			"checksumSHA1": "K33xdaNbpTxlDZbenJzT9PzTyvM=",
+			"origin": "github.com/opsee/vape/vendor/github.com/jmoiron/sqlx",
 			"path": "github.com/jmoiron/sqlx",
 			"revision": "398dd5876282499cdfd4cb8ea0f31a672abe9495",
-			"revisionTime": "2016-02-06T17:15:33-05:00"
+			"revisionTime": "2016-02-06T22:15:33Z"
 		},
 		{
 			"checksumSHA1": "Sywkpq8/z9Enzy90gjzNk+dhhow=",
+			"origin": "github.com/opsee/vape/vendor/github.com/jmoiron/sqlx/reflectx",
 			"path": "github.com/jmoiron/sqlx/reflectx",
 			"revision": "398dd5876282499cdfd4cb8ea0f31a672abe9495",
-			"revisionTime": "2016-02-06T17:15:33-05:00"
+			"revisionTime": "2016-02-06T22:15:33Z"
 		},
 		{
 			"checksumSHA1": "GpOUEm/XeltYiaNnFk0/aswAbqw=",
+			"origin": "github.com/opsee/vape/vendor/github.com/keighl/mandrill",
 			"path": "github.com/keighl/mandrill",
 			"revision": "5d7133fb578a9504f8ab549737c993422f65a000",
-			"revisionTime": "2015-07-10T10:28:48-04:00"
+			"revisionTime": "2015-07-10T14:28:48Z"
 		},
 		{
-			"checksumSHA1": "Mt2HF+iR18jEOWEh0lRJVMseZ8I=",
+			"checksumSHA1": "SIuDINVRGtvLZyzKJbU1YN90sMA=",
+			"origin": "github.com/opsee/vape/vendor/github.com/lib/pq",
 			"path": "github.com/lib/pq",
-			"revision": "165a3529e799da61ab10faed1fabff3662d6193f",
-			"revisionTime": "2016-03-02T00:17:19-08:00"
+			"revision": "8ad2b298cadd691a77015666a5372eae5dbfac8f",
+			"revisionTime": "2016-01-14T15:24:13Z"
 		},
 		{
 			"checksumSHA1": "xppHi82MLqVx1eyQmbhTesAEjx8=",
+			"origin": "github.com/opsee/vape/vendor/github.com/lib/pq/oid",
 			"path": "github.com/lib/pq/oid",
-			"revision": "165a3529e799da61ab10faed1fabff3662d6193f",
-			"revisionTime": "2016-03-02T00:17:19-08:00"
+			"revision": "8ad2b298cadd691a77015666a5372eae5dbfac8f",
+			"revisionTime": "2016-01-14T15:24:13Z"
 		},
 		{
 			"checksumSHA1": "gcLub3oB+u4QrOJZcYmk/y2AP4k=",
+			"origin": "github.com/opsee/vape/vendor/github.com/nu7hatch/gouuid",
 			"path": "github.com/nu7hatch/gouuid",
 			"revision": "179d4d0c4d8d407a32af483c2354df1d2c91e6c3",
-			"revisionTime": "2013-12-21T12:05:32-08:00"
+			"revisionTime": "2013-12-21T20:05:32Z"
 		},
 		{
 			"checksumSHA1": "JLhed1lAnZ3eAvzYte77yd3V1b4=",
@@ -205,60 +241,52 @@
 			"revisionTime": "2016-06-27T17:49:19-07:00"
 		},
 		{
-			"checksumSHA1": "cjGCZ6gnS6lGdBe7vG3YDfoGx/s=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema",
+			"checksumSHA1": "hHr2mPYT2rKyvzsXjYdVtGCJFNM=",
 			"path": "github.com/opsee/basic/schema",
-			"revision": "4ea0dd2368c99ff34e07b6d60e3edacb88632472",
-			"revisionTime": "2016-06-27T17:49:19-07:00"
+			"revision": "242a5ff11a379ac3c9e6e481201b34057822565f",
+			"revisionTime": "2016-06-28T22:01:51Z"
 		},
 		{
 			"checksumSHA1": "FkjxadUmA3jQE9gNzDheJ5axvyw=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/autoscaling",
 			"path": "github.com/opsee/basic/schema/aws/autoscaling",
-			"revision": "4ea0dd2368c99ff34e07b6d60e3edacb88632472",
-			"revisionTime": "2016-06-27T17:49:19-07:00"
+			"revision": "242a5ff11a379ac3c9e6e481201b34057822565f",
+			"revisionTime": "2016-06-28T22:01:51Z"
 		},
 		{
 			"checksumSHA1": "fySg/HSrU9fwCAsXLwt4fsm0imc=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/cloudwatch",
 			"path": "github.com/opsee/basic/schema/aws/cloudwatch",
-			"revision": "4ea0dd2368c99ff34e07b6d60e3edacb88632472",
-			"revisionTime": "2016-06-27T17:49:19-07:00"
+			"revision": "242a5ff11a379ac3c9e6e481201b34057822565f",
+			"revisionTime": "2016-06-28T22:01:51Z"
 		},
 		{
 			"checksumSHA1": "+vaNkzRGuv1YFreB47sAf9h1xlA=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/credentials",
 			"path": "github.com/opsee/basic/schema/aws/credentials",
-			"revision": "4ea0dd2368c99ff34e07b6d60e3edacb88632472",
-			"revisionTime": "2016-06-27T17:49:19-07:00"
+			"revision": "242a5ff11a379ac3c9e6e481201b34057822565f",
+			"revisionTime": "2016-06-28T22:01:51Z"
 		},
 		{
 			"checksumSHA1": "srjU1ESiQMdYhe8RsQeIaEAF27k=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/ec2",
 			"path": "github.com/opsee/basic/schema/aws/ec2",
-			"revision": "4ea0dd2368c99ff34e07b6d60e3edacb88632472",
-			"revisionTime": "2016-06-27T17:49:19-07:00"
+			"revision": "242a5ff11a379ac3c9e6e481201b34057822565f",
+			"revisionTime": "2016-06-28T22:01:51Z"
 		},
 		{
 			"checksumSHA1": "3Vy2baXYVara8ivNlOHj8fpZcXk=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/ecs",
 			"path": "github.com/opsee/basic/schema/aws/ecs",
-			"revision": "4ea0dd2368c99ff34e07b6d60e3edacb88632472",
-			"revisionTime": "2016-06-27T17:49:19-07:00"
+			"revision": "242a5ff11a379ac3c9e6e481201b34057822565f",
+			"revisionTime": "2016-06-28T22:01:51Z"
 		},
 		{
 			"checksumSHA1": "9JoTo+10PvSF5YcdZahA35SnCUk=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/elb",
 			"path": "github.com/opsee/basic/schema/aws/elb",
-			"revision": "4ea0dd2368c99ff34e07b6d60e3edacb88632472",
-			"revisionTime": "2016-06-27T17:49:19-07:00"
+			"revision": "242a5ff11a379ac3c9e6e481201b34057822565f",
+			"revisionTime": "2016-06-28T22:01:51Z"
 		},
 		{
 			"checksumSHA1": "lfQKxPHPkM/+3PDuhT4NnVGKUgM=",
-			"origin": "github.com/opsee/vape/vendor/github.com/opsee/basic/schema/aws/rds",
 			"path": "github.com/opsee/basic/schema/aws/rds",
-			"revision": "4ea0dd2368c99ff34e07b6d60e3edacb88632472",
-			"revisionTime": "2016-06-27T17:49:19-07:00"
+			"revision": "242a5ff11a379ac3c9e6e481201b34057822565f",
+			"revisionTime": "2016-06-28T22:01:51Z"
 		},
 		{
 			"checksumSHA1": "Ckr2QpFzj32o6sHDmitM2MRKQg4=",
@@ -269,15 +297,17 @@
 		},
 		{
 			"checksumSHA1": "4SRqRNsZ2S+7ZXFbHn/4NxrflLU=",
+			"origin": "github.com/opsee/vape/vendor/github.com/opsee/logrus",
 			"path": "github.com/opsee/logrus",
 			"revision": "6d9ae300aaf85d6acd2e5424081c7fcddb21dab8",
 			"revisionTime": "2016-05-24T13:24:53Z"
 		},
 		{
-			"checksumSHA1": "Qk5VaNR5dJHzN+LeuRWUdfp7xIE=",
+			"checksumSHA1": "LnjFsETUGmSSoBIIPc/wy5SToEc=",
+			"origin": "github.com/opsee/vape/vendor/github.com/opsee/notification-templates/dist/go/slack",
 			"path": "github.com/opsee/notification-templates/dist/go/slack",
-			"revision": "11cec5d21a8cdd8fea4db25d787b15577c539c61",
-			"revisionTime": "2016-03-31T16:47:51-07:00"
+			"revision": "c8437d9331b5650db2f7835ea575a33b7ed2c259",
+			"revisionTime": "2016-05-03T21:08:31Z"
 		},
 		{
 			"checksumSHA1": "Oc5/hmIbwL/aWBo72SigCzA82JE=",
@@ -315,15 +345,17 @@
 		},
 		{
 			"checksumSHA1": "vE43s37+4CJ2CDU6TlOUOYE0K9c=",
+			"origin": "github.com/opsee/vape/vendor/golang.org/x/crypto/bcrypt",
 			"path": "golang.org/x/crypto/bcrypt",
-			"revision": "c197bcf24cde29d3f73c7b4ac6fd41f4384e8af6",
-			"revisionTime": "2016-03-17T15:08:20-05:00"
+			"revision": "1e61df8d9ea476e2e1504cd9a32b40280c7c6c7e",
+			"revisionTime": "2016-04-30T21:10:58Z"
 		},
 		{
 			"checksumSHA1": "udD2DzUPFZbMVXP0VNADhef4zKk=",
+			"origin": "github.com/opsee/vape/vendor/golang.org/x/crypto/blowfish",
 			"path": "golang.org/x/crypto/blowfish",
-			"revision": "c197bcf24cde29d3f73c7b4ac6fd41f4384e8af6",
-			"revisionTime": "2016-03-17T15:08:20-05:00"
+			"revision": "1e61df8d9ea476e2e1504cd9a32b40280c7c6c7e",
+			"revisionTime": "2016-04-30T21:10:58Z"
 		},
 		{
 			"checksumSHA1": "9QKY4bQlbQ/VZZFP8/1WtH4b0mA=",
@@ -333,28 +365,38 @@
 			"revisionTime": "2016-03-28T18:55:07-07:00"
 		},
 		{
-			"checksumSHA1": "S1F98HYTTK86DNwVVM8983DJnyU=",
+			"checksumSHA1": "ADAx2RtTFteKdUFwAvTHgWSLjLI=",
+			"origin": "github.com/opsee/vape/vendor/golang.org/x/net/http2",
 			"path": "golang.org/x/net/http2",
-			"revision": "4876518f9e71663000c348837735820161a42df7",
-			"revisionTime": "2016-03-22T02:00:46Z"
+			"revision": "7c71ca708c71bcbd0e6c856b01468ee07fe24557",
+			"revisionTime": "2016-06-20T20:30:30Z"
 		},
 		{
-			"checksumSHA1": "VYl3cuReuGeFp9vb1cm8x87qdlU=",
+			"checksumSHA1": "EYNaHp7XdLWRydUCE0amEkKAtgk=",
+			"origin": "github.com/opsee/vape/vendor/golang.org/x/net/http2/hpack",
 			"path": "golang.org/x/net/http2/hpack",
-			"revision": "4876518f9e71663000c348837735820161a42df7",
-			"revisionTime": "2016-03-22T02:00:46Z"
+			"revision": "7c71ca708c71bcbd0e6c856b01468ee07fe24557",
+			"revisionTime": "2016-06-20T20:30:30Z"
 		},
 		{
 			"checksumSHA1": "/k7k6eJDkxXx6K9Zpo/OwNm58XM=",
+			"origin": "github.com/opsee/vape/vendor/golang.org/x/net/internal/timeseries",
 			"path": "golang.org/x/net/internal/timeseries",
-			"revision": "4876518f9e71663000c348837735820161a42df7",
-			"revisionTime": "2016-03-22T02:00:46Z"
+			"revision": "7c71ca708c71bcbd0e6c856b01468ee07fe24557",
+			"revisionTime": "2016-06-20T20:30:30Z"
 		},
 		{
-			"checksumSHA1": "dZJWvQmmWOwDkGPxJqoE8rN005w=",
+			"checksumSHA1": "yhndhWXMs/VSEDLks4dNyFMQStA=",
+			"path": "golang.org/x/net/lex/httplex",
+			"revision": "7c71ca708c71bcbd0e6c856b01468ee07fe24557",
+			"revisionTime": "2016-06-20T20:30:30Z"
+		},
+		{
+			"checksumSHA1": "WpST9lFOHvWrjDVy0GJNqHe+R3E=",
+			"origin": "github.com/opsee/vape/vendor/golang.org/x/net/trace",
 			"path": "golang.org/x/net/trace",
-			"revision": "4876518f9e71663000c348837735820161a42df7",
-			"revisionTime": "2016-03-22T02:00:46Z"
+			"revision": "7c71ca708c71bcbd0e6c856b01468ee07fe24557",
+			"revisionTime": "2016-06-20T20:30:30Z"
 		},
 		{
 			"checksumSHA1": "v0uHX/rT68NwTauphFdR7QVV2+E=",
@@ -421,9 +463,10 @@
 		},
 		{
 			"checksumSHA1": "I2d7Kn572Fz02mnnlcI4MHXCu0c=",
+			"origin": "github.com/opsee/vape/vendor/gopkg.in/check.v1",
 			"path": "gopkg.in/check.v1",
 			"revision": "4f90aeace3a26ad7021961c297b22c42160c7b25",
-			"revisionTime": "2016-01-05T14:49:36-02:00"
+			"revisionTime": "2016-01-05T16:49:36Z"
 		}
 	],
 	"rootPath": "github.com/opsee/vape"

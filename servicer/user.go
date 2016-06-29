@@ -114,6 +114,9 @@ func NewUser(name, email, password string) (*schema.User, error) {
 }
 
 func AuthenticateUser(user *schema.User, password string) error {
+	if err := user.CheckActiveStatus(); err != nil {
+		return err
+	}
 	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 }
 

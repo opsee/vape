@@ -1,11 +1,12 @@
 package api
 
 import (
+	"time"
+
 	"github.com/gocraft/web"
 	"github.com/opsee/basic/schema"
 	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
-	"time"
 )
 
 type AuthContext struct {
@@ -176,7 +177,7 @@ func (c *AuthContext) Echo(rw web.ResponseWriter, r *web.Request) {
 // @Failure 401 {object}    MessageResponse
 // @Router /authenticate/refresh [put]
 func (c *AuthContext) Refresh(rw web.ResponseWriter, r *web.Request) {
-	if c.CurrentUser == nil {
+	if c.CurrentUser == nil || c.CurrentUser.Status != "active" {
 		c.Unauthorized(Messages.TokenRequired)
 		return
 	}
