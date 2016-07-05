@@ -112,7 +112,7 @@ func createSignup(customerId, email, name, referrer string, activated bool, perm
 	existingSignup := new(model.Signup)
 	err := store.Get(existingSignup, "signup-by-email", email)
 	if err == nil {
-		return nil, SignupExists
+		return existingSignup, SignupExists
 	} else if err != sql.ErrNoRows {
 		return nil, err
 	}
