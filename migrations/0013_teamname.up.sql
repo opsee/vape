@@ -1,0 +1,1 @@
+ALTER TABLE ONLY customers ALTER COLUMN name SET DEFAULT 'default';
