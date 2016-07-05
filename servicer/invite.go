@@ -11,7 +11,12 @@ func CreateActiveInvite(teamName, senderEmail, customerId, email string, perms *
 	referrer := ""
 	signup, err := createSignup(customerId, email, "", referrer, true, perms)
 	if err != nil {
-		return nil, err
+		// only return err if signupexists and was previously claimed
+		if err == SignupExists && signup.Claimed == true {
+			return nil, err
+		} else if err != SignupExists {
+			return nil, err
+		}
 	}
 
 	log.Debugf("invite signup %v permissions: %v", signup, signup.Perms)
