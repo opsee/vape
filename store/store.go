@@ -43,7 +43,7 @@ var queries = map[string]string{
 	// customers
 	"customer-by-id-and-active": "select * from customers where id = $1 and active = $2",
 	"customer-by-id":            "select * from customers where id = $1",
-	"insert-new-customer":       "insert into customers (name, active) values (NULL, true) returning id",
+	"insert-new-customer":       "insert into customers (name, active) values ('default', true) returning id",
 
 	// teams (a subset of customer fields and actions accessible to team admins)
 	"update-team":       "update customers set name = :name, subscription = :subscription where id = :id and active = true",
