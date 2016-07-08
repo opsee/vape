@@ -1,2 +1,3 @@
 POSTGRES_CONN=postgres://postgres@postgres/vape_test?sslmode=disable
 OPSEE_HOST="https://app.opsee.local"
+VAPE_STRIPE_KEY="sk_test_3EbpLJOMqaOUgVHHEJLFWx5j"
