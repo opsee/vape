@@ -31,6 +31,7 @@ var (
 	slackDomain     string
 	slackAdminToken string
 	spanxClient     opsee.SpanxClient
+	catsClient      opsee.CatsClient
 )
 
 func init() {
@@ -56,12 +57,19 @@ func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, in
 		closeioClient = closeio.New(closeioKey)
 	}
 
-	conn, err := grpc.Dial(spanxHost, grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})))
+	spanxconn, err := grpc.Dial(spanxHost, grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})))
 	if err != nil {
 		return err
 	}
 
-	spanxClient = opsee.NewSpanxClient(conn)
+	spanxClient = opsee.NewSpanxClient(spanxconn)
+
+	catsconn, err := grpc.Dial("cats.in.opsee.com:443", grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})))
+	if err != nil {
+		return err
+	}
+
+	catsClient = opsee.NewCatsClient(catsconn)
 
 	return nil
 }
