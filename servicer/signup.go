@@ -223,13 +223,33 @@ func ClaimSignup(id int, token, name, password string, verified bool) (*schema.U
 	customerId := signup.CustomerId
 	if signup.CustomerId == "" {
 		// signup is a new signup -- not user invite. must generate customer
-		if err = tx.Get(&customerId, "insert-new-customer"); err != nil {
+		resp, err := catsClient.CreateTeam(context.Background(), &opsee.CreateTeamRequest{
+			Requestor: user,
+			Team: &schema.Team{
+				Name:             "default",
+				SubscriptionPlan: "beta",
+			},
+		})
+		if err != nil {
 			tx.Rollback()
 			return nil, err
 		}
+
+		if resp.Team == nil {
+			tx.Rollback()
+			return nil, fmt.Errorf("team response was nil")
+		}
+
+		if resp.Team.Id == "" {
+			tx.Rollback()
+			return nil, fmt.Errorf("team response id was nil")
+		}
+
+		customerId = resp.Team.Id
 		// ensure that user has admin privs (0111b)
 		user.Perms = &schema.UserFlags{Admin: true, Edit: true, Billing: true}
 	}
+
 	user.CustomerId = customerId
 	if _, err := tx.Exec("claim-signup", signup.Id); err != nil {
 		tx.Rollback()

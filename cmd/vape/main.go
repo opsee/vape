@@ -7,7 +7,6 @@ import (
 	"github.com/keighl/mandrill"
 	log "github.com/opsee/logrus"
 	"github.com/opsee/vape/api"
-	"github.com/opsee/vape/service"
 	"github.com/opsee/vape/servicer"
 	"github.com/opsee/vape/store"
 	"github.com/opsee/vaper"
@@ -90,7 +89,7 @@ func main() {
 		log.Fatal("Must set the VAPE_SPANX_HOST environment variable.")
 	}
 
-	servicer.Init(host, mandrillClient, intercomKey, closeioKey, slackUrl, slackDomain, slackToken, spanxHost)
+	servicer.Init(host, mandrillClient, intercomKey, closeioKey, slackUrl, slackDomain, slackToken, spanxHost, "cats.in.opsee.com:443")
 
 	certfile := os.Getenv("VAPE_CERT")
 	certkeyfile := os.Getenv("VAPE_CERT_KEY")
@@ -98,7 +97,5 @@ func main() {
 		log.Fatal("VAPE_CERT and VAPE_CERT_KEY must be set, and you must have a certificate and key")
 	}
 
-	service := service.New()
-
-	api.ListenAndServe(os.Getenv("VAPE_PUBLIC_HOST"), os.Getenv("VAPE_PRIVATE_HOST"), certfile, certkeyfile, service.Server)
+	api.ListenAndServe(os.Getenv("VAPE_PUBLIC_HOST"), os.Getenv("VAPE_PRIVATE_HOST"), certfile, certkeyfile)
 }

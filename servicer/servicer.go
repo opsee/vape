@@ -31,6 +31,7 @@ var (
 	slackDomain     string
 	slackAdminToken string
 	spanxClient     opsee.SpanxClient
+	catsClient      opsee.CatsClient
 )
 
 func init() {
@@ -44,7 +45,7 @@ func init() {
 	slackTemplates["new-signup"] = tmpl
 }
 
-func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, inviteSlackDomain, inviteSlackAdminToken, spanxHost string) error {
+func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, inviteSlackDomain, inviteSlackAdminToken, spanxHost, catsHost string) error {
 	opseeHost = host
 	mailClient = mailer
 	intercomKey = []byte(intercom)
@@ -56,12 +57,19 @@ func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, in
 		closeioClient = closeio.New(closeioKey)
 	}
 
-	conn, err := grpc.Dial(spanxHost, grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})))
+	spanxconn, err := grpc.Dial(spanxHost, grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})))
 	if err != nil {
 		return err
 	}
 
-	spanxClient = opsee.NewSpanxClient(conn)
+	spanxClient = opsee.NewSpanxClient(spanxconn)
+
+	catsconn, err := grpc.Dial(catsHost, grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})))
+	if err != nil {
+		return err
+	}
+
+	catsClient = opsee.NewCatsClient(catsconn)
 
 	return nil
 }
