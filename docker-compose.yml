@@ -1,9 +1,9 @@
 postgres:
-  image: sameersbn/postgresql:9.4-3
+  image: postgres:9.5
   environment:
     PSQL_TRUST_LOCALNET: "true"
-    DB_USER: postgres
-    DB_PASS: ""
-    DB_NAME: vape_test
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: ""
+    POSTGRES_DB: vape_test
   ports:
     - 5434:5432

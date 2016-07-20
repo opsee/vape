@@ -45,7 +45,7 @@ func init() {
 	slackTemplates["new-signup"] = tmpl
 }
 
-func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, inviteSlackDomain, inviteSlackAdminToken, spanxHost string) error {
+func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, inviteSlackDomain, inviteSlackAdminToken, spanxHost, catsHost string) error {
 	opseeHost = host
 	mailClient = mailer
 	intercomKey = []byte(intercom)
@@ -64,7 +64,7 @@ func Init(host string, mailer MandrillMailer, intercom, closeioKey, slackUrl, in
 
 	spanxClient = opsee.NewSpanxClient(spanxconn)
 
-	catsconn, err := grpc.Dial("cats.in.opsee.com:443", grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})))
+	catsconn, err := grpc.Dial(catsHost, grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})))
 	if err != nil {
 		return err
 	}
