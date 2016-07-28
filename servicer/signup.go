@@ -227,7 +227,7 @@ func ClaimSignup(id int, token, name, password string, verified bool) (*schema.U
 			Requestor: user,
 			Team: &schema.Team{
 				Name:             "default",
-				SubscriptionPlan: "beta",
+				SubscriptionPlan: "developer_monthly",
 			},
 		})
 		if err != nil {
