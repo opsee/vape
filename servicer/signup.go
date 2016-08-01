@@ -234,7 +234,7 @@ func ClaimSignup(id int, token, name, password string, verified bool) (*schema.U
 
 		// certain referrers get different trial expirations
 		if signup.Referrer == "producthunt" {
-			createTeamRequest.TrialEnd = time.Now.Add(30 * 24 * time.Hour).Unix()
+			createTeamRequest.TrialEnd = time.Now().Add(30 * 24 * time.Hour).Unix()
 		}
 
 		resp, err := catsClient.CreateTeam(context.Background(), createTeamRequest)
