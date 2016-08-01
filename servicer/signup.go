@@ -3,6 +3,7 @@ package servicer
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/opsee/basic/schema"
 	opsee "github.com/opsee/basic/service"
@@ -223,13 +224,20 @@ func ClaimSignup(id int, token, name, password string, verified bool) (*schema.U
 	customerId := signup.CustomerId
 	if signup.CustomerId == "" {
 		// signup is a new signup -- not user invite. must generate customer
-		resp, err := catsClient.CreateTeam(context.Background(), &opsee.CreateTeamRequest{
+		createTeamRequest := &opsee.CreateTeamRequest{
 			Requestor: user,
 			Team: &schema.Team{
 				Name:             "default",
 				SubscriptionPlan: "developer_monthly",
 			},
-		})
+		}
+
+		// certain referrers get different trial expirations
+		if signup.Referrer == "producthunt" {
+			createTeamRequest.TrialEnd = time.Now.Add(30 * 24 * time.Hour).Unix()
+		}
+
+		resp, err := catsClient.CreateTeam(context.Background(), createTeamRequest)
 		if err != nil {
 			tx.Rollback()
 			return nil, err
